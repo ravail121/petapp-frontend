@@ -6,7 +6,7 @@ function Login() {
           <div class="col-xl-6 col-lg-8 col-md-10">
             <div class="form-wrapper wow fadeInUp" data-wow-duration="1.5s" data-wow-delay=".2s">
               <div class="form-title">
-                <h3>Log In</h3>
+                <h3>Log In From PipelIne</h3>
                 <p>New Member? <a href="sign-up.html">signup here</a></p>
               </div>
               <form class="w-100">
