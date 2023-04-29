@@ -26,4 +26,4 @@ jobs:
           username: cwkxg1ljq4ax
           password: N0%mIgy7P8wV
           local-dir: build/
-          server-dir: public_html
+          server-dir: public_html/
