@@ -24,6 +24,6 @@ jobs:
         with:
           server: 68.178.151.4
           username: cwkxg1ljq4ax
-          password: N0%mIgy7P8wV
+          password: Fztsnf5Yhj%0
           local-dir: build/
           server-dir: public_html/
