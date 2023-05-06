@@ -20,31 +20,12 @@ jobs:
         run: CI=false npm run build 
           
 
-      - name: Deploy to Server
+      - name: Deploy to Droplet
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-            SOURCE: "build/"
-            REMOTE_HOST: 68.183.40.171
-            REMOTE_USER: root
-            TARGET: /var/www/html/app/user/build/
+            SOURCE: ${{ secrets.SOURCE_DIR }}
+            REMOTE_HOST: ${{ secrets.SERVER_IP }}
+            REMOTE_USER: ${{ secrets.SERVER_USER_NAME }}
+            TARGET: ${{ secrets.TARGET_DIR }}
             
-      # - name: Deploy to server
-      #   uses: easingthemes/ssh-deploy@v2.1.5
-      #   with:
-      #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     server: 68.183.40.171
-      #     username: root
-      #     local-dir: build/
-      #     remote-dir: /var/ww/html/app/user/build/
-
-
-      # - name: Upload files to cPanel
-      #   uses: SamKirkland/FTP-Deploy-Action@4.0.0
-      #   with:
-      #     server: 68.183.40.171
-      #     username: root
-      #     password: bVXrcBQ0M8XrQsa
-      #     local-dir: build/
-      #     server-dir: /var/ww/html/app/user/build/
-          
