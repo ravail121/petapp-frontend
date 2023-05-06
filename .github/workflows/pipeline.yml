@@ -1,4 +1,4 @@
-name: Deploy to cPanel
+name: Deploy to Digital Ocean
 
 on:
   push:
@@ -17,13 +17,25 @@ jobs:
         run: npm install
 
       - name: Build React app
-        run: CI=false npm run build
+        run: CI=false npm run build |
+        echo secrets.SSH_PRIVATE_KEY
 
-      - name: Upload files to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@v2.1.5
         with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           server: 68.183.40.171
           username: root
-          password: bVXrcBQ0M8XrQsa
           local-dir: build/
-          server-dir: /var/ww/html/app/user/build/
+          remote-dir: /var/ww/html/app/user/build/
+
+
+      # - name: Upload files to cPanel
+      #   uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      #   with:
+      #     server: 68.183.40.171
+      #     username: root
+      #     password: bVXrcBQ0M8XrQsa
+      #     local-dir: build/
+      #     server-dir: /var/ww/html/app/user/build/
+          
