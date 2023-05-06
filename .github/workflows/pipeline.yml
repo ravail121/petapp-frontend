@@ -19,15 +19,25 @@ jobs:
       - name: Build React app
         run: |
           CI=false npm run build 
-          echo secrets.SSH_PRIVATE_KEY
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@v2.1.5
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          server: 68.183.40.171
-          username: root
-          local-dir: build/
-          remote-dir: /var/ww/html/app/user/build/
+          echo ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            SOURCE: "build/"
+            REMOTE_HOST: 68.183.40.171
+            REMOTE_USER: root
+            TARGET: /var/ww/html/app/user/build/
+            
+      # - name: Deploy to server
+      #   uses: easingthemes/ssh-deploy@v2.1.5
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     server: 68.183.40.171
+      #     username: root
+      #     local-dir: build/
+      #     remote-dir: /var/ww/html/app/user/build/
 
 
       # - name: Upload files to cPanel
