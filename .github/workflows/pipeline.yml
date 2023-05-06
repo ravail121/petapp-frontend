@@ -27,7 +27,7 @@ jobs:
             SOURCE: "build/"
             REMOTE_HOST: 68.183.40.171
             REMOTE_USER: root
-            TARGET: /var/ww/html/app/user/build/
+            TARGET: /var/www/html/app/user/build/
             
       # - name: Deploy to server
       #   uses: easingthemes/ssh-deploy@v2.1.5
