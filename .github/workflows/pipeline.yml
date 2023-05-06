@@ -1,29 +1,29 @@
-name: Deploy to cPanel
+# name: Deploy to cPanel
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Install dependencies
+#         run: npm install
 
-      - name: Build React app
-        run: CI=false npm run build
+#       - name: Build React app
+#         run: CI=false npm run build
 
-      - name: Upload files to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          server: 68.178.151.4
-          username: cwkxg1ljq4ax
-          password: Fztsnf5Yhj%0
-          local-dir: build/
-          server-dir: public_html/
+#       - name: Upload files to cPanel
+#         uses: SamKirkland/FTP-Deploy-Action@4.0.0
+#         with:
+#           server: 68.178.151.4
+#           username: cwkxg1ljq4ax
+#           password: Fztsnf5Yhj%0
+#           local-dir: build/
+#           server-dir: public_html/
