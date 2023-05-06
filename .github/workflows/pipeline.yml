@@ -18,9 +18,8 @@ jobs:
 
       - name: Build React app
         run: |
-        CI=false npm run build 
-        echo secrets.SSH_PRIVATE_KEY
-
+          CI=false npm run build 
+          echo secrets.SSH_PRIVATE_KEY
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v2.1.5
         with:
