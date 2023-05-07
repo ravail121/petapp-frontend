@@ -1,7 +1,5 @@
 import product_discription2 from './assets/images/bg/h3-category-2.png';
-import { useEffect, useState } from 'react';
-import './assets/css/common.css';
-import Slider from 'react-slick';
+import { useState } from 'react';
 
 function ProductsRow(props) {
    const products = props.products;
