@@ -1,10 +1,19 @@
 import product_discription2 from './assets/images/bg/h3-category-2.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function ProductsRow(props) {
    const products = props.products;
-  const [startIndex, setStartIndex] = useState(0);
- 
+   const [startIndex, setStartIndex] = useState(0);
+   const [categories , setCategories] = useState([]);
+
+   const [page , setPage] = useState(1);
+   const [rows , setRows] = useState(6);
+
+   useEffect(()=>{
+    fetchCategories();
+   } , [] )
+
+  
   const selected_products = (list, i) => {
     const index = i % list.length;
     const values = [];
@@ -18,12 +27,29 @@ function ProductsRow(props) {
     return values;
   }
 
-  const listProducts = selected_products(products, startIndex).map((product) => 
+  const fetchCategories = () => {
+    let url = `http://apis.rubypets.co.uk/user/categories/list/${page}/${rows}`;
+    console.log(url)
+    fetch(url, {
+      method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+      setCategories(data.data.categories);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
+
+
+  const listProducts = categories.map((product) => 
       <div className="category-card">
         <a href="shop.html" className="category-card-inner">
           <div className="category-card-front">
             <div className="category-icon">
-              <img src={product.img} alt="" />
+              <img src={product.imgName} alt="" />
             </div>
             <div className="content">
               <h4>{product.name}</h4>

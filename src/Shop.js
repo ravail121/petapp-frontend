@@ -3,9 +3,47 @@ import banner from './assets/images/bg/inner-banner-img.png';
 import ProductCard from './ProductCard';
 import { useNavigate } from 'react-router-dom';
 import Header from './shared/Header';
+import { useEffect, useState } from 'react';
 
 function Shop() {
   const navigate = useNavigate();
+  
+  const [ products , setProducts ] = useState([]);
+  const fetchProducts = () => {
+    let url = `http://apis.rubypets.co.uk/user/products/list/1/3`;
+    console.log(url)
+    fetch(url, {
+      method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        setProducts(data.data.products);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
+  useEffect(()=>{
+    fetchProducts();
+  } , [])
+
+
+
+
+const listProducts = products.map((item_) => 
+    <ProductCard 
+    name={item_["name"]} 
+    price={item_["price"]} 
+    orignal_price={333} 
+    total_reviews={23} 
+    rating={5}
+    />  
+)
+
+
+
+
   return (
     <>
       <Header navigate={navigate}/>
@@ -170,9 +208,10 @@ function Shop() {
                 {/* shop */}
                 <div className="col-lg-9">
                     <div className="row g-4 justify-content-center">
-                      <ProductCard name={'abc'} price={123} orignal_price={333} total_reviews={23} rating={5}/>
-                      <ProductCard name={'xyz'} price={678} orignal_price={666} total_reviews={34} rating={3} additional_classes={'offer-card sale'} additional_text={'Hot Sale'}/>
-                      <ProductCard name={'Testing'} price={789} orignal_price={999} total_reviews={39} rating={5} additional_classes={'offer-card offer'} additional_text={'Disscount'}/>
+
+                      { listProducts }
+
+
                     </div>
                     <div className="row pt-70">
                         <div className="col-lg-12 d-flex justify-content-center">
