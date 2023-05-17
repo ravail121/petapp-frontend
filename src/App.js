@@ -8,6 +8,8 @@ import Footer from "./shared/Footer";
 import About from "./About";
 import Product from "./pages/Products";
 import ProductDetails from "./pages/ProductDetail";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/CheckOut";
 
 function App() {
   return (
@@ -17,9 +19,11 @@ function App() {
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkOut" element={<Checkout />} />
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Product />} />
-          <Route path="/productsDetails" element={<ProductDetails />} />
+          <Route path="/productsDetails/:id" element={<ProductDetails />} />
           <Route path="/shop" element={<Shop />} />
         </Routes>
       </BrowserRouter>

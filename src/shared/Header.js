@@ -54,30 +54,10 @@ function Header(props) {
                 Products
               </a> */}
             </li>
-            <li className="menu-item-has-children">
-              <Link to="/products">Shop</Link>
+            <li>
+              <Link to="/cart">Cart</Link>
 
               {/* <a href="#">Shop</a> */}
-              <i className="bi bi-plus dropdown-icon"></i>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/shop">Shop</Link>
-
-                  {/* <a href="" onClick={() => navigate("/shop")}>
-                    Shop Now
-                  </a> */}
-                </li>
-                <li>
-                  <Link to="/shop">Cart</Link>
-
-                  {/* <a href="cart.html">Cart</a> */}
-                </li>
-                <li>
-                  <Link to="/shop">Check Out</Link>
-
-                  {/* <a href="check-out.html">Check Out</a> */}
-                </li>
-              </ul>
             </li>
             <li>
               <a href="#" onClick={handleContactClick}>

@@ -12,7 +12,7 @@ const Product = () => {
   const navigate = useNavigate();
   const [IsLoading, setIsLoading] = React.useState(false);
   const [products, setProducts] = React.useState([]);
-
+  const [AllPages, setAllpages] = React.useState(0);
   useEffect(() => {
     GetAllProducts();
   }, []);
@@ -31,6 +31,7 @@ const Product = () => {
         console.log("All Products ----->>>", response);
         if (response.message === "Products has been fetched Succesfully") {
           setProducts(response?.data?.products);
+          setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
       })
@@ -67,7 +68,11 @@ const Product = () => {
                             <span>Offer</span>
                           </div>
                           <div class="collection-img">
-                            <img class="img-gluid" src={img2} alt="" />
+                            <img
+                              class="img-gluid"
+                              src={item?.imageName}
+                              alt=""
+                            />
                             <div class="view-dt-btn">
                               <div class="plus-icon">
                                 <i class="bi bi-plus"></i>
@@ -89,12 +94,16 @@ const Product = () => {
                           </div>
                           <div class="collection-content text-center">
                             <h4>
-                              <a onClick={() => navigate("/productsDetails")}>
-                                Whiskas Cat Food Core Tuna
+                              <a
+                                onClick={() =>
+                                  navigate(`/productsDetails/${item?.id}`)
+                                }
+                              >
+                                {item?.name}
                               </a>
                             </h4>
                             <div class="price">
-                              <h6>$25.00</h6>
+                              <h6>${item.price}</h6>
                               <del>$30.00</del>
                             </div>
                             <div class="review">
@@ -130,7 +139,7 @@ const Product = () => {
                 <div class="col-lg-12 d-flex justify-content-center">
                   <div class="paginations-area">
                     <Pagination
-                      // count={AllPages}
+                      count={AllPages}
                       variant="outlined"
                       shape="rounded"
                       onChange={(e, Value) => {

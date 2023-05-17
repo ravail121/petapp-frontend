@@ -5,7 +5,7 @@ import product_item1 from "./assets/images/icon/dog.svg";
 import product_item2 from "./assets/images/icon/cat.svg";
 import product_item3 from "./assets/images/icon/fish.svg";
 import product_item4 from "./assets/images/icon/bird.svg";
-
+import { Link } from "react-router-dom";
 import banner from "./assets/images/bg/h3-banner-img.png";
 import Footer from "./shared/Footer";
 import { useNavigate } from "react-router-dom";
@@ -40,12 +40,9 @@ function Home() {
               <div className="col-lg-6 banner-content">
                 <h1>Best Store For Your Shooping.</h1>
                 <div className="btn-group">
-                  <a
-                    className="primary-btn5 btn-md"
-                    onClick={() => navigate("/shop")}
-                  >
+                  <Link className="primary-btn5 btn-md" to="/products">
                     Shop Now
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="col-lg-6 d-flex justify-content-end">

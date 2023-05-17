@@ -1,8 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
+import { Link } from "react-router-dom";
+import { url } from "../environment";
+import { useParams } from "react-router-dom";
 
 const ProductDetails = () => {
+  const [, setIsLoading] = React.useState(false);
+  const [ProductDetail, setProductDetail] = React.useState();
+  const { id } = useParams();
+
+  useEffect(() => {
+    GetAllProducts();
+  }, []);
+
+  const GetAllProducts = (e, pageNumber) => {
+    setIsLoading(true);
+    fetch(`${url}/user/products/get/${id}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("Product detail ----->>>", response);
+        if (response.message === "Product has been fetched Succesfully") {
+          setProductDetail(response?.data?.product);
+          // setAllpages(response?.data?.totalCount);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       {" "}
@@ -145,7 +178,7 @@ const ProductDetails = () => {
             </div>
             <div class="col-lg-5">
               <div class="shop-details-content">
-                <h3>To Make Delicious Food Item.</h3>
+                <h3>{ProductDetail?.name}</h3>
                 <ul class="shopuct-review2 d-flex flex-row align-items-center mb-25">
                   <li>
                     <i class="bi bi-star-fill"></i>
@@ -173,23 +206,21 @@ const ProductDetails = () => {
                 </div>
                 <div class="price-tag">
                   <h4>
-                    $50.00 <del>$80.00</del>
+                    ${ProductDetail?.rrp}{" "}
+                    <del>${ProductDetail?.dropshipPrice}</del>
                   </h4>
                 </div>
 
-                <p>
-                  Donec bibendum enim ut elit porta ullamcorper. Vestibulum Nai
-                  wekemdini iaculis vitae nulla. Morbi mattis nec mi ac mollis.{" "}
-                </p>
+                <p>{ProductDetail?.description}</p>
                 <div class="shop-quantity d-flex align-items-center justify-content-start mb-20">
                   <div class="quantity d-flex align-items-center">
                     <div class="quantity-nav nice-number d-flex align-items-center">
                       <input type="number" value="1" min="1" />
                     </div>
                   </div>
-                  <a href="cart.html" class="primary-btn3">
+                  <Link to="/cart" class="primary-btn3">
                     Add to cart
-                  </a>
+                  </Link>
                 </div>
                 <div class="buy-now-btn">
                   <a href="cart.html">Buy Now</a>

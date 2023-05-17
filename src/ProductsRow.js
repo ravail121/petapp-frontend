@@ -51,14 +51,14 @@ function ProductsRow(props) {
       <a href="shop.html" className="category-card-inner">
         <div className="category-card-front">
           <div className="category-icon">
-            <img src={product.imgName} alt="" />
+            {/* <img width={126} height={126} alt="" /> */}
           </div>
           <div className="content">
             <h4>{product.name}</h4>
           </div>
         </div>
         <div className="category-card-back">
-          <img src={product_discription2} alt="" />
+          <img width={126} height={126} src={product.imageName} alt="" />
         </div>
       </a>
     </div>
