@@ -6917,7 +6917,7 @@ footer.style2 .social-area ul li:hover a i {
   background: #E0F1F0;
   border-radius: 70px;
   perspective: 1000px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
 .home3-categoty-area .category-card .category-card-inner {
   display: block;

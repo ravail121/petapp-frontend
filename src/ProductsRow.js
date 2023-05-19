@@ -210,7 +210,7 @@ function ProductsRow(props) {
         </div>
       ) : categories.length > 0 ? (
         // categories
-        <div className="row">{listProducts}</div>
+        <div className="maincategory">{listProducts}</div>
       ) : (
         <div className="row" style={{ display: "block", textAlign: "center" }}>
           <h2>No Categories found</h2>

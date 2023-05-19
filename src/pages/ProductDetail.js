@@ -9,9 +9,13 @@ const ProductDetails = () => {
   const [, setIsLoading] = React.useState(false);
   const [ProductDetail, setProductDetail] = React.useState();
   const { id } = useParams();
-
+  const decodedObj = JSON.parse(decodeURIComponent(id));
+  console.log(decodedObj);
+  // setProductDetail(decodedObj);
   useEffect(() => {
     GetAllProducts();
+    setProductDetail(decodedObj);
+    // addToCart();
   }, []);
 
   const GetAllProducts = (e, pageNumber) => {
@@ -35,6 +39,15 @@ const ProductDetails = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+  const addToCart = () => {
+    const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+    //  decodedObj const  = { id: 123 }; // Example decoded object
+    const hasDuplicate = storedArray.some((obj) => obj.id === decodedObj.id);
+    if (!hasDuplicate) {
+      storedArray.push(decodedObj);
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+    }
   };
   return (
     <>
@@ -206,19 +219,19 @@ const ProductDetails = () => {
                 </div>
                 <div class="price-tag">
                   <h4>
-                    ${ProductDetail?.rrp}{" "}
-                    <del>${ProductDetail?.dropshipPrice}</del>
+                    ${ProductDetail?.dropshipPrice}{" "}
+                    <del>${ProductDetail?.rrp}</del>
                   </h4>
                 </div>
 
-                <p>{ProductDetail?.description}</p>
+                <p>{ProductDetail?.fullDescription}</p>
                 <div class="shop-quantity d-flex align-items-center justify-content-start mb-20">
                   <div class="quantity d-flex align-items-center">
                     <div class="quantity-nav nice-number d-flex align-items-center">
                       <input type="number" value="1" min="1" />
                     </div>
                   </div>
-                  <Link to="/cart" class="primary-btn3">
+                  <Link to="/cart" onClick={addToCart} class="primary-btn3">
                     Add to cart
                   </Link>
                 </div>

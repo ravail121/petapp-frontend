@@ -69,6 +69,8 @@ const Product = () => {
                           </div>
                           <div class="collection-img">
                             <img
+                              width={200}
+                              height={150}
                               class="img-gluid"
                               src={item?.imageName}
                               alt=""
@@ -96,15 +98,19 @@ const Product = () => {
                             <h4>
                               <a
                                 onClick={() =>
-                                  navigate(`/productsDetails/${item?.id}`)
+                                  navigate(
+                                    `/productsDetails/${encodeURIComponent(
+                                      JSON.stringify(item)
+                                    )}`
+                                  )
                                 }
                               >
                                 {item?.name}
                               </a>
                             </h4>
                             <div class="price">
-                              <h6>${item.price}</h6>
-                              <del>$30.00</del>
+                              <h6>${item.dropshipPrice}</h6>
+                              <del>${item.rrp}</del>
                             </div>
                             <div class="review">
                               <ul>

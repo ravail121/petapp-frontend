@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
 import { Link } from "react-router-dom";
 const Cart = () => {
+  let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+  const [CartData, setCartData] = useState([]);
+  useEffect(() => {
+    setCartData(storedArray);
+  }, []);
+  const rmoveToCart = (id) => {
+    storedArray = storedArray.filter((obj) => obj.id !== id);
+    console.log(storedArray);
+    setCartData(storedArray);
+
+    localStorage.setItem("myArray", JSON.stringify(storedArray));
+  };
   return (
     <>
       <DiscountHeader minimum_limit={80} />
@@ -26,83 +38,39 @@ const Cart = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td data-label="Delete">
-                        <div class="delete-icon">
-                          <i class="bi bi-x"></i>
-                        </div>
-                      </td>
-                      <td data-label="Image">
-                        <img src="assets/images/bg/cart-01.png" alt="" />
-                      </td>
-                      <td data-label="Food Name">
-                        <a href="shop-details.html">
-                          Whiskas Cat Food Core Tuna
-                        </a>
-                      </td>
-                      <td data-label="Unite Price">
-                        <del>$30.00</del>
-                      </td>
-                      <td data-label="Discount Price">$25.00</td>
-                      <td data-label="Quantity">
-                        <div class="quantity d-flex align-items-center">
-                          <div class="quantity-nav nice-number d-flex align-items-center">
-                            <input type="number" value="1" min="1" />
-                          </div>
-                        </div>
-                      </td>
-                      <td data-label="Subtotal">$25.006</td>
-                    </tr>
-                    <tr>
-                      <td data-label="Delete">
-                        <div class="delete-icon">
-                          <i class="bi bi-x"></i>
-                        </div>
-                      </td>
-                      <td data-label="Image">
-                        <img src="assets/images/bg/cart-02.png" alt="" />
-                      </td>
-                      <td data-label="Food Name">
-                        <a href="shop-details.html">
-                          Friskies Kitten Discoveries.
-                        </a>
-                      </td>
-                      <td data-label="Unite Price">
-                        <del>$49.00</del>
-                      </td>
-                      <td data-label="Discount Price">$39.00</td>
-                      <td data-label="Quantity">
-                        <div class="quantity d-flex align-items-center">
-                          <div class="quantity-nav nice-number d-flex align-items-center">
-                            <input type="number" value="1" min="1" />
-                          </div>
-                        </div>
-                      </td>
-                      <td data-label="Subtotal">$39.00</td>
-                    </tr>
-                    <tr>
-                      <td data-label="Delete">
-                        <div class="delete-icon">
-                          <i class="bi bi-x"></i>
-                        </div>
-                      </td>
-                      <td data-label="Image">
-                        <img src="assets/images/bg/cart-03.png" alt="" />
-                      </td>
-                      <td data-label="Food Name">
-                        <a href="shop-details.html">Natural Dog Fresh Food.</a>
-                      </td>
-                      <td data-label="Unite Price">$30.00</td>
-                      <td data-label="Discount Price">$18.00</td>
-                      <td data-label="Quantity">
-                        <div class="quantity d-flex align-items-center">
-                          <div class="quantity-nav nice-number d-flex align-items-center">
-                            <input type="number" value="1" min="1" />
-                          </div>
-                        </div>
-                      </td>
-                      <td data-label="Subtotal">$18.00</td>
-                    </tr>
+                    {CartData &&
+                      CartData?.map((item) => {
+                        return (
+                          <tr>
+                            <td data-label="Delete">
+                              <div
+                                class="delete-icon"
+                                onClick={() => rmoveToCart(item.id)}
+                              >
+                                <i class="bi bi-x"></i>
+                              </div>
+                            </td>
+                            <td data-label="Image">
+                              <img src="assets/images/bg/cart-01.png" alt="" />
+                            </td>
+                            <td data-label="Food Name">
+                              <a href="shop-details.html">{item.name}</a>
+                            </td>
+                            <td data-label="Unite Price">
+                              <del>${item.dropshipPrice}</del>
+                            </td>
+                            <td data-label="Discount Price">${item.rrp}</td>
+                            <td data-label="Quantity">
+                              <div class="quantity d-flex align-items-center">
+                                <div class="quantity-nav nice-number d-flex align-items-center">
+                                  <input type="number" value="1" min="1" />
+                                </div>
+                              </div>
+                            </td>
+                            <td data-label="Subtotal">$25.006</td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
