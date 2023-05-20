@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.tric{
+  padding: 6px 10px;
+    background: black;
+    color: white;
+    border-radius: 10px;
+}

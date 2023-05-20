@@ -47,7 +47,13 @@ function Home() {
               </div>
               <div className="col-lg-6 d-flex justify-content-end">
                 <div className="hero-img">
-                  <img className="img-fluid banner-imgas" src={banner} alt="" />
+                  <img
+                    className={"img-fluid banner-imgas"}
+                    src={
+                      "https://thumbs.dreamstime.com/b/woman-using-digital-tablet-to-shop-online-shoes-61909444.jpg"
+                    }
+                    alt=""
+                  />
                 </div>
               </div>
             </div>

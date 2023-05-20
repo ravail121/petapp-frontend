@@ -89,107 +89,107 @@ function ProductsRow(props) {
           </div>
         </div>
       </div>
-      {/* <div class="row">
-        <div class="col-lg-12 d-flex justify-content-center">
-          <div class="swiper h3-category-slider">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <div class="category-card">
-                  <a href="shop.html" class="category-card-inner">
-                    <div class="category-card-front">
-                      <div class="category-icon">
+      {/* <div className="row">
+        <div className="col-lg-12 d-flex justify-content-center">
+          <div className="swiper h3-category-slider">
+            <div className="swiper-wrapper">
+              <div className="swiper-slide">
+                <div className="category-card">
+                  <a href="shop.html" className="category-card-inner">
+                    <div className="category-card-front">
+                      <div className="category-icon">
                         <img src="assets/images/icon/dog.svg" alt="" />
                       </div>
-                      <div class="content">
+                      <div className="content">
                         <h4>Dog Supplies</h4>
                       </div>
                     </div>
-                    <div class="category-card-back">
+                    <div className="category-card-back">
                       <img src="assets/images/bg/h3-category-1.png" alt="" />
                     </div>
                   </a>
                 </div>
               </div>
-              <div class="swiper-slide">
-                <div class="category-card">
-                  <a href="shop.html" class="category-card-inner">
-                    <div class="category-card-front">
-                      <div class="category-icon">
+              <div className="swiper-slide">
+                <div className="category-card">
+                  <a href="shop.html" className="category-card-inner">
+                    <div className="category-card-front">
+                      <div className="category-icon">
                         <img src="assets/images/icon/cat.svg" alt="" />
                       </div>
-                      <div class="content">
+                      <div className="content">
                         <h4>Cat Supplies</h4>
                       </div>
                     </div>
-                    <div class="category-card-back">
+                    <div className="category-card-back">
                       <img src="assets/images/bg/h3-category-2.png" alt="" />
                     </div>
                   </a>
                 </div>
               </div>
-              <div class="swiper-slide">
-                <div class="category-card">
-                  <a href="shop.html" class="category-card-inner">
-                    <div class="category-card-front">
-                      <div class="category-icon">
+              <div className="swiper-slide">
+                <div className="category-card">
+                  <a href="shop.html" className="category-card-inner">
+                    <div className="category-card-front">
+                      <div className="category-icon">
                         <img src="assets/images/icon/bird.svg" alt="" />
                       </div>
-                      <div class="content">
+                      <div className="content">
                         <h4>Bird Supplies</h4>
                       </div>
                     </div>
-                    <div class="category-card-back">
+                    <div className="category-card-back">
                       <img src="assets/images/bg/h3-category-4.png" alt="" />
                     </div>
                   </a>
                 </div>
               </div>
-              <div class="swiper-slide">
-                <div class="category-card">
-                  <a href="shop.html" class="category-card-inner">
-                    <div class="category-card-front">
-                      <div class="category-icon">
+              <div className="swiper-slide">
+                <div className="category-card">
+                  <a href="shop.html" className="category-card-inner">
+                    <div className="category-card-front">
+                      <div className="category-icon">
                         <img src="assets/images/icon/Rabbit.svg" alt="" />
                       </div>
-                      <div class="content">
+                      <div className="content">
                         <h4>Small Animal</h4>
                       </div>
                     </div>
-                    <div class="category-card-back">
+                    <div className="category-card-back">
                       <img src="assets/images/bg/h3-category-5.png" alt="" />
                     </div>
                   </a>
                 </div>
               </div>
-              <div class="swiper-slide">
-                <div class="category-card">
-                  <a href="shop.html" class="category-card-inner">
-                    <div class="category-card-front">
-                      <div class="category-icon">
+              <div className="swiper-slide">
+                <div className="category-card">
+                  <a href="shop.html" className="category-card-inner">
+                    <div className="category-card-front">
+                      <div className="category-icon">
                         <img src="assets/images/icon/Acces.svg" alt="" />
                       </div>
-                      <div class="content">
+                      <div className="content">
                         <h4>Accessories</h4>
                       </div>
                     </div>
-                    <div class="category-card-back">
+                    <div className="category-card-back">
                       <img src="assets/images/bg/h3-category-6.png" alt="" />
                     </div>
                   </a>
                 </div>
               </div>
-              <div class="swiper-slide">
-                <div class="category-card">
-                  <a href="shop.html" class="category-card-inner">
-                    <div class="category-card-front">
-                      <div class="category-icon">
+              <div className="swiper-slide">
+                <div className="category-card">
+                  <a href="shop.html" className="category-card-inner">
+                    <div className="category-card-front">
+                      <div className="category-icon">
                         <img src="assets/images/icon/fish.svg" alt="" />
                       </div>
-                      <div class="content">
+                      <div className="content">
                         <h4>Fish Supplies</h4>
                       </div>
                     </div>
-                    <div class="category-card-back">
+                    <div className="category-card-back">
                       <img src="assets/images/bg/h3-category-3.png" alt="" />
                     </div>
                   </a>
@@ -204,8 +204,8 @@ function ProductsRow(props) {
           className="row text-align-center"
           style={{ display: "block", textAlign: "center" }}
         >
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : categories.length > 0 ? (

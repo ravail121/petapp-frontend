@@ -5,8 +5,8 @@
 }
 
 .bi::before,
-[class^="bi-"]::before,
-[class*=" bi-"]::before {
+[className^="bi-"]::before,
+[className*=" bi-"]::before {
   display: inline-block;
   font-family: bootstrap-icons !important;
   font-style: normal;
