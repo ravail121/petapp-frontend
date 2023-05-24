@@ -67,18 +67,14 @@ const Product = () => {
   const [IsLoading, setIsLoading] = React.useState(false);
   const [products, setProducts] = React.useState([]);
   const [AllPages, setAllpages] = React.useState(0);
-  const [minValue, setMinValue] = React.useState(100);
-  const [maxValue, setMaxValue] = React.useState(500);
+  const [value1, setValue1] = React.useState([20, 397]);
+
 
   useEffect(() => {
     GetAllProducts();
   }, []);
 
-  const handleRangeChange = (event) => {
-    setMinValue(event.target.value[0]);
-    setMaxValue(event.target.value[1]);
-  };
-
+  
   const GetAllProducts = (e, pageNumber) => {
     setIsLoading(true);
     fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/6`, {
@@ -101,7 +97,6 @@ const Product = () => {
         console.log(err);
       });
   };
-  const [value1, setValue1] = React.useState([20, 397]);
 
   const handleChange1 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -119,9 +114,7 @@ const Product = () => {
     <>
       <DiscountHeader minimum_limit={80} />
       <Header navigate={navigate} />
-      <div className="shop-page  mb-120">
-        <div className="container">
-          <div className="inner-page-banner" style={{ marginBottom: "120px" }}>
+      <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px" ,padding:'120px 0px'}}>
             <div className="breadcrumb-vec-btm">
               <img
                 className="img-fluid"
@@ -129,7 +122,7 @@ const Product = () => {
                 alt=""
               />
             </div>
-            <div className="container">
+            <div className="container ">
               <div className="row justify-content-center align-items-center text-center">
                 <div className="col-lg-6 align-items-center">
                   <div className="banner-content">
@@ -154,13 +147,13 @@ const Product = () => {
                     <div className="banner-img-bg">
                       <img
                         className="img-fluid"
-                        src="assets/images/bg/inner-banner-vec.png"
+                        src="https://demo.egenslab.com/html/scooby/preview/assets/images/bg/inner-banner-img.png"
                         alt=""
                       />
                     </div>
                     <img
                       className="img-fluid"
-                      src="assets/images/bg/inner-banner-img.png"
+                      // src="assets/images/bg/inner-banner-img.png"
                       alt=""
                     />
                   </div>
@@ -168,7 +161,11 @@ const Product = () => {
               </div>
             </div>
           </div>
+      <div className="shop-page  mb-120">
+        <div className="container">
+          
           <div className="row">
+            
             <div className="col-lg-3">
               <div className="shop-sidebar">
                 <div className="shop-widget">

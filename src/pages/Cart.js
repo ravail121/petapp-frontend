@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
+import { message } from 'antd';
+
 import { Link } from "react-router-dom";
 const Cart = () => {
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const [count, setCount] = useState(1);
   const [TotalPrice, setTotalPrice] = useState(0);
+  const [contextHolder] = message.useMessage();
 
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
@@ -16,6 +19,7 @@ const Cart = () => {
   }, []);
   const calculateTotalPrice = (product, index) => {
     CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
+
     return product.quantity * product.dropshipPrice;
     // checBalance();
   };
@@ -54,9 +58,38 @@ const Cart = () => {
   };
   return (
     <>
+      {/* {contextHolder} */}
+
       <DiscountHeader minimum_limit={80} />
       <Header />
-
+      <div class="inner-page-banner" style={{ padding: '120px 0px' }}>
+        <div class="breadcrumb-vec-btm">
+          <img class="img-fluid" src="assets/images/bg/inner-banner-btm-vec.png" alt="" />
+        </div>
+        <div class="container">
+          <div class="row justify-content-center align-items-center text-center">
+            <div class="col-lg-6 align-items-center">
+              <div class="banner-content">
+                <h1>Cart</h1>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="banner-img d-lg-block d-none">
+                <div class="banner-img-bg">
+                  <img class="img-fluid" src="https://demo.egenslab.com/html/scooby/preview/assets/images/bg/inner-banner-img.png" alt="" />
+                </div>
+                {/* <img class="img-fluid" src="assets/images/bg/inner-banner-img.png" alt=""/> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="cart-section pt-120 pb-120">
         <div className="container">
           <div className="row">
@@ -94,7 +127,7 @@ const Cart = () => {
                             </td>
 
                             <td data-label="Discount Price">
-                              ${item.dropshipPrice}
+                              ${Number(item.dropshipPrice).toFixed(2)}
                             </td>
                             <td data-label="Quantity">
                               <div className="quantity d-flex align-items-center">
@@ -134,7 +167,7 @@ const Cart = () => {
                               </div>
                             </td>
                             <td data-label="Subtotal">
-                              ${calculateTotalPrice(item, index)}
+                              ${calculateTotalPrice(item, index).toFixed(2)}
                             </td>
                           </tr>
                         );
@@ -162,7 +195,7 @@ const Cart = () => {
                   <tr>
                     <th>Cart Totals</th>
                     <th></th>
-                    <th>${totalSum}</th>
+                    <th>${totalSum ? totalSum.toFixed(2) : 0}</th>
                   </tr>
                 </thead>
                 <tbody>

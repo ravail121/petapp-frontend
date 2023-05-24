@@ -55,7 +55,8 @@ function Header(props) {
               </a> */}
             </li>
             <li>
-              <Link to="/cart">Cart</Link>
+    
+              <Link to="/cart" style={{ display: 'flex', gap: '10px' }}>Cart {JSON.parse(localStorage.getItem("myArray")).length > 0 && <span className="badge">{JSON.parse(localStorage.getItem("myArray")).length > 0 ? JSON.parse(localStorage.getItem("myArray")).length : 0}</span>}</Link>
 
               {/* <a href="#">Shop</a> */}
             </li>

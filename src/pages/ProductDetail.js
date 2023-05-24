@@ -1,16 +1,25 @@
 import React, { useEffect } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
+import { message } from 'antd';
 
+import mxsvg from '../assets/images/icon/amex.svg'
 const ProductDetails = () => {
   const [, setIsLoading] = React.useState(false);
   const [ProductDetail, setProductDetail] = React.useState();
+  const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams();
   const [count, setCount] = React.useState(1);
-
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Add to cart Successfully Added',
+    });
+  };
+  const navigate = useNavigate()
   const decodedObj = JSON.parse(decodeURIComponent(id));
   // console.log(decodedObj);
   // setProductDetail(decodedObj);
@@ -42,21 +51,65 @@ const ProductDetails = () => {
         console.log(err);
       });
   };
+
+
   const addToCart = () => {
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     //  decodedObj const  = { id: 123 }; // Example decoded object
-    const hasDuplicate = storedArray.some((obj) => obj.id === decodedObj.id);
+    const hasDuplicate = storedArray.find((obj) => obj.id === decodedObj.id);
+    console.log(hasDuplicate)
     if (!hasDuplicate) {
       decodedObj["quantity"] = count;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
+      success()
+      navigate("/cart")
+
+    } else {
+      console.log('else')
+      // storedArray["quantity"] = count;
+      hasDuplicate["quantity"] = count + hasDuplicate["quantity"];
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      success()
+      navigate(`/cart`)
     }
   };
+
   return (
     <>
       {" "}
+      {contextHolder}
       <DiscountHeader minimum_limit={80} />
       <Header />
+
+      <div class="inner-page-banner" style={{ padding: '120px 0px' }}>
+        <div class="breadcrumb-vec-btm">
+          <img class="img-fluid" src="../assets/images/bg/inner-banner-btm-vec.png" alt="" />
+        </div>
+        <div class="container">
+          <div class="row justify-content-center align-items-center text-center">
+            <div class="col-lg-6 align-items-center">
+              <div class="banner-content">
+                <h1>Shop Details</h1>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Shop Details</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="banner-img d-lg-block d-none">
+                <div class="banner-img-bg">
+                  <img class="img-fluid" src="https://demo.egenslab.com/html/scooby/preview/assets/images/bg/inner-banner-img.png" alt="" />
+                </div>
+                <img class="img-fluid" src="assets/images/bg/inner-banner-img.png" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="shop-details-page pt-120 mb-120">
         <div className="container">
           <div className="row g-lg-4 gy-5 mb-120">
@@ -254,37 +307,37 @@ const ProductDetails = () => {
                       </button>
                     </div>
                   </div>
-                  <Link to="/cart" onClick={addToCart} className="primary-btn3">
+                  <Link onClick={addToCart} to="/cart" className="primary-btn3">
                     Add to cart
                   </Link>
                 </div>
                 <div className="buy-now-btn">
-                  <a href="#">Buy Now</a>
+                  <Link to='/checkOut'>Buy Now</Link>
                 </div>
 
                 <div className="pyment-method">
-                  <h6>Guaranted Safe Checkout</h6>
+                  <h6 onClick={success}>Guaranted Safe Checkout</h6>
                   <ul>
                     <li>
-                      <img src="assets/images/icon/visa2.svg" alt="" />
+                      <img src="../assets/images/icon/visa2.svg" alt="" />
                     </li>
                     <li>
-                      <img src="assets/images/icon/amex.svg" alt="" />
+                      <img src={mxsvg} alt="" />
                     </li>
                     <li>
-                      <img src="assets/images/icon/discover.svg" alt="" />
+                      <img src="../assets/images/icon/discover.svg" alt="" />
                     </li>
                     <li>
-                      <img src="assets/images/icon/mastercard.svg" alt="" />
+                      <img src="../assets/images/icon/mastercard.svg" alt="" />
                     </li>
                     <li>
-                      <img src="assets/images/icon/stripe.svg" alt="" />
+                      <img src="../assets/images/icon/stripe.svg" alt="" />
                     </li>
                     <li>
-                      <img src="assets/images/icon/paypal.svg" alt="" />
+                      <img src="../assets/images/icon/paypal.svg" alt="" />
                     </li>
                     <li>
-                      <img src="assets/images/icon/pay.svg" alt="" />
+                      <img src="../assets/images/icon/pay.svg" alt="" />
                     </li>
                   </ul>
                 </div>
