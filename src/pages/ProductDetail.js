@@ -8,7 +8,8 @@ import { message } from 'antd';
 
 import mxsvg from '../assets/images/icon/amex.svg'
 const ProductDetails = () => {
-  const [, setIsLoading] = React.useState(false);
+  const [IsLoading, setIsLoading] = React.useState(false);
+  const [Products, setProducts] = React.useState([]);
   const [ProductDetail, setProductDetail] = React.useState();
   const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams();
@@ -24,12 +25,13 @@ const ProductDetails = () => {
   // console.log(decodedObj);
   // setProductDetail(decodedObj);
   useEffect(() => {
+    GetAllProductsdet();
     GetAllProducts();
     setProductDetail(decodedObj);
     // addToCart();
   }, []);
 
-  const GetAllProducts = (e, pageNumber) => {
+  const GetAllProductsdet = (e, pageNumber) => {
     setIsLoading(true);
     fetch(`${url}/user/products/get/${id}`, {
       method: "GET",
@@ -74,6 +76,31 @@ const ProductDetails = () => {
       navigate(`/cart`)
     }
   };
+
+
+  const GetAllProducts = (e, pageNumber) => {
+    setIsLoading(true);
+    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/10`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        // console.log("All Products ----->>>", response);
+        if (response.message === "Products has been fetched Succesfully") {
+          setProducts(response?.data?.products);
+          // setAllpages(response?.data?.totalCount);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
 
   return (
     <>
@@ -250,7 +277,7 @@ const ProductDetails = () => {
             <div className="col-lg-5">
               <div className="shop-details-content">
                 <h3>{ProductDetail?.name}</h3>
-                <ul className="shopuct-review2 d-flex flex-row align-items-center mb-25">
+                {/* <ul className="shopuct-review2 d-flex flex-row align-items-center mb-25">
                   <li>
                     <i className="bi bi-star-fill"></i>
                   </li>
@@ -266,19 +293,19 @@ const ProductDetails = () => {
                   <li>
                     <i className="bi bi-star-fill"></i>
                   </li>
-                  <li>
-                    {/* <a href="#" className="review-no">
+                  <li> */}
+                {/* <a href="#" className="review-no">
                       (1 customer review)
                     </a> */}
-                  </li>
-                </ul>
-                <div className="model-number">
+                {/* </li>
+                </ul> */}
+                {/* <div className="model-number">
                   <span>SKU:9852410</span>
-                </div>
+                </div> */}
                 <div className="price-tag">
                   <h4>
                     ${ProductDetail?.dropshipPrice}{" "}
-                    <del>${ProductDetail?.rrp}</del>
+                    {/* <del>${ProductDetail?.rrp}</del> */}
                   </h4>
                 </div>
 
@@ -615,360 +642,100 @@ const ProductDetails = () => {
                     <div className="inner-section-title">
                       <h2>Other Products</h2>
                     </div>
-                    <div className="swiper-btn-wrap d-flex align-items-center">
+                    {/* <div className="swiper-btn-wrap d-flex align-items-center">
                       <div className="slider-btn prev-btn-12">
                         <i className="bi bi-arrow-left"></i>
                       </div>
                       <div className="slider-btn next-btn-12">
                         <i className="bi bi-arrow-right"></i>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="row">
-                  <div className="swiper essential-items-slider">
-                    <div className="swiper-wrapper">
-                      <div className="swiper-slide">
-                        <div className="collection-card">
-                          <div className="offer-card">
-                            <span>Offer</span>
-                          </div>
-                          <div className="collection-img">
-                            <img
-                              className="img-gluid"
-                              src="assets/images/bg/category/h3-collection-01.png"
-                              alt=""
-                            />
-                            <div className="view-dt-btn">
-                              <div className="plus-icon">
-                                <i className="bi bi-plus"></i>
-                              </div>
-                              <a>View Details</a>
-                            </div>
-                            <ul className="cart-icon-list">
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-cart3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-favorites3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="collection-content text-center">
-                            <h4>
-                              <a href="shop-details.html">
-                                Whiskas Cat Food Core Tuna
-                              </a>
-                            </h4>
-                            <div className="price">
-                              <h6>$25.00</h6>
-                              <del>$30.00</del>
-                            </div>
-                            <div className="review">
-                              <ul>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                              </ul>
-                              <span>(50)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="swiper-slide">
-                        <div className="collection-card">
-                          <div className="collection-img">
-                            <img
-                              className="img-gluid"
-                              src="assets/images/bg/category/h3-collection-02.png"
-                              alt=""
-                            />
-                            <div className="view-dt-btn">
-                              <div className="plus-icon">
-                                <i className="bi bi-plus"></i>
-                              </div>
-                              <a href="shop-details.html">View Details</a>
-                            </div>
-                            <ul className="cart-icon-list">
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-cart3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-favorites3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="collection-content text-center">
-                            <h4>
-                              <a href="shop-details.html">
-                                Friskies Kitten Discoveries.
-                              </a>
-                            </h4>
-                            <div className="price">
-                              <h6>$39.00</h6>
-                              <del>$39.00</del>
-                            </div>
-                            <div className="review">
-                              <ul>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                              </ul>
-                              <span>(50)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="swiper-slide">
-                        <div className="collection-card">
-                          <div className="offer-card sale">
-                            <span>Hot Sale</span>
-                          </div>
-                          <div className="collection-img">
-                            <img
-                              className="img-gluid"
-                              src="assets/images/bg/category/h3-collection-03.png"
-                              alt=""
-                            />
-                            <div className="view-dt-btn">
-                              <div className="plus-icon">
-                                <i className="bi bi-plus"></i>
-                              </div>
-                              <a href="shop-details.html">View Details</a>
-                            </div>
-                            <ul className="cart-icon-list">
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-cart3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-favorites3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="collection-content text-center">
-                            <h4>
-                              <a href="shop-details.html">
-                                Joules Cat Cotton House.
-                              </a>
-                            </h4>
-                            <div className="price">
-                              <h6>$150.00</h6>
-                              <del>$200.00</del>
-                            </div>
-                            <div className="review">
-                              <ul>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                              </ul>
-                              <span>(50)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="swiper-slide">
-                        <div className="collection-card">
-                          <div className="collection-img">
-                            <img
-                              className="img-gluid"
-                              src="assets/images/bg/category/h3-collection-04.png"
-                              alt=""
-                            />
-                            <div className="view-dt-btn">
-                              <div className="plus-icon">
-                                <i className="bi bi-plus"></i>
-                              </div>
-                              <a href="shop-details.html">View Details</a>
-                            </div>
-                            <ul className="cart-icon-list">
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-cart3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-favorites3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="collection-content text-center">
-                            <h4>
-                              <a href="shop-details.html">
-                                Natural Dog Fresh Food.
-                              </a>
-                            </h4>
-                            <div className="price">
-                              <h6>$18.00</h6>
-                              <del>$30.00</del>
-                            </div>
-                            <div className="review">
-                              <ul>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                              </ul>
-                              <span>(50)</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="swiper-slide">
-                        <div className="collection-card">
-                          <div className="offer-card sold-out">
-                            <span>Sold Out</span>
-                          </div>
-                          <div className="collection-img">
-                            <img
-                              className="img-gluid"
-                              src="assets/images/bg/category/h3-collection-07.png"
-                              alt=""
-                            />
-                            <div className="view-dt-btn">
-                              <div className="plus-icon">
-                                <i className="bi bi-plus"></i>
-                              </div>
-                              <a href="shop-details.html">View Details</a>
-                            </div>
-                            <ul className="cart-icon-list">
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-cart3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <img
-                                    src="assets/images/icon/Icon-favorites3.svg"
-                                    alt=""
-                                  />
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="collection-content text-center">
-                            <h4>
-                              <a href="shop-details.html">
-                                Rooibos Pet Food Supple
-                              </a>
-                            </h4>
-                            <div className="price">
-                              <h6>$75.00</h6>
-                              <del>$80.00</del>
-                            </div>
-                            <div className="review">
-                              <ul>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                              </ul>
-                              <span>(50)</span>
-                            </div>
-                          </div>
-                        </div>
+                  {IsLoading ? (
+                    <div
+                      className="row text-align-center"
+                      style={{ display: "block", textAlign: "center" }}
+                    >
+                      <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
                       </div>
                     </div>
-                  </div>
+                  ) : Products.length > 0 ? (
+                    Products &&
+                    Products?.map((item) => {
+                      return (
+
+                        <div className="col-lg-4 col-md-4 col-sm-6 mb-" >
+                          <div className="collection-card">
+                            {/* <div className="offer-card">
+                            <span>Offer</span>
+                          </div> */}
+                            <div className="collection-img">
+                              <img
+                                width={200}
+                                height={150}
+                                className="img-gluid"
+                                src={item?.imageName}
+                                alt=""
+                              />
+                              <div className="view-dt-btn">
+                                <div className="plus-icon">
+                                  <i className="bi bi-plus"></i>
+                                </div>
+                                <a
+                                  onClick={() =>
+                                    navigate(
+                                      `/productsDetails/${encodeURIComponent(
+                                        JSON.stringify(item)
+                                      )}`
+                                    )
+                                  }
+                                >
+                                  View Details
+                                </a>
+                              </div>
+                              <ul className="cart-icon-list">
+                                <li>
+                                  <a href="#">
+                                    {/* <img src={img1} alt="" /> */}
+                                  </a>
+                                </li>
+                                {/* <li>
+                                <a href="#">
+                                  <img src={fav3} alt="" />
+                                </a>
+                              </li> */}
+                              </ul>
+                            </div>
+                            <div className="collection-content text-center">
+                              <h4>
+                                <a
+                                  onClick={() =>
+                                    navigate(
+                                      `/productsDetails/${encodeURIComponent(
+                                        JSON.stringify(item)
+                                      )}`
+                                    )
+                                  }
+                                >
+                                  {item?.name}
+                                </a>
+                              </h4>
+                              <div className="price">
+                                <h6>${item.dropshipPrice}</h6>
+                                {/* <del>${item.rrp}</del> */}
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <h2>No Products found</h2>
+                  )}
                 </div>
               </div>
             </div>

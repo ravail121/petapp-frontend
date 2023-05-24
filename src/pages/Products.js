@@ -74,7 +74,7 @@ const Product = () => {
     GetAllProducts();
   }, []);
 
-  
+
   const GetAllProducts = (e, pageNumber) => {
     setIsLoading(true);
     fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/6`, {
@@ -114,58 +114,58 @@ const Product = () => {
     <>
       <DiscountHeader minimum_limit={80} />
       <Header navigate={navigate} />
-      <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px" ,padding:'120px 0px'}}>
-            <div className="breadcrumb-vec-btm">
-              <img
-                className="img-fluid"
-                src="assets/images/bg/inner-banner-btm-vec.png"
-                alt=""
-              />
+      <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px", padding: '120px 0px' }}>
+        <div className="breadcrumb-vec-btm">
+          <img
+            className="img-fluid"
+            src="assets/images/bg/inner-banner-btm-vec.png"
+            alt=""
+          />
+        </div>
+        <div className="container ">
+          <div className="row justify-content-center align-items-center text-center">
+            <div className="col-lg-6 align-items-center">
+              <div className="banner-content">
+                <h1>Shop</h1>
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
+                      <a href="index.html">Home</a>
+                    </li>
+                    <li
+                      className="breadcrumb-item active"
+                      aria-current="page"
+                    >
+                      Shop
+                    </li>
+                  </ol>
+                </nav>
+              </div>
             </div>
-            <div className="container ">
-              <div className="row justify-content-center align-items-center text-center">
-                <div className="col-lg-6 align-items-center">
-                  <div className="banner-content">
-                    <h1>Shop</h1>
-                    <nav aria-label="breadcrumb">
-                      <ol className="breadcrumb">
-                        <li className="breadcrumb-item">
-                          <a href="index.html">Home</a>
-                        </li>
-                        <li
-                          className="breadcrumb-item active"
-                          aria-current="page"
-                        >
-                          Shop
-                        </li>
-                      </ol>
-                    </nav>
-                  </div>
+            <div className="col-lg-6">
+              <div className="banner-img d-lg-block d-none">
+                <div className="banner-img-bg">
+                  <img
+                    className="img-fluid"
+                    src="https://demo.egenslab.com/html/scooby/preview/assets/images/bg/inner-banner-img.png"
+                    alt=""
+                  />
                 </div>
-                <div className="col-lg-6">
-                  <div className="banner-img d-lg-block d-none">
-                    <div className="banner-img-bg">
-                      <img
-                        className="img-fluid"
-                        src="https://demo.egenslab.com/html/scooby/preview/assets/images/bg/inner-banner-img.png"
-                        alt=""
-                      />
-                    </div>
-                    <img
-                      className="img-fluid"
-                      // src="assets/images/bg/inner-banner-img.png"
-                      alt=""
-                    />
-                  </div>
-                </div>
+                <img
+                  className="img-fluid"
+                  // src="assets/images/bg/inner-banner-img.png"
+                  alt=""
+                />
               </div>
             </div>
           </div>
+        </div>
+      </div>
       <div className="shop-page  mb-120">
         <div className="container">
-          
+
           <div className="row">
-            
+
             <div className="col-lg-3">
               <div className="shop-sidebar">
                 <div className="shop-widget">
@@ -249,12 +249,10 @@ const Product = () => {
                           id="color-dropdown"
                         >
                           <option selected value="0">
-                            12
+                            5
                           </option>
-                          <option value="1">15</option>
-                          <option value="2">18</option>
-                          <option value="3">21</option>
-                          <option value="4">25</option>
+                          <option value="1">10</option>
+
                         </select>
                       </div>
                     </div>
@@ -277,9 +275,9 @@ const Product = () => {
                     return (
                       <div className="col-lg-4 col-md-4 col-sm-6">
                         <div className="collection-card">
-                          <div className="offer-card">
+                          {/* <div className="offer-card">
                             <span>Offer</span>
-                          </div>
+                          </div> */}
                           <div className="collection-img">
                             <img
                               width={200}
@@ -310,11 +308,11 @@ const Product = () => {
                                   <img src={img1} alt="" />
                                 </a>
                               </li>
-                              <li>
+                              {/* <li>
                                 <a href="#">
                                   <img src={fav3} alt="" />
                                 </a>
-                              </li>
+                              </li> */}
                             </ul>
                           </div>
                           <div className="collection-content text-center">
@@ -333,28 +331,9 @@ const Product = () => {
                             </h4>
                             <div className="price">
                               <h6>${item.dropshipPrice}</h6>
-                              <del>${item.rrp}</del>
+                              {/* <del>${item.rrp}</del> */}
                             </div>
-                            <div className="review">
-                              <ul>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                                <li>
-                                  <i className="bi bi-star-fill"></i>
-                                </li>
-                              </ul>
-                              <span>(50)</span>
-                            </div>
+
                           </div>
                         </div>
                       </div>

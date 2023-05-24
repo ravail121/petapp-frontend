@@ -29,11 +29,11 @@ function Home() {
       <Header navigate={navigate} />
 
       <div className="hero3 mb-90">
-        <div className="d-flex justify-content-center background-text">
+        {/* <div className="d-flex justify-content-center background-text">
           <h2 className="marquee_text">
             <span>Get exciting Discount</span> Up To 50%
           </h2>
-        </div>
+        </div> */}
         <div className="swiper-slide hero-wrapper">
           <div className="container">
             <div className="row align-items-center">
@@ -68,7 +68,7 @@ function Home() {
         </div>
       </div>
 
-      {}
+      { }
     </>
   );
 }
