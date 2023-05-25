@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import product_discription2 from "./assets/images/bg/h3-category-2.png";
 import { useEffect, useState } from "react";
 
@@ -14,18 +15,7 @@ function ProductsRow(props) {
     fetchCategories();
   }, [page]);
 
-  const selected_products = (list, i) => {
-    const index = i % list.length;
-    const values = [];
 
-    for (let j = 0; j < 6; j++) {
-      const valueIndex = (index + j) % list.length;
-      const value = list[valueIndex];
-      values.push(value);
-    }
-
-    return values;
-  };
 
   const fetchCategories = () => {
     setLoading(true);
@@ -48,7 +38,7 @@ function ProductsRow(props) {
 
   const listProducts = categories.map((product) => (
     <div className="category-card col-lg-2 col-md-4 col-sm-6 mb-5">
-      <a href="shop.html" className="category-card-inner">
+      <Link to={`/products/${product.id}`} className="category-card-inner">
         <div className="category-card-front">
           <div className="category-icon">
             {/* <img width={126} height={126} alt="" /> */}
@@ -60,7 +50,7 @@ function ProductsRow(props) {
         <div className="category-card-back">
           <img width={126} height={126} src={product.imageName} alt="" />
         </div>
-      </a>
+      </Link>
     </div>
   ));
 
@@ -68,10 +58,8 @@ function ProductsRow(props) {
     <>
       <div className="row mb-60">
         <div className="col-lg-12 d-flex align-items-center justify-content-between flex-wrap gap-3">
-          <div className="section-title3">
-            <h2>
-              <span>Browse By Categories</span>
-            </h2>
+          <div class="section-title3">
+            <h2><img src="assets/images/icon/h3-sec-tt-vect-left.svg" alt="" /><span>Browse By Categories</span><img src="assets/images/icon/h3-sec-tt-vect-right.svg" alt="" /></h2>
           </div>
           <div className="slider-btn-wrap">
             <div className="slider-btn prev-btn-11">
@@ -208,7 +196,7 @@ function ProductsRow(props) {
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      ) : categories.length > 0 ? (
+      ) : categories?.length > 0 ? (
         // categories
         <div className="maincategory">{listProducts}</div>
       ) : (

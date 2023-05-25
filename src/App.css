@@ -73,3 +73,15 @@
   color: var(--white);
   font-size: 14px;
 }
+
+.cartNumber {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.cartCount {
+  align-self: flex-start;
+  position: relative;
+  top: -10px;
+}

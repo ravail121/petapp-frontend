@@ -10,7 +10,7 @@ import Product from "./pages/Products";
 import ProductDetails from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/CheckOut";
-
+import ProductsId from './pages/ProductsId'
 function App() {
   return (
     <>
@@ -23,6 +23,7 @@ function App() {
           <Route path="/checkOut" element={<Checkout />} />
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Product />} />
+          <Route path="/products/:id" element={<ProductsId />} />
           <Route path="/productsDetails/:id" element={<ProductDetails />} />
           <Route path="/shop" element={<Shop />} />
         </Routes>

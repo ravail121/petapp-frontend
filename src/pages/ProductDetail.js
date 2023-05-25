@@ -9,7 +9,9 @@ import { message } from 'antd';
 import mxsvg from '../assets/images/icon/amex.svg'
 const ProductDetails = () => {
   const [IsLoading, setIsLoading] = React.useState(false);
+  const [AllValues, setAllValues] = React.useState({ id: '' });
   const [Products, setProducts] = React.useState([]);
+
   const [ProductDetail, setProductDetail] = React.useState();
   const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams();
@@ -55,7 +57,18 @@ const ProductDetails = () => {
   };
 
 
+
+
+  const getValue = (e, name) => {
+    let obj = AllValues
+    obj[name] = e.target.value;
+    setAllValues(obj)
+    console.log(obj)
+  }
+
   const addToCart = () => {
+    success()
+
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     //  decodedObj const  = { id: 123 }; // Example decoded object
     const hasDuplicate = storedArray.find((obj) => obj.id === decodedObj.id);
@@ -69,10 +82,11 @@ const ProductDetails = () => {
 
     } else {
       console.log('else')
+      success()
+
       // storedArray["quantity"] = count;
       hasDuplicate["quantity"] = count + hasDuplicate["quantity"];
       localStorage.setItem("myArray", JSON.stringify(storedArray));
-      success()
       navigate(`/cart`)
     }
   };
@@ -662,7 +676,7 @@ const ProductDetails = () => {
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     </div>
-                  ) : Products.length > 0 ? (
+                  ) : Products?.length > 0 ? (
                     Products &&
                     Products?.map((item) => {
                       return (

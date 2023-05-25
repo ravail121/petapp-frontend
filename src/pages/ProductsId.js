@@ -64,7 +64,7 @@ const Product = () => {
   const navigate = useNavigate();
   const [IsLoading, setIsLoading] = React.useState(false);
   const [products, setProducts] = React.useState([]);
-  const [SelecedCat, setSetSelecedCat] = React.useState('');
+  const [SelecedCat, setSelecedCat] = React.useState('');
   const [Name, setName] = React.useState('');
   const [AllPages, setAllpages] = React.useState(0);
   const [value1, setValue1] = React.useState([20, 397]);
@@ -91,11 +91,11 @@ const Product = () => {
     }
   }, [Name])
 
-  // useEffect(() => {
-  //   if (SelecedCat) {
-  //     GetAllProductsCat()
-  //   }
-  // }, [SelecedCat])
+  useEffect(() => {
+    if (SelecedCat) {
+      GetAllProductsCat()
+    }
+  }, [SelecedCat])
 
 
   const filterProducts = () => {
@@ -236,7 +236,7 @@ const Product = () => {
   return (
     <>
       <DiscountHeader minimum_limit={80} />
-      <Header navigate={navigate} setName={setName} setSetSelecedCat={setSetSelecedCat} />
+      <Header navigate={navigate} setName={setName} setSelecedCat={setSelecedCat} />
       <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px", padding: '120px 0px' }}>
         <div className="breadcrumb-vec-btm">
           <img

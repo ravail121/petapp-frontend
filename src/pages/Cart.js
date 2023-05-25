@@ -13,7 +13,7 @@ const Cart = () => {
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
     setCartData(storedArray);
-    if (storedArray.length > 0) {
+    if (storedArray?.length > 0) {
       checBalance();
     }
   }, []);
