@@ -84,4 +84,15 @@
   align-self: flex-start;
   position: relative;
   top: -10px;
+  height: 18px;
+  background: black;
+  color: white;
+  align-items: center;
+  display: flex;
+  width: 16px;
+  font-size: 12px;
+  justify-content: center;
+  text-align: center;
+  padding: 0px;
+  border-radius: 50%;
 }

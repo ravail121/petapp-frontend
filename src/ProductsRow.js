@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import product_discription2 from "./assets/images/bg/h3-category-2.png";
 import { useEffect, useState } from "react";
+import { encode } from "base-64";
 
 function ProductsRow(props) {
   const products = props.products;
@@ -38,7 +39,7 @@ function ProductsRow(props) {
 
   const listProducts = categories.map((product) => (
     <div className="category-card col-lg-2 col-md-4 col-sm-6 mb-5">
-      <Link to={`/products/${product.id}`} className="category-card-inner">
+      <Link to={`/products/${encode(product.id)}`} className="category-card-inner">
         <div className="category-card-front">
           <div className="category-icon">
             {/* <img width={126} height={126} alt="" /> */}

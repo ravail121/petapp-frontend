@@ -9,6 +9,8 @@ import img1 from "../assets/images/icon/Icon-cart3.svg";
 import { Pagination } from "@mui/material";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
+import { encode, decode } from 'base-64';
+
 function valuetext(value) {
   return `${value}°C`;
 }
@@ -63,20 +65,23 @@ AirbnbThumbComponent.propTypes = {
 const Product = () => {
   const navigate = useNavigate();
   const [IsLoading, setIsLoading] = React.useState(false);
+  const [limits, setLimits] = React.useState(10);
   const [products, setProducts] = React.useState([]);
   const [SelecedCat, setSelecedCat] = React.useState('');
   const [Name, setName] = React.useState('');
+  const [perPage, setPerPage] = React.useState(5);
   const [AllPages, setAllpages] = React.useState(0);
-  const [value1, setValue1] = React.useState([20, 397]);
+  const [value1, setValue1] = React.useState([0, 500]);
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
   const { id } = useParams()
-
+  const ID = decode(id)
+  // console.log(ID)
   useEffect(() => {
     fetchCategories()
 
-    if (id) {
+    if (ID) {
       GetAllProductsCat()
       return
     }
@@ -89,7 +94,7 @@ const Product = () => {
       filterProducts()
 
     }
-  }, [Name])
+  }, [])
 
   useEffect(() => {
     if (SelecedCat) {
@@ -117,7 +122,7 @@ const Product = () => {
       body: JSON.stringify({
         page: 1,
         categories: filteredItems,
-        limit: 10,
+        limit: Number(limits),
         name: Name,
         price: value1
 
@@ -127,8 +132,8 @@ const Product = () => {
       .then((response) => {
         console.log("Product ----->>>", response);
         if (response.message === "Products fetched Successfully") {
-          setProducts(response?.data?.product);
-          // setAllpages(response?.data?.totalCount);
+          setProducts(response?.data?.products);
+          setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
       })
@@ -137,9 +142,10 @@ const Product = () => {
       });
   };
 
-  const GetAllProducts = (e, pageNumber) => {
+  const GetAllProducts = (e, pageNumber, perPage) => {
     setIsLoading(true);
-    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/10`, {
+    setLimits(perPage)
+    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/${perPage ? perPage : 10}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -163,7 +169,7 @@ const Product = () => {
   const GetAllProductsCat = (e, pageNumber) => {
     setIsLoading(true);
 
-    fetch(`${url}/user/products/getby-category/${id}/${pageNumber ? pageNumber : 1}/10`, {
+    fetch(`${url}/user/products/getby-category/${ID}/${pageNumber ? pageNumber : 1}/10`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -212,6 +218,13 @@ const Product = () => {
       });
   };
 
+
+  const handleChange = (event) => {
+    const selectedValue = event.target.value;
+    console.log("Selected value: ", selectedValue);
+    // Perform actions based on the selected value
+    GetAllProducts(0, 1, selectedValue)
+  }
 
   const handleChange1 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -365,11 +378,19 @@ const Product = () => {
                         <select
                           className="defult-select-drowpown"
                           id="color-dropdown"
+                          value={limits}
+                          onChange={(e) => GetAllProducts(e, 1, e.target.value)}
                         >
-                          <option selected value="0">
+                          <option selected value="5">
                             5
                           </option>
-                          <option value="1">10</option>
+                          <option value="10" selected>10</option>
+                          <option selected value="25">
+                            25
+                          </option>
+                          <option selected value="50">
+                            50
+                          </option>
 
                         </select>
                       </div>

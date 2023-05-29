@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/images/header2-logo.svg";
 import { useNavigate } from "react-router-dom";
+import { encode, decode } from 'base-64';
+
 import { Link } from "react-router-dom";
 const handleContactClick = () => {
   window.scrollTo({
@@ -9,8 +11,9 @@ const handleContactClick = () => {
   });
 };
 
-function Header({ setName, setSelecedCat }) {
+function Header({ setSelecedCat, Refresh }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [Name, setName] = useState('');
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +26,11 @@ function Header({ setName, setSelecedCat }) {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    let Data = JSON.parse(localStorage.getItem("myArray"))
+    localStorage.setItem("myArray", JSON.stringify(Data));
 
+  }, [Refresh])
 
   const fetchCategories = () => {
     setLoading(true);
@@ -43,6 +50,8 @@ function Header({ setName, setSelecedCat }) {
         console.error(error);
       });
   };
+
+
   return (
     <header className="header-area style-3">
       <div className="container d-flex justify-content-between align-items-center">
@@ -87,7 +96,7 @@ function Header({ setName, setSelecedCat }) {
               <ul class="sub-menu">
                 {categories && categories.map((item) => {
                   return (
-                    <li><Link to={`/products/${item.id}`} onClick={() => setSelecedCat(item.id)}>{item.name} </Link></li>
+                    <li><Link to={`/products/${encode(item.id)}`} onClick={() => setSelecedCat(item.id)}>{item.name} </Link></li>
 
                   )
 
@@ -126,12 +135,13 @@ function Header({ setName, setSelecedCat }) {
               <form className="nav__search-form">
                 <input
                   type="text"
+
                   placeholder="Search Products"
                   id="search"
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="off"
                 />
-                <button type="submit">
+                <Link to={`/products/?name=${encode(Name)}`} style={{ padding: '' }} >
                   <svg
                     width="15"
                     height="15"
@@ -140,7 +150,7 @@ function Header({ setName, setSelecedCat }) {
                   >
                     <path d="M13.8914 12.3212L11.3164 9.74312C11.1877 9.63999 11.0332 9.56265 10.8787 9.56265H10.4667C11.1619 8.6603 11.5997 7.52593 11.5997 6.26265C11.5997 3.32358 9.1792 0.900146 6.2437 0.900146C3.28245 0.900146 0.887695 3.32358 0.887695 6.26265C0.887695 9.22749 3.28245 11.6251 6.2437 11.6251C7.4797 11.6251 8.6127 11.2126 9.5397 10.4908V10.9291C9.5397 11.0837 9.5912 11.2384 9.71995 11.3673L12.2692 13.9197C12.5267 14.1775 12.9129 14.1775 13.1447 13.9197L13.8657 13.1978C14.1232 12.9658 14.1232 12.5791 13.8914 12.3212ZM6.2437 9.56265C4.41545 9.56265 2.9477 8.09312 2.9477 6.26265C2.9477 4.45796 4.41545 2.96265 6.2437 2.96265C8.0462 2.96265 9.5397 4.45796 9.5397 6.26265C9.5397 8.09312 8.0462 9.56265 6.2437 9.56265Z" />
                   </svg>
-                </button>
+                </Link>
               </form>
             </li>
             {/* <li>

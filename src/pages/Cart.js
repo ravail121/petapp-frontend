@@ -2,17 +2,20 @@ import React, { useEffect, useState } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
 import { message } from 'antd';
-
+import { url } from "../environment";
 import { Link } from "react-router-dom";
 const Cart = () => {
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const [count, setCount] = useState(1);
-  const [TotalPrice, setTotalPrice] = useState(0);
   const [contextHolder] = message.useMessage();
+  const [IsLoading, setIsLoading] = useState(false);
+  const [ShippingSettings, setShippingSettings] = useState([]);
+  const [TotalPrice, setTotalPrice] = useState(0);
 
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
     setCartData(storedArray);
+    GetAllShipping()
     if (storedArray?.length > 0) {
       checBalance();
     }
@@ -41,6 +44,30 @@ const Cart = () => {
     // console.log(totalPrice * count);
     setTotalPrice(totalPrice);
   };
+
+  const GetAllShipping = () => {
+    setIsLoading(true);
+    fetch(`${url}/user/orders/shipping/costs`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("All Shipping ----->>>", response);
+        if (response.message === "Shipping Fee has been fetched Succesfully") {
+          setShippingSettings(response?.data?.shippingFee);
+          // setAllpages(response?.data?.totalCount);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
 
   const rmoveToCart = (id) => {
     storedArray = storedArray.filter((obj) => obj.id !== id);
@@ -204,8 +231,6 @@ const Cart = () => {
                     <td>
                       <ul className="cost-list text-start">
                         <li>Shipping Fee</li>
-                        <li>Total ( tax excl.)</li>
-                        <li>Total ( tax incl.)</li>
                         <li>Taxes</li>
                         {/* <li>
                           Shipping Enter your address to view shipping options.{" "}
@@ -215,11 +240,14 @@ const Cart = () => {
                     </td>
                     <td>
                       <ul className="single-cost text-center">
-                        <li>Fee</li>
-                        <li>$15</li>
-                        <li></li>
-                        <li>$15</li>
-                        <li>$15</li>
+                        {ShippingSettings && ShippingSettings?.map((item) => {
+                          return (<>
+                            <li>${item?.shippingFee}</li>
+                            <li>${item?.tax}</li>
+                          </>
+                          )
+
+                        })}
                         {/* <li>$5</li> */}
                       </ul>
                     </td>

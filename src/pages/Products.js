@@ -9,6 +9,8 @@ import img1 from "../assets/images/icon/Icon-cart3.svg";
 import { Pagination } from "@mui/material";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
+import { message } from 'antd';
+import { decode, encode } from "base-64";
 function valuetext(value) {
   return `${value}°C`;
 }
@@ -67,12 +69,19 @@ const Product = () => {
   const [SelecedCat, setSetSelecedCat] = React.useState('');
   const [Name, setName] = React.useState('');
   const [AllPages, setAllpages] = React.useState(0);
-  const [value1, setValue1] = React.useState([20, 397]);
+  const [Refresh, setRefresh] = React.useState(0);
+  const [value1, setValue1] = React.useState([0, 500]);
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const { id } = useParams()
+  const { id, name } = useParams()
+  // console.log('Products', decode(window.location.href))
+  const searchParams = new URLSearchParams(window.location.search);
+  const userId = searchParams.get('name');
 
+  // Use the userId in your component logic
+  console.log(decode(userId));
   useEffect(() => {
     fetchCategories()
 
@@ -80,16 +89,19 @@ const Product = () => {
       GetAllProductsCat()
       return
     }
+    else if (userId) {
+      filterProducts(userId)
+      return
+    }
     GetAllProducts();
 
   }, []);
 
   useEffect(() => {
-    if (Name) {
-      filterProducts()
+    if (userId) {
 
     }
-  }, [Name])
+  }, [])
 
   // useEffect(() => {
   //   if (SelecedCat) {
@@ -98,7 +110,7 @@ const Product = () => {
   // }, [SelecedCat])
 
 
-  const filterProducts = () => {
+  const filterProducts = (userId) => {
     let Docline = categories.map((item) => {
       if (item.checked) {
         return item.id
@@ -118,7 +130,7 @@ const Product = () => {
         page: 1,
         categories: filteredItems,
         limit: 10,
-        name: Name,
+        name: Name ? Name : decode(userId),
         price: value1
 
       })
@@ -127,8 +139,8 @@ const Product = () => {
       .then((response) => {
         console.log("Product ----->>>", response);
         if (response.message === "Products fetched Successfully") {
-          setProducts(response?.data?.product);
-          // setAllpages(response?.data?.totalCount);
+          setProducts(response?.data?.products);
+          setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
       })
@@ -137,9 +149,9 @@ const Product = () => {
       });
   };
 
-  const GetAllProducts = (e, pageNumber) => {
+  const GetAllProducts = (e, pageNumber, perpage) => {
     setIsLoading(true);
-    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/10`, {
+    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/${perpage ? perpage : 10}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -227,16 +239,47 @@ const Product = () => {
     }
   };
 
-  const getCategoiresValue = (value, index) => {
-    let obj = categories;
-    obj[index]['checked'] = value
-    console.log(obj)
-  }
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Add to cart Successfully Added',
+    });
+  };
+
+  const addToCart = (decodedObj) => {
+    // success()
+    // debugger;
+    const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+    //  decodedObj const  = { id: 123 }; // Example decoded object
+    const hasDuplicate = storedArray.find((obj) => obj.id === decodedObj.id);
+    console.log(hasDuplicate)
+    if (!hasDuplicate) {
+      decodedObj["quantity"] = 1;
+      storedArray.push(decodedObj);
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      console.log(storedArray)
+      success()
+      setRefresh(Refresh + 1)
+      // navigate("/cart")
+
+    } else {
+
+      hasDuplicate["quantity"] = 1 + hasDuplicate["quantity"];
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      success()
+
+      // navigate(`/cart`)
+    }
+  };
+
+
 
   return (
     <>
+      {contextHolder}
+
       <DiscountHeader minimum_limit={80} />
-      <Header navigate={navigate} setName={setName} setSetSelecedCat={setSetSelecedCat} />
+      <Header navigate={navigate} setName={setName} Name={Name} setSetSelecedCat={setSetSelecedCat} />
       <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px", padding: '120px 0px' }}>
         <div className="breadcrumb-vec-btm">
           <img
@@ -365,11 +408,18 @@ const Product = () => {
                         <select
                           className="defult-select-drowpown"
                           id="color-dropdown"
+                          onChange={(e) => GetAllProducts(e, 1, e.target.value)}
                         >
-                          <option selected value="0">
+                          <option selected value="5">
                             5
                           </option>
-                          <option value="1">10</option>
+                          <option value="10" selected>10</option>
+                          <option selected value="25">
+                            25
+                          </option>
+                          <option selected value="50">
+                            50
+                          </option>
 
                         </select>
                       </div>
@@ -422,7 +472,7 @@ const Product = () => {
                             </div>
                             <ul className="cart-icon-list">
                               <li>
-                                <a href="#">
+                                <a href="#" onClick={() => addToCart(item)}>
                                   <img src={img1} alt="" />
                                 </a>
                               </li>

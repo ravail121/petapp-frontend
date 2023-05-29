@@ -67,7 +67,7 @@ const ProductDetails = () => {
   }
 
   const addToCart = () => {
-    success()
+    // success()
 
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     //  decodedObj const  = { id: 123 }; // Example decoded object
@@ -348,7 +348,7 @@ const ProductDetails = () => {
                       </button>
                     </div>
                   </div>
-                  <Link onClick={addToCart} to="/cart" className="primary-btn3">
+                  <Link onClick={addToCart} className="primary-btn3">
                     Add to cart
                   </Link>
                 </div>
