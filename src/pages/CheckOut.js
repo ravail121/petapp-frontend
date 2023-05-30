@@ -16,7 +16,7 @@ const Checkout = () => {
     var totalQuantity = 0;
 
     let Data = JSON.parse(localStorage.getItem("myArray"))
-    for (var i = 0; i < Data.length; i++) {
+    for (var i = 0; i < Data?.length; i++) {
 
       totalQuantity += Data[i].quantity;
 

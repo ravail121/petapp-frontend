@@ -14,19 +14,22 @@ const Cart = () => {
 
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
+  const [ShippingTotal, setShippingTotal] = useState(0);
   const [TotalPrice, setTotalPrice] = useState(0);
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
-  console.log(cartCountTotal)
+  const cartCountNew = useSelector((state) => state.add.cartCount);
+  // console.log(cartCountTotal)
 
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
-    setCartData(storedArray);
     checkDefaultCounter()
 
     GetAllShipping()
     if (storedArray?.length > 0) {
       checBalance();
     }
+    setCartData(storedArray);
+
   }, []);
   const calculateTotalPrice = (product, index) => {
     CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
@@ -34,16 +37,24 @@ const Cart = () => {
     return product.quantity * product.dropshipPrice;
     // checBalance();
   };
+  const calculateShippingPrice = (product, index) => {
+    ShippingSettings[index]["totalPrice"] = product.quantity * product.dropshipPrice;
+
+    return product.quantity * product.dropshipPrice;
+    // checBalance();
+  };
+
   // const updatedProducts = CartData.map((product) => ({
   //   ...product,
   //   totalPrice: calculateTotalPrice(product),
   // }));
   dispatch({
     type: UPDATE_CART_TOTAL, payload: CartData.reduce(
-      (sum, product) => sum + product.totalPrice,
+      (sum, product) => sum + Number(product.totalPrice),
       0
     )
   })
+
 
 
 
@@ -88,6 +99,12 @@ const Cart = () => {
         if (response.message === "Shipping Fee has been fetched Succesfully") {
           setShippingSettings(response?.data?.shippingFee);
           // setAllpages(response?.data?.totalCount);
+          let obj = response?.data?.shippingFee[0]
+          const sum = Object.keys(obj)
+            .filter(key => key !== "id")
+            .reduce((acc, key) => acc + obj[key], 0);
+          setShippingTotal(sum)
+          console.log(sum)
           setIsLoading(false);
         }
       })
@@ -107,9 +124,16 @@ const Cart = () => {
     checkDefaultCounter()
   };
   const getOnChangeCounter = (value, index) => {
+    console.log(value)
     let obj = CartData;
     obj[index]["quantity"] = value;
     // console.log(obj);
+    dispatch({
+      type: UPDATE_CART_TOTAL, payload: CartData.reduce(
+        (sum, product) => sum + product.totalPrice,
+        0
+      )
+    })
     setCartData(obj);
     checkDefaultCounter()
   };
@@ -285,7 +309,7 @@ const Cart = () => {
                   <tr>
                     <td>Subtotal</td>
                     <td></td>
-                    <td>$162.70</td>
+                    <td>${cartCountTotal + ShippingTotal}</td>
                   </tr>
                 </tbody>
               </table>
@@ -296,9 +320,13 @@ const Cart = () => {
                   </a>
                 </li>
                 <li>
-                  <Link to="/checkOut" className="primary-btn3 btn-lg">
+                  {cartCountNew === 0 ? (
+                    <Link className="primary-btn3 btn-lg" >
+                      Proceed to Checkout
+                    </Link>
+                  ) : (<Link to="/checkOut" className="primary-btn3 btn-lg" >
                     Proceed to Checkout
-                  </Link>
+                  </Link>)}
                 </li>
               </ul>
             </div>

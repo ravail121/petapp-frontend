@@ -31,7 +31,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
     var totalQuantity = 0;
 
     let Data = JSON.parse(localStorage.getItem("myArray"))
-    for (var i = 0; i < Data.length; i++) {
+    for (var i = 0; i < Data?.length; i++) {
 
       totalQuantity += Data[i].quantity;
 
@@ -111,7 +111,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
                   )
 
                 })}
-                {categories.length < 1 && <li><a href="#">No Categories Found </a></li>}
+                {categories?.length < 1 && <li><a href="#">No Categories Found </a></li>}
 
               </ul>
             </li>
