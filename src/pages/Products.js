@@ -3,6 +3,8 @@ import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
 import { styled } from "@mui/material/styles";
 import Slider, { SliderThumb } from "@mui/material/Slider";
 import img1 from "../assets/images/icon/Icon-cart3.svg";
@@ -10,6 +12,7 @@ import { Pagination } from "@mui/material";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
 import { message } from 'antd';
+
 import { decode, encode } from "base-64";
 function valuetext(value) {
   return `${value}°C`;
@@ -66,7 +69,8 @@ const Product = () => {
   const navigate = useNavigate();
   const [IsLoading, setIsLoading] = React.useState(false);
   const [products, setProducts] = React.useState([]);
-  const [SelecedCat, setSetSelecedCat] = React.useState('');
+  const [SelecedCat, setSelecedCat] = React.useState('');
+  const [Counts, setCounts] = React.useState(0);
   const [Name, setName] = React.useState('');
   const [AllPages, setAllpages] = React.useState(0);
   const [Refresh, setRefresh] = React.useState(0);
@@ -74,18 +78,20 @@ const Product = () => {
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-
-  const { id, name } = useParams()
+  const dispatch = useDispatch();
+  // const { id, name, idCat } = useParams()
   // console.log('Products', decode(window.location.href))
   const searchParams = new URLSearchParams(window.location.search);
   const userId = searchParams.get('name');
+  const IdCat = searchParams.get('idCat');
 
   // Use the userId in your component logic
-  console.log(decode(userId));
+  let SearchData = decode(userId)
+  let SearchID = decode(IdCat)
   useEffect(() => {
     fetchCategories()
 
-    if (id) {
+    if (IdCat) {
       GetAllProductsCat()
       return
     }
@@ -94,14 +100,9 @@ const Product = () => {
       return
     }
     GetAllProducts();
+    checkDefaultCounter()
+  }, [Name]);
 
-  }, []);
-
-  useEffect(() => {
-    if (userId) {
-
-    }
-  }, [])
 
   // useEffect(() => {
   //   if (SelecedCat) {
@@ -111,6 +112,7 @@ const Product = () => {
 
 
   const filterProducts = (userId) => {
+    debugger
     let Docline = categories.map((item) => {
       if (item.checked) {
         return item.id
@@ -130,7 +132,7 @@ const Product = () => {
         page: 1,
         categories: filteredItems,
         limit: 10,
-        name: Name ? Name : decode(userId),
+        name: SearchData ? SearchData : Name,
         price: value1
 
       })
@@ -174,8 +176,8 @@ const Product = () => {
 
   const GetAllProductsCat = (e, pageNumber) => {
     setIsLoading(true);
-
-    fetch(`${url}/user/products/getby-category/${id}/${pageNumber ? pageNumber : 1}/10`, {
+    debugger;
+    fetch(`${url}/user/products/getby-category/${Number(SearchID)}/${pageNumber ? pageNumber : 1}/10`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -246,12 +248,28 @@ const Product = () => {
     });
   };
 
+  const checkDefaultCounter = () => {
+    var totalQuantity = 0;
+
+    let Data = JSON.parse(localStorage.getItem("myArray"))
+    for (var i = 0; i < Data.length; i++) {
+
+      totalQuantity += Data[i].quantity;
+
+      console.log(totalQuantity)
+    }
+    localStorage.setItem("myArray", JSON.stringify(Data));
+    dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
+
+  }
+
+
   const addToCart = (decodedObj) => {
     // success()
     // debugger;
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     //  decodedObj const  = { id: 123 }; // Example decoded object
-    const hasDuplicate = storedArray.find((obj) => obj.id === decodedObj.id);
+    const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
     console.log(hasDuplicate)
     if (!hasDuplicate) {
       decodedObj["quantity"] = 1;
@@ -260,6 +278,7 @@ const Product = () => {
       console.log(storedArray)
       success()
       setRefresh(Refresh + 1)
+      checkDefaultCounter()
       // navigate("/cart")
 
     } else {
@@ -267,6 +286,9 @@ const Product = () => {
       hasDuplicate["quantity"] = 1 + hasDuplicate["quantity"];
       localStorage.setItem("myArray", JSON.stringify(storedArray));
       success()
+      setRefresh(Refresh + 1)
+      checkDefaultCounter()
+
 
       // navigate(`/cart`)
     }
@@ -279,7 +301,7 @@ const Product = () => {
       {contextHolder}
 
       <DiscountHeader minimum_limit={80} />
-      <Header navigate={navigate} setName={setName} Name={Name} setSetSelecedCat={setSetSelecedCat} />
+      <Header Counts={Counts} navigate={navigate} setName={setName} Name={Name} setSelecedCat={setSelecedCat} />
       <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px", padding: '120px 0px' }}>
         <div className="breadcrumb-vec-btm">
           <img
@@ -410,14 +432,14 @@ const Product = () => {
                           id="color-dropdown"
                           onChange={(e) => GetAllProducts(e, 1, e.target.value)}
                         >
-                          <option selected value="5">
+                          <option value="5">
                             5
                           </option>
                           <option value="10" selected>10</option>
-                          <option selected value="25">
+                          <option value="25">
                             25
                           </option>
-                          <option selected value="50">
+                          <option value="50">
                             50
                           </option>
 
@@ -532,4 +554,6 @@ const Product = () => {
     </>
   );
 };
+
+
 export default Product;

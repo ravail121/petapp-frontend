@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import logo from "../assets/images/header2-logo.svg";
+import logo from "../assets/images/fav-icon.png"
 import { useNavigate } from "react-router-dom";
 import { encode, decode } from 'base-64';
-
+import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 const handleContactClick = () => {
   window.scrollTo({
@@ -11,12 +11,13 @@ const handleContactClick = () => {
   });
 };
 
-function Header({ setSelecedCat, Refresh }) {
+function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [Name, setName] = useState('');
+  const [TotalQuantity, setTotalQuantity] = useState(0);
+  const [NameNew, setNameNew] = useState('');
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const cartCountNew = useSelector((state) => state.cartCount);
   const handleToggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -27,7 +28,16 @@ function Header({ setSelecedCat, Refresh }) {
   }, []);
 
   useEffect(() => {
+    var totalQuantity = 0;
+
     let Data = JSON.parse(localStorage.getItem("myArray"))
+    for (var i = 0; i < Data.length; i++) {
+
+      totalQuantity += Data[i].quantity;
+
+      console.log(totalQuantity)
+    }
+    setTotalQuantity(totalQuantity)
     localStorage.setItem("myArray", JSON.stringify(Data));
 
   }, [Refresh])
@@ -57,14 +67,14 @@ function Header({ setSelecedCat, Refresh }) {
       <div className="container d-flex justify-content-between align-items-center">
         <div className="header-logo">
           <a href="index.html">
-            <img alt="image" className="img-fluid" src={logo} />
+            <img alt="image" className="img-fluid" src={logo} width={150} />
           </a>
         </div>
         <div className={`main-menu ${isMobileMenuOpen ? "show-menu" : ""}`}>
           <div className="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
             <div className="mobile-logo-wrap">
               <a href="index.html">
-                <img alt="image" src={logo} />
+                <img alt="image" src={logo} width={150} />
               </a>
             </div>
             <div className="menu-close-btn">
@@ -96,7 +106,7 @@ function Header({ setSelecedCat, Refresh }) {
               <ul class="sub-menu">
                 {categories && categories.map((item) => {
                   return (
-                    <li><Link to={`/products/${encode(item.id)}`} onClick={() => setSelecedCat(item.id)}>{item.name} </Link></li>
+                    <li><Link to={`/products/?idCat=${encode(item.id)}`} onClick={() => setName(item?.id)}>{item.name} </Link></li>
 
                   )
 
@@ -138,10 +148,10 @@ function Header({ setSelecedCat, Refresh }) {
 
                   placeholder="Search Products"
                   id="search"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setNameNew(e.target.value)}
                   autoComplete="off"
                 />
-                <Link to={`/products/?name=${encode(Name)}`} style={{ padding: '' }} >
+                <Link to={`/products/?name=${encode(Name)}`} onClick={() => setName(NameNew)} style={{ padding: '8px' }} >
                   <svg
                     width="15"
                     height="15"
@@ -177,7 +187,7 @@ function Header({ setSelecedCat, Refresh }) {
                 </svg>
 
               </Link>
-              <div className="cartCount">{JSON.parse(localStorage.getItem("myArray"))?.length > 0 && <b>{JSON.parse(localStorage.getItem("myArray"))?.length > 0 ? JSON.parse(localStorage.getItem("myArray"))?.length : 0}</b>}</div>
+              {JSON.parse(localStorage.getItem("myArray"))?.length > 0 && <div className="cartCount"> <b>{JSON.parse(localStorage.getItem("myArray"))?.length > 0 ? cartCountNew : 0}</b></div>}
 
             </li>
             {/* <li>

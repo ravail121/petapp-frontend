@@ -5,12 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
 import { message } from 'antd';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
 import mxsvg from '../assets/images/icon/amex.svg'
 const ProductDetails = () => {
   const [IsLoading, setIsLoading] = React.useState(false);
   const [AllValues, setAllValues] = React.useState({ id: '' });
   const [Products, setProducts] = React.useState([]);
+  const dispatch = useDispatch();
 
   const [ProductDetail, setProductDetail] = React.useState();
   const [messageApi, contextHolder] = message.useMessage();
@@ -30,6 +32,8 @@ const ProductDetails = () => {
     GetAllProductsdet();
     GetAllProducts();
     setProductDetail(decodedObj);
+    checkDefaultCounter()
+
     // addToCart();
   }, []);
 
@@ -66,6 +70,21 @@ const ProductDetails = () => {
     console.log(obj)
   }
 
+  const checkDefaultCounter = () => {
+    var totalQuantity = 0;
+
+    let Data = JSON.parse(localStorage.getItem("myArray"))
+    for (var i = 0; i < Data.length; i++) {
+
+      totalQuantity += Data[i].quantity;
+
+      console.log(totalQuantity)
+    }
+    localStorage.setItem("myArray", JSON.stringify(Data));
+    dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
+
+  }
+
   const addToCart = () => {
     // success()
 
@@ -77,17 +96,19 @@ const ProductDetails = () => {
       decodedObj["quantity"] = count;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
+      checkDefaultCounter()
       success()
-      navigate("/cart")
+      // navigate("/cart")
 
     } else {
-      console.log('else')
+      // console.log('else')
       success()
 
       // storedArray["quantity"] = count;
       hasDuplicate["quantity"] = count + hasDuplicate["quantity"];
       localStorage.setItem("myArray", JSON.stringify(storedArray));
-      navigate(`/cart`)
+      checkDefaultCounter()
+      // navigate(`/cart`)
     }
   };
 

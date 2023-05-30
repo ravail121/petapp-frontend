@@ -1,7 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
+
 const Checkout = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    checkDefaultCounter()
+
+  }, [])
+
+  const checkDefaultCounter = () => {
+    var totalQuantity = 0;
+
+    let Data = JSON.parse(localStorage.getItem("myArray"))
+    for (var i = 0; i < Data.length; i++) {
+
+      totalQuantity += Data[i].quantity;
+
+      console.log(totalQuantity)
+    }
+    localStorage.setItem("myArray", JSON.stringify(Data));
+    dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
+
+  }
   return (
     <>
       <DiscountHeader minimum_limit={80} />

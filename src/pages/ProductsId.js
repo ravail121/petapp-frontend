@@ -7,9 +7,12 @@ import { styled } from "@mui/material/styles";
 import Slider, { SliderThumb } from "@mui/material/Slider";
 import img1 from "../assets/images/icon/Icon-cart3.svg";
 import { Pagination } from "@mui/material";
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
 import { encode, decode } from 'base-64';
+import { message } from 'antd';
 
 function valuetext(value) {
   return `${value}°C`;
@@ -68,12 +71,15 @@ const Product = () => {
   const [limits, setLimits] = React.useState(10);
   const [products, setProducts] = React.useState([]);
   const [SelecedCat, setSelecedCat] = React.useState('');
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [Name, setName] = React.useState('');
   const [perPage, setPerPage] = React.useState(5);
   const [AllPages, setAllpages] = React.useState(0);
   const [value1, setValue1] = React.useState([0, 500]);
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const dispatch = useDispatch();
 
   const { id } = useParams()
   const ID = decode(id)
@@ -100,9 +106,24 @@ const Product = () => {
     if (SelecedCat) {
       GetAllProductsCat()
     }
+    // checkDefaultCounter()
+
   }, [SelecedCat])
 
+  const checkDefaultCounter = () => {
+    var totalQuantity = 0;
 
+    let Data = JSON.parse(localStorage.getItem("myArray"))
+    for (var i = 0; i < Data.length; i++) {
+
+      totalQuantity += Data[i].quantity;
+
+      console.log(totalQuantity)
+    }
+    localStorage.setItem("myArray", JSON.stringify(Data));
+    dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
+
+  }
   const filterProducts = () => {
     let Docline = categories.map((item) => {
       if (item.checked) {
@@ -142,6 +163,43 @@ const Product = () => {
       });
   };
 
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Add to cart Successfully Added',
+    });
+  };
+
+
+  const addToCart = (decodedObj) => {
+    // success()
+    // debugger;
+    const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+    //  decodedObj const  = { id: 123 }; // Example decoded object
+    const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
+    console.log(hasDuplicate)
+    if (!hasDuplicate) {
+      decodedObj["quantity"] = 1;
+      storedArray.push(decodedObj);
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      console.log(storedArray)
+      success()
+      // setRefresh(Refresh + 1)
+      checkDefaultCounter()
+      // navigate("/cart")
+
+    } else {
+
+      hasDuplicate["quantity"] = 1 + hasDuplicate["quantity"];
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      success()
+      // setRefresh(Refresh + 1)
+      checkDefaultCounter()
+
+
+      // navigate(`/cart`)
+    }
+  };
   const GetAllProducts = (e, pageNumber, perPage) => {
     setIsLoading(true);
     setLimits(perPage)
@@ -443,7 +501,7 @@ const Product = () => {
                             </div>
                             <ul className="cart-icon-list">
                               <li>
-                                <a href="#">
+                                <a href="#" onClick={() => addToCart(item)}>
                                   <img src={img1} alt="" />
                                 </a>
                               </li>

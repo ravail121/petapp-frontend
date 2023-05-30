@@ -26,12 +26,17 @@ import "./assets/css/bootstrap-icons.css"
 import "./assets/css/jquery.countdown.css"
 import "./assets/css/locomotive-scroll.css"
 import "./assets/css/jquery.fancybox.min.css"
-
+import { Provider } from 'react-redux';
+import store from './Redux/store';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+
+      <App />
+    </Provider>
+
   </React.StrictMode>
 );

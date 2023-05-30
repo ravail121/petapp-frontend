@@ -4,10 +4,14 @@ import DiscountHeader from "../shared/DiscountHeader";
 import { message } from 'antd';
 import { url } from "../environment";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
 const Cart = () => {
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const [count, setCount] = useState(1);
   const [contextHolder] = message.useMessage();
+  const dispatch = useDispatch();
+
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
   const [TotalPrice, setTotalPrice] = useState(0);
@@ -15,6 +19,8 @@ const Cart = () => {
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
     setCartData(storedArray);
+    checkDefaultCounter()
+
     GetAllShipping()
     if (storedArray?.length > 0) {
       checBalance();
@@ -35,6 +41,22 @@ const Cart = () => {
     (sum, product) => sum + product.totalPrice,
     0
   );
+
+
+  const checkDefaultCounter = () => {
+    var totalQuantity = 0;
+
+    let Data = JSON.parse(localStorage.getItem("myArray"))
+    for (var i = 0; i < Data.length; i++) {
+
+      totalQuantity += Data[i].quantity;
+
+      console.log(totalQuantity)
+    }
+    localStorage.setItem("myArray", JSON.stringify(Data));
+    dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
+
+  }
 
   const checBalance = () => {
     const totalPrice = storedArray.reduce(

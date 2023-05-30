@@ -6,6 +6,8 @@ import product_item1 from "./assets/images/icon/dog.svg";
 import product_item2 from "./assets/images/icon/cat.svg";
 import product_item3 from "./assets/images/icon/fish.svg";
 import { url } from "./environment";
+import { useDispatch } from 'react-redux';
+import { UPDATE_CART_COUNT } from './Redux/Actions/action';
 
 import product_item4 from "./assets/images/icon/bird.svg";
 import { Link } from "react-router-dom";
@@ -27,9 +29,11 @@ function Home() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [IsLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     GetAllProducts();
+    checkDefaultCounter()
   }, []);
 
 
@@ -55,6 +59,22 @@ function Home() {
         console.log(err);
       });
   };
+
+
+
+  const checkDefaultCounter = () => {
+    var totalQuantity = 0;
+
+    let Data = JSON.parse(localStorage.getItem("myArray"))
+    for (var i = 0; i < Data.length; i++) {
+
+      totalQuantity += Data[i].quantity;
+
+      console.log(totalQuantity)
+    }
+    localStorage.setItem("myArray", JSON.stringify(Data));
+    dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
+  }
 
   return (
     <>
@@ -83,7 +103,7 @@ function Home() {
                   <img
                     className={"img-fluid banner-imgas"}
                     src={
-                      "https://thumbs.dreamstime.com/b/woman-using-digital-tablet-to-shop-online-shoes-61909444.jpg"
+                      "assets/images/home.png"
                     }
                     alt=""
                   />
