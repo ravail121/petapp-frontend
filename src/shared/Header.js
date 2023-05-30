@@ -187,7 +187,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
                 </svg>
 
               </Link>
-              {JSON.parse(localStorage.getItem("myArray"))?.length > 0 && <div className="cartCount"> <b>{JSON.parse(localStorage.getItem("myArray"))?.length > 0 ? cartCountNew : 0}</b></div>}
+              {cartCountNew !== 0 && <div className="cartCount"> <b>{JSON.parse(localStorage.getItem("myArray"))?.length > 0 ? cartCountNew : 0}</b></div>}
 
             </li>
             {/* <li>
