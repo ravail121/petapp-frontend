@@ -17,7 +17,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
   const [NameNew, setNameNew] = useState('');
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const cartCountNew = useSelector((state) => state.cartCount);
+  const cartCountNew = useSelector((state) => state.add.cartCount);
   const handleToggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };

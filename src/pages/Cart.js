@@ -5,7 +5,7 @@ import { message } from 'antd';
 import { url } from "../environment";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
+import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL } from '../Redux/Actions/action';
 const Cart = () => {
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const [count, setCount] = useState(1);
@@ -15,6 +15,8 @@ const Cart = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
   const [TotalPrice, setTotalPrice] = useState(0);
+  const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
+  console.log(cartCountTotal)
 
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
@@ -36,18 +38,21 @@ const Cart = () => {
   //   ...product,
   //   totalPrice: calculateTotalPrice(product),
   // }));
+  dispatch({
+    type: UPDATE_CART_TOTAL, payload: CartData.reduce(
+      (sum, product) => sum + product.totalPrice,
+      0
+    )
+  })
 
-  const totalSum = CartData.reduce(
-    (sum, product) => sum + product.totalPrice,
-    0
-  );
+
 
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
 
-    let Data = JSON.parse(localStorage.getItem("myArray"))
-    for (var i = 0; i < Data.length; i++) {
+    let Data = JSON.parse(localStorage.getItem("myArray")) || []
+    for (var i = 0; i < Data?.length; i++) {
 
       totalQuantity += Data[i].quantity;
 
@@ -63,6 +68,7 @@ const Cart = () => {
       (accumulator, product) => accumulator + Number(product.dropshipPrice),
       0
     );
+
     // console.log(totalPrice * count);
     setTotalPrice(totalPrice);
   };
@@ -246,7 +252,7 @@ const Cart = () => {
                   <tr>
                     <th>Cart Totals</th>
                     <th></th>
-                    <th>${totalSum ? totalSum.toFixed(2) : 0}</th>
+                    <th>${cartCountTotal ? cartCountTotal.toFixed(2) : 0}</th>
                   </tr>
                 </thead>
                 <tbody>
