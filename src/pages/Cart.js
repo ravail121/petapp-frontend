@@ -98,12 +98,14 @@ const Cart = () => {
 
     localStorage.setItem("myArray", JSON.stringify(storedArray));
     checBalance();
+    checkDefaultCounter()
   };
   const getOnChangeCounter = (value, index) => {
     let obj = CartData;
     obj[index]["quantity"] = value;
     // console.log(obj);
     setCartData(obj);
+    checkDefaultCounter()
   };
   return (
     <>
