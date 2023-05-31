@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import logo from "../assets/images/fav-icon.png"
 import { useNavigate } from "react-router-dom";
 import { encode, decode } from 'base-64';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
+import { UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT } from "../Redux/Actions/action";
 const handleContactClick = () => {
   window.scrollTo({
     top: document.body.scrollHeight,
@@ -15,6 +16,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [TotalQuantity, setTotalQuantity] = useState(0);
   const [NameNew, setNameNew] = useState('');
+  const dispatch = useDispatch()
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const cartCountNew = useSelector((state) => state.add.cartCount);
@@ -61,6 +63,17 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
       });
   };
 
+  const getOnchange = (e) => {
+    setNameNew(e)
+
+  }
+
+  const catValue = (id) => {
+    console.log(id)
+    dispatch({
+      type: UPDATE_SEARCH_CATEGORIES, payload: id
+    })
+  }
 
   return (
     <header className="header-area style-3">
@@ -106,7 +119,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
               <ul class="sub-menu">
                 {categories && categories.map((item) => {
                   return (
-                    <li><Link to={`/products/?idCat=${encode(item.id)}`} onClick={() => setName(item?.id)}>{item.name} </Link></li>
+                    <li><Link to={`/products`} onClick={() => catValue(item.id)}>{item.name} </Link></li>
 
                   )
 
@@ -148,10 +161,12 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
 
                   placeholder="Search Products"
                   id="search"
-                  onChange={(e) => setNameNew(e.target.value)}
+                  onChange={(e) => getOnchange(e.target.value)}
                   autoComplete="off"
                 />
-                <Link to={`/products/?name=${encode(Name)}`} onClick={() => setName(NameNew)} style={{ padding: '8px' }} >
+                <Link to={`/products`} onClick={() => dispatch({
+                  type: UPDATE_SEARCH_PRODUCT, payload: NameNew
+                })} style={{ padding: '8px' }} >
                   <svg
                     width="15"
                     height="15"

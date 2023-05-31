@@ -37,12 +37,12 @@ const Cart = () => {
     return product.quantity * product.dropshipPrice;
     // checBalance();
   };
-  const calculateShippingPrice = (product, index) => {
-    ShippingSettings[index]["totalPrice"] = product.quantity * product.dropshipPrice;
+  // const calculateShippingPrice = (product, index) => {
+  //   ShippingSettings[index]["totalPrice"] = product.quantity * product.dropshipPrice;
 
-    return product.quantity * product.dropshipPrice;
-    // checBalance();
-  };
+  //   return product.quantity * product.dropshipPrice;
+  //   // checBalance();
+  // };
 
   // const updatedProducts = CartData.map((product) => ({
   //   ...product,
@@ -75,7 +75,7 @@ const Cart = () => {
   }
 
   const checBalance = () => {
-    const totalPrice = storedArray.reduce(
+    const totalPrice = storedArray?.reduce(
       (accumulator, product) => accumulator + Number(product.dropshipPrice),
       0
     );

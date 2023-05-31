@@ -74,7 +74,12 @@ const Product = () => {
   const [Name, setName] = React.useState('');
   const [AllPages, setAllpages] = React.useState(0);
   const [Refresh, setRefresh] = React.useState(0);
+  const [limits, setLimits] = React.useState(10);
+
   const [value1, setValue1] = React.useState([0, 500]);
+  const SearchValue = useSelector((state) => state.searchValue.value);
+  const SearchCat = useSelector((state) => state.searchCat.value);
+
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -88,20 +93,21 @@ const Product = () => {
   // Use the userId in your component logic
   let SearchData = decode(userId)
   let SearchID = decode(IdCat)
+  console.log()
   useEffect(() => {
-    fetchCategories()
+    // fetchCategories()
 
-    if (IdCat) {
+    if (SearchCat) {
       GetAllProductsCat()
       return
     }
-    else if (userId) {
+    else if (SearchValue) {
       filterProducts(userId)
       return
     }
     GetAllProducts();
     checkDefaultCounter()
-  }, [Name]);
+  }, [SearchValue, SearchCat]);
 
 
   // useEffect(() => {
@@ -113,14 +119,14 @@ const Product = () => {
 
   const filterProducts = (userId) => {
     debugger
-    let Docline = categories.map((item) => {
+    let Docline = categories?.map((item) => {
       if (item.checked) {
         return item.id
       }
     })
     const filteredItems = Docline.filter((item) => typeof item !== 'undefined');
 
-    console.log(filteredItems)
+    // console.log(filteredItems)
     setIsLoading(true);
     fetch(`${url}/user/products/filter`, {
       method: "POST",
@@ -132,7 +138,7 @@ const Product = () => {
         page: 1,
         categories: filteredItems,
         limit: 10,
-        name: SearchData ? SearchData : Name,
+        name: SearchValue,
         price: value1
 
       })
@@ -174,10 +180,10 @@ const Product = () => {
       });
   };
 
-  const GetAllProductsCat = (e, pageNumber) => {
+  const GetAllProductsCat = (e, pageNumber, perpage) => {
     setIsLoading(true);
     debugger;
-    fetch(`${url}/user/products/getby-category/${Number(SearchID)}/${pageNumber ? pageNumber : 1}/10`, {
+    fetch(`${url}/user/products/getby-category/${SearchCat})}/${pageNumber ? pageNumber : 1}/${perpage ? perpage : 10}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -190,6 +196,8 @@ const Product = () => {
         if (response.message === "Product fetched Successfully") {
           setProducts(response?.data?.products);
           setAllpages(response?.data?.totalCount);
+          fetchCategories()
+
           setIsLoading(false);
         }
       })
@@ -213,10 +221,11 @@ const Product = () => {
           data?.data?.categories?.map((item) => {
             Array.push({
               name: item.name,
-              checked: false,
+              checked: item.id === Number(SearchCat) ? true : false,
               id: item.id
             })
           })
+          console.log(Array)
           setCategories(Array);
           setLoading(false);
         }
@@ -364,7 +373,7 @@ const Product = () => {
                         <AirbnbSlider
                           slots={{ thumb: AirbnbThumbComponent }}
                           onChange={handleChange1}
-                          min={100}
+                          min={0}
                           max={500}
                           getAriaLabel={(index) =>
                             index === 0 ? "Minimum price" : "Maximum price"
@@ -394,7 +403,7 @@ const Product = () => {
                   <div class="check-box-item">
                     <h5 class="shop-widget-title">Category</h5>
                     <div class="checkbox-container">
-                      {categories && categories.map((item, index) => {
+                      {categories && categories?.map((item, index) => {
                         return (
                           <label class="containerss">
                             {item.name}
@@ -430,6 +439,7 @@ const Product = () => {
                         <select
                           className="defult-select-drowpown"
                           id="color-dropdown"
+                          value={limits}
                           onChange={(e) => GetAllProducts(e, 1, e.target.value)}
                         >
                           <option value="5">

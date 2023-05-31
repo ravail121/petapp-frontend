@@ -79,36 +79,40 @@ const Product = () => {
   const [value1, setValue1] = React.useState([0, 500]);
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const SearchValue = useSelector((state) => state.searchValue.value);
+  const SearchCat = useSelector((state) => state.searchCat.value);
+
   const dispatch = useDispatch();
 
   const { id } = useParams()
   const ID = decode(id)
   // console.log(ID)
+  // useEffect(() => {
+  //   fetchCategories()
+
+  //   if (ID) {
+  //     GetAllProductsCat()
+  //     return
+  //   }
+  //   // GetAllProducts();
+
+  // }, []);
+
   useEffect(() => {
     fetchCategories()
 
-    if (ID) {
+    if (SearchCat || ID) {
       GetAllProductsCat()
       return
     }
-    GetAllProducts();
-
-  }, []);
-
-  useEffect(() => {
-    if (Name) {
+    else if (SearchValue) {
       filterProducts()
-
+      return
     }
-  }, [])
+    // GetAllProducts();
+    checkDefaultCounter()
+  }, [SearchValue, SearchCat]);
 
-  useEffect(() => {
-    if (SelecedCat) {
-      GetAllProductsCat()
-    }
-    // checkDefaultCounter()
-
-  }, [SelecedCat])
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
@@ -125,12 +129,12 @@ const Product = () => {
 
   }
   const filterProducts = () => {
-    let Docline = categories.map((item) => {
+    let Docline = categories?.map((item) => {
       if (item.checked) {
         return item.id
       }
     })
-    const filteredItems = Docline.filter((item) => typeof item !== 'undefined');
+    const filteredItems = Docline?.filter((item) => typeof item !== 'undefined');
 
     console.log(filteredItems)
     setIsLoading(true);
@@ -200,34 +204,13 @@ const Product = () => {
       // navigate(`/cart`)
     }
   };
-  const GetAllProducts = (e, pageNumber, perPage) => {
+
+
+  const GetAllProductsCat = (e, pageNumber, perPage) => {
     setIsLoading(true);
     setLimits(perPage)
-    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/${perPage ? perPage : 10}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        accept: "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        // console.log("All Products ----->>>", response);
-        if (response.message === "Products has been fetched Succesfully") {
-          setProducts(response?.data?.products);
-          setAllpages(response?.data?.totalCount);
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
-  const GetAllProductsCat = (e, pageNumber) => {
-    setIsLoading(true);
-
-    fetch(`${url}/user/products/getby-category/${ID}/${pageNumber ? pageNumber : 1}/10`, {
+    fetch(`${url}/user/products/getby-category/${ID}/${pageNumber ? pageNumber : 1}/${perPage ? perPage : 10}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -263,7 +246,7 @@ const Product = () => {
           data?.data?.categories?.map((item) => {
             Array.push({
               name: item.name,
-              checked: false,
+              checked: item.id === Number(ID) ? true : false,
               id: item.id
             })
           })
@@ -277,12 +260,6 @@ const Product = () => {
   };
 
 
-  const handleChange = (event) => {
-    const selectedValue = event.target.value;
-    console.log("Selected value: ", selectedValue);
-    // Perform actions based on the selected value
-    GetAllProducts(0, 1, selectedValue)
-  }
 
   const handleChange1 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -370,7 +347,7 @@ const Product = () => {
                         <AirbnbSlider
                           slots={{ thumb: AirbnbThumbComponent }}
                           onChange={handleChange1}
-                          min={100}
+                          min={0}
                           max={500}
                           getAriaLabel={(index) =>
                             index === 0 ? "Minimum price" : "Maximum price"
@@ -437,7 +414,7 @@ const Product = () => {
                           className="defult-select-drowpown"
                           id="color-dropdown"
                           value={limits}
-                          onChange={(e) => GetAllProducts(e, 1, e.target.value)}
+                          onChange={(e) => GetAllProductsCat(e, 1, e.target.value)}
                         >
                           <option selected value="5">
                             5
@@ -548,7 +525,7 @@ const Product = () => {
                       variant="outlined"
                       shape="rounded"
                       onChange={(e, Value) => {
-                        GetAllProducts(e, Value);
+                        GetAllProductsCat(e, Value);
                       }}
                     />
                   </div>

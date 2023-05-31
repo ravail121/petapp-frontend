@@ -11,7 +11,7 @@ const reducerAdd = (state = initialState, action) => {
     switch (action.type) {
 
         case UPDATE_CART_COUNT:
-            console.log(UPDATE_CART_COUNT)
+            // console.log(UPDATE_CART_COUNT)
             return {
                 ...state,
                 cartCount: action.payload,
