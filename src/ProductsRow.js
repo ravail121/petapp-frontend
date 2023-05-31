@@ -2,15 +2,16 @@ import { Link } from "react-router-dom";
 import product_discription2 from "./assets/images/bg/h3-category-2.png";
 import { useEffect, useState } from "react";
 import { encode } from "base-64";
-
+import { useDispatch } from "react-redux";
+import { UPDATE_SEARCH_CATEGORIES } from './Redux/Actions/action'
 function ProductsRow(props) {
   const products = props.products;
   const [startIndex, setStartIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [page, setPage] = useState(1);
   const [rows, setRows] = useState(6);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     fetchCategories();
@@ -36,10 +37,15 @@ function ProductsRow(props) {
         console.error(error);
       });
   };
-
-  const listProducts = categories.map((product) => (
+  const catValue = (id) => {
+    console.log(id)
+    dispatch({
+      type: UPDATE_SEARCH_CATEGORIES, payload: id
+    })
+  }
+  const listProducts = categories?.map((product) => (
     <div className="category-card col-lg-2 col-md-4 col-sm-6 mb-5">
-      <Link to={`/products/${encode(product.id)}`} className="category-card-inner">
+      <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
         <div className="category-card-front">
           <div className="category-icon">
             {/* <img width={126} height={126} alt="" /> */}

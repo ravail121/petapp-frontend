@@ -12,7 +12,7 @@ const handleContactClick = () => {
   });
 };
 
-function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
+function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [TotalQuantity, setTotalQuantity] = useState(0);
   const [NameNew, setNameNew] = useState('');
@@ -107,7 +107,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
               </a> */}
             </li>
             <li>
-              <Link to="/products">Products</Link>
+              <Link to="/products" onClick={() => resetAll()}>Products</Link>
 
               {/* <a href="" onClick={() => navigate("/products")}>
                 Products

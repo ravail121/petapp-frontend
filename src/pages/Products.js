@@ -4,7 +4,7 @@ import DiscountHeader from "../shared/DiscountHeader";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
+import { UPDATE_CART_COUNT, UPDATE_SEARCH_PRODUCT } from '../Redux/Actions/action';
 import { styled } from "@mui/material/styles";
 import Slider, { SliderThumb } from "@mui/material/Slider";
 import img1 from "../assets/images/icon/Icon-cart3.svg";
@@ -70,6 +70,7 @@ const Product = () => {
   const [IsLoading, setIsLoading] = React.useState(false);
   const [products, setProducts] = React.useState([]);
   const [SelecedCat, setSelecedCat] = React.useState('');
+  const [Activepage, setActivepage] = React.useState(0);
   const [Counts, setCounts] = React.useState(0);
   const [Name, setName] = React.useState('');
   const [AllPages, setAllpages] = React.useState(0);
@@ -77,8 +78,8 @@ const Product = () => {
   const [limits, setLimits] = React.useState(10);
 
   const [value1, setValue1] = React.useState([0, 500]);
-  const SearchValue = useSelector((state) => state.searchValue.value);
-  const SearchCat = useSelector((state) => state.searchCat.value);
+  let SearchValue = useSelector((state) => state.searchValue.value);
+  let SearchCat = useSelector((state) => state.searchCat.value);
 
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -86,26 +87,28 @@ const Product = () => {
   const dispatch = useDispatch();
   // const { id, name, idCat } = useParams()
   // console.log('Products', decode(window.location.href))
-  const searchParams = new URLSearchParams(window.location.search);
-  const userId = searchParams.get('name');
-  const IdCat = searchParams.get('idCat');
 
-  // Use the userId in your component logic
-  let SearchData = decode(userId)
-  let SearchID = decode(IdCat)
   console.log()
   useEffect(() => {
-    // fetchCategories()
+    let Search = parseInt(SearchValue);
 
-    if (SearchCat) {
-      GetAllProductsCat()
-      return
+
+    if (!Search) {
+      GetAllProducts();
+
     }
-    else if (SearchValue) {
-      filterProducts(userId)
-      return
+    else {
+      console.log(" send price range in api", Search)
+      // setValue1([0, Number(Search)])
+
+      SearchValue = ''
+      GetAllProducts(Search);
+
+
+
     }
-    GetAllProducts();
+    fetchCategories()
+
     checkDefaultCounter()
   }, [SearchValue, SearchCat]);
 
@@ -117,8 +120,10 @@ const Product = () => {
   // }, [SelecedCat])
 
 
-  const filterProducts = (userId) => {
-    debugger
+
+  const GetAllProducts = (e, pageNumber, perpage) => {
+    // debugger
+    setLimits(perpage)
     let Docline = categories?.map((item) => {
       if (item.checked) {
         return item.id
@@ -126,9 +131,54 @@ const Product = () => {
     })
     const filteredItems = Docline.filter((item) => typeof item !== 'undefined');
 
-    // console.log(filteredItems)
     setIsLoading(true);
-    fetch(`${url}/user/products/filter`, {
+    fetch(`${url}/user/products/list`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        page: pageNumber ? pageNumber : 1,
+        limit: perpage ? Number(perpage) : 10,
+        name: e && !e.target ? '' : SearchValue,
+        categoryId: SearchCat,
+        categories: filteredItems,
+        price: e && !e.target ? [0, e] : value1,
+      })
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("All Products ----->>>", response);
+        if (response.statusCode === 200) {
+          setProducts(response?.data?.products);
+          // fetchCategories()
+          setAllpages(response?.data?.totalCount);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const resetAll = () => {
+    // filteredItems = []
+    SearchCat = ''
+    SearchValue = ''
+    setLimits(10)
+    setActivepage(1)
+    // setValue1([0, 500])
+    let Array = []
+    categories?.map((item) => {
+      Array.push({
+        name: item.name,
+        checked: false,
+        id: item.id
+      })
+    })
+    setCategories(Array);
+    fetch(`${url}/user/products/list`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -136,18 +186,19 @@ const Product = () => {
       },
       body: JSON.stringify({
         page: 1,
-        categories: filteredItems,
         limit: 10,
-        name: SearchValue,
-        price: value1
-
+        name: '',
+        categoryId: '',
+        categories: [],
+        price: [0, 500],
       })
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("Product ----->>>", response);
-        if (response.message === "Products fetched Successfully") {
+        console.log("All Products ----->>>", response);
+        if (response.statusCode === 200) {
           setProducts(response?.data?.products);
+          // fetchCategories()
           setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
@@ -155,56 +206,8 @@ const Product = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
+  }
 
-  const GetAllProducts = (e, pageNumber, perpage) => {
-    setIsLoading(true);
-    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/${perpage ? perpage : 10}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        accept: "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        // console.log("All Products ----->>>", response);
-        if (response.message === "Products has been fetched Succesfully") {
-          setProducts(response?.data?.products);
-          setAllpages(response?.data?.totalCount);
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const GetAllProductsCat = (e, pageNumber, perpage) => {
-    setIsLoading(true);
-    debugger;
-    fetch(`${url}/user/products/getby-category/${SearchCat})}/${pageNumber ? pageNumber : 1}/${perpage ? perpage : 10}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        accept: "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        // console.log("All Products ----->>>", response);
-        if (response.message === "Product fetched Successfully") {
-          setProducts(response?.data?.products);
-          setAllpages(response?.data?.totalCount);
-          fetchCategories()
-
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
 
   const fetchCategories = () => {
@@ -310,7 +313,7 @@ const Product = () => {
       {contextHolder}
 
       <DiscountHeader minimum_limit={80} />
-      <Header Counts={Counts} navigate={navigate} setName={setName} Name={Name} setSelecedCat={setSelecedCat} />
+      <Header resetAll={resetAll} Counts={Counts} navigate={navigate} setName={setName} Name={Name} setSelecedCat={setSelecedCat} />
       <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px", padding: '120px 0px' }}>
         <div className="breadcrumb-vec-btm">
           <img
@@ -423,7 +426,11 @@ const Product = () => {
                   </div>
                 </div>
                 <div class="d-grid gap-2">
-                  <button type="button" class="btn btn-dark btn-lg" onClick={() => filterProducts()}>Apply filter</button>
+                  <button type="button" class="btn btn-dark btn-lg" onClick={() => {
+                    GetAllProducts(); dispatch({
+                      type: UPDATE_SEARCH_PRODUCT, payload: ''
+                    })
+                  }}>Apply filter</button>
 
                 </div>
               </div>
@@ -548,9 +555,11 @@ const Product = () => {
                   <div className="paginations-area">
                     <Pagination
                       count={AllPages}
+                      page={Activepage}
                       variant="outlined"
                       shape="rounded"
                       onChange={(e, Value) => {
+                        setActivepage(Value)
                         GetAllProducts(e, Value);
                       }}
                     />
