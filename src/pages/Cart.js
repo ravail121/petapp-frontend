@@ -127,15 +127,16 @@ const Cart = () => {
     console.log(value)
     let obj = CartData;
     obj[index]["quantity"] = value;
-    // console.log(obj);
+    console.log(obj);
+
+    setCartData(obj);
+    checkDefaultCounter()
     dispatch({
-      type: UPDATE_CART_TOTAL, payload: CartData.reduce(
+      type: UPDATE_CART_TOTAL, payload: obj.reduce(
         (sum, product) => sum + product.totalPrice,
         0
       )
     })
-    setCartData(obj);
-    checkDefaultCounter()
   };
   return (
     <>
@@ -309,7 +310,7 @@ const Cart = () => {
                   <tr>
                     <td>Subtotal</td>
                     <td></td>
-                    <td>${cartCountTotal + ShippingTotal}</td>
+                    <td>${(cartCountTotal + ShippingTotal).toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>

@@ -95,7 +95,7 @@ function Home() {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-lg-6 banner-content">
-                <h1>Best Store For Your Shooping.</h1>
+                <h1>Best Store For Your Shopping.</h1>
                 <div className="btn-group">
                   <Link className="primary-btn5 btn-md" to="/products">
                     Shop Now

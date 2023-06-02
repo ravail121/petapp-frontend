@@ -105,6 +105,9 @@ const Product = () => {
 
   const GetAllProducts = (e, pageNumber, perpage) => {
     // debugger
+    window.scrollTo(0, 0);
+
+
     setLimits(perpage)
     let Docline = categories?.map((item) => {
       if (item.checked) {
@@ -137,7 +140,6 @@ const Product = () => {
           // fetchCategories()
           setAllpages(response?.data?.totalCount);
           setIsLoading(false);
-          window.scrollTo(0, 0);
 
         }
       })
