@@ -55,15 +55,43 @@ const Cart = () => {
     )
   })
 
+  const addToCart = (decodedObj, check) => {
+    console.log(decodedObj)
+    // success()
+    // debugger;
+    const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+    //  decodedObj const  = { id: 123 }; // Example decoded object
+    const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
+    console.log(hasDuplicate)
+    if (!hasDuplicate) {
+      decodedObj["quantity"] = 1;
+      storedArray.push(decodedObj);
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      console.log(storedArray)
 
+      checkDefaultCounter()
+      // navigate("/cart")
+
+    } else {
+      hasDuplicate["quantity"] = check === '+' ? 1 + hasDuplicate["quantity"] : hasDuplicate["quantity"] - 1;
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+
+      checkDefaultCounter()
+
+
+      // navigate(`/cart`)
+    }
+  };
 
 
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
+    console.log(JSON.parse(localStorage.getItem("myArray")))
 
-    let Data = JSON.parse(localStorage.getItem("myArray")) || []
+    let Data = JSON.parse(localStorage.getItem("myArray"))
     for (var i = 0; i < Data?.length; i++) {
+      console.log(JSON.parse(localStorage.getItem("myArray")))
 
       totalQuantity += Data[i].quantity;
 
@@ -124,12 +152,11 @@ const Cart = () => {
     checkDefaultCounter()
   };
   const getOnChangeCounter = (value, index) => {
+    // addToCart()
     console.log(value)
     let obj = CartData;
     obj[index]["quantity"] = value;
     console.log(obj);
-
-    setCartData(obj);
     checkDefaultCounter()
     dispatch({
       type: UPDATE_CART_TOTAL, payload: obj.reduce(
@@ -137,6 +164,12 @@ const Cart = () => {
         0
       )
     })
+    // dispatch({
+    //   type: UPDATE_CART_TOTAL, payload: obj.reduce(
+    //     (sum, product) => sum + product.totalPrice,
+    //     0
+    //   )
+    // })
   };
   return (
     <>
@@ -218,6 +251,7 @@ const Cart = () => {
                                     disabled={item.quantity === 1}
                                     onClick={() => {
                                       setCount(count - 1);
+                                      addToCart(item, '-');
                                       getOnChangeCounter(
                                         item.quantity - 1,
                                         index
@@ -235,6 +269,7 @@ const Cart = () => {
                                   <button
                                     onClick={() => {
                                       setCount(count + 1);
+                                      addToCart(item, '+');
 
                                       getOnChangeCounter(
                                         item.quantity + 1,
@@ -321,13 +356,11 @@ const Cart = () => {
                   </a>
                 </li>
                 <li>
-                  {cartCountNew === 0 ? (
-                    <Link className="primary-btn3 btn-lg" >
+                  {cartCountNew > 0 ? (
+                    <Link to="/checkOut" className="primary-btn3 btn-lg" >
                       Proceed to Checkout
                     </Link>
-                  ) : (<Link to="/checkOut" className="primary-btn3 btn-lg" >
-                    Proceed to Checkout
-                  </Link>)}
+                  ) : ('')}
                 </li>
               </ul>
             </div>
