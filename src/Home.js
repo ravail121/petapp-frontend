@@ -39,17 +39,21 @@ function Home() {
 
   const GetAllProducts = (e, pageNumber) => {
     setIsLoading(true);
-    fetch(`${url}/user/products/list/${pageNumber ? pageNumber : 1}/6`, {
-      method: "GET",
+    fetch(`${url}/user/products/list`, {
+      method: "POST",
       headers: {
         "content-type": "application/json",
         accept: "application/json",
       },
+      body: JSON.stringify({
+        "page": 1,
+        "limit": 10,
+      })
     })
       .then((response) => response.json())
       .then((response) => {
         // console.log("All Products ----->>>", response);
-        if (response.message === "Products has been fetched Succesfully") {
+        if (response.message === "Products fetched Successfully") {
           setProducts(response?.data?.products);
           // setAllpages(response?.data?.totalCount);
           setIsLoading(false);

@@ -3,7 +3,7 @@ import product_discription2 from "./assets/images/bg/h3-category-2.png";
 import { useEffect, useState } from "react";
 import { encode } from "base-64";
 import { useDispatch } from "react-redux";
-import { UPDATE_SEARCH_CATEGORIES } from './Redux/Actions/action'
+import { UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT } from './Redux/Actions/action'
 function ProductsRow(props) {
   const products = props.products;
   const [startIndex, setStartIndex] = useState(0);
@@ -41,6 +41,9 @@ function ProductsRow(props) {
     console.log(id)
     dispatch({
       type: UPDATE_SEARCH_CATEGORIES, payload: id
+    })
+    dispatch({
+      type: UPDATE_SEARCH_PRODUCT, payload: ''
     })
   }
   const listProducts = categories?.map((product) => (

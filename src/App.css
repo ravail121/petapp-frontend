@@ -96,3 +96,16 @@
   padding: 0px;
   border-radius: 50%;
 }
+
+.numeric-input::-webkit-inner-spin-button,
+.numeric-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  /* Additional styles to hide the increment arrow */
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  opacity: 0;
+}

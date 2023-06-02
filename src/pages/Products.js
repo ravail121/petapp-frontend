@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,10 @@ import img1 from "../assets/images/icon/Icon-cart3.svg";
 import { Pagination } from "@mui/material";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
+import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core';
+
+
 import { message } from 'antd';
 
 import { decode, encode } from "base-64";
@@ -70,10 +74,13 @@ const Product = () => {
   const [IsLoading, setIsLoading] = React.useState(false);
   const [products, setProducts] = React.useState([]);
   const [SelecedCat, setSelecedCat] = React.useState('');
-  const [Activepage, setActivepage] = React.useState(0);
+  const [Activepage, setActivepage] = React.useState(1);
+  const [sliderValues, setSliderValues] = React.useState([0, 500]);
+
   const [Counts, setCounts] = React.useState(0);
   const [Name, setName] = React.useState('');
   const [AllPages, setAllpages] = React.useState(0);
+  const [PageData, setPageData] = React.useState(10);
   const [Refresh, setRefresh] = React.useState(0);
   const [limits, setLimits] = React.useState(10);
 
@@ -85,40 +92,15 @@ const Product = () => {
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
-  // const { id, name, idCat } = useParams()
-  // console.log('Products', decode(window.location.href))
 
-  console.log()
   useEffect(() => {
-    let Search = parseInt(SearchValue);
 
+    GetAllProducts();
 
-    if (!Search) {
-      GetAllProducts();
-
-    }
-    else {
-      console.log(" send price range in api", Search)
-      // setValue1([0, Number(Search)])
-
-      SearchValue = ''
-      GetAllProducts(Search);
-
-
-
-    }
     fetchCategories()
 
     checkDefaultCounter()
   }, [SearchValue, SearchCat]);
-
-
-  // useEffect(() => {
-  //   if (SelecedCat) {
-  //     GetAllProductsCat()
-  //   }
-  // }, [SelecedCat])
-
 
 
   const GetAllProducts = (e, pageNumber, perpage) => {
@@ -130,7 +112,7 @@ const Product = () => {
       }
     })
     const filteredItems = Docline.filter((item) => typeof item !== 'undefined');
-
+    console.log(SearchCat)
     setIsLoading(true);
     fetch(`${url}/user/products/list`, {
       method: "POST",
@@ -140,11 +122,11 @@ const Product = () => {
       },
       body: JSON.stringify({
         page: pageNumber ? pageNumber : 1,
-        limit: perpage ? Number(perpage) : 10,
-        name: e && !e.target ? '' : SearchValue,
-        categoryId: SearchCat,
-        categories: filteredItems,
-        price: e && !e.target ? [0, e] : value1,
+        limit: perpage ? Number(perpage) : PageData,
+        search: SearchValue,
+        // categoryId: SearchCat,
+        categories: filteredItems?.length > 0 ? filteredItems : SearchCat ? [SearchCat] : [],
+        price: sliderValues,
       })
     })
       .then((response) => response.json())
@@ -155,6 +137,8 @@ const Product = () => {
           // fetchCategories()
           setAllpages(response?.data?.totalCount);
           setIsLoading(false);
+          window.scrollTo(0, 0);
+
         }
       })
       .catch((err) => {
@@ -166,6 +150,7 @@ const Product = () => {
     // filteredItems = []
     SearchCat = ''
     SearchValue = ''
+    setSliderValues([0, 500])
     setLimits(10)
     setActivepage(1)
     // setValue1([0, 500])
@@ -173,7 +158,7 @@ const Product = () => {
     categories?.map((item) => {
       Array.push({
         name: item.name,
-        checked: false,
+        checked: true,
         id: item.id
       })
     })
@@ -188,7 +173,6 @@ const Product = () => {
         page: 1,
         limit: 10,
         name: '',
-        categoryId: '',
         categories: [],
         price: [0, 500],
       })
@@ -305,9 +289,62 @@ const Product = () => {
       // navigate(`/cart`)
     }
   };
+  const minPriceInputRef = useRef(null);
+  const maxPriceInputRef = useRef(null);
+
+  useEffect(() => {
+    const minPriceInput = minPriceInputRef.current;
+    const maxPriceInput = maxPriceInputRef.current;
+
+    const handleMinPriceChange = () => {
+      const minPrice = parseInt(minPriceInput.value);
+      const maxPrice = parseInt(maxPriceInput.value);
+      if (minPrice <= maxPrice) {
+        setSliderValues([minPrice, maxPrice]);
+      }
+    };
+
+    const handleMaxPriceChange = () => {
+      const minPrice = parseInt(minPriceInput.value);
+      const maxPrice = parseInt(maxPriceInput.value);
+      if (maxPrice >= minPrice) {
+        setSliderValues([minPrice, maxPrice]);
+      }
+    };
+
+    minPriceInput.addEventListener('input', handleMinPriceChange);
+    maxPriceInput.addEventListener('input', handleMaxPriceChange);
+
+    return () => {
+      minPriceInput.removeEventListener('input', handleMinPriceChange);
+      maxPriceInput.removeEventListener('input', handleMaxPriceChange);
+    };
+  }, []);
 
 
+  const handleSliderChange = (event, newValues) => {
 
+    setSliderValues(newValues);
+    minPriceInputRef.current.value = newValues[0];
+    maxPriceInputRef.current.value = newValues[1];
+  };
+
+
+  const theme = createTheme({
+    overrides: {
+      MuiSlider: {
+        thumb: {
+          color: 'orange',
+        },
+        track: {
+          color: 'orange',
+        },
+        rail: {
+          color: 'orange',
+        },
+      },
+    },
+  });
   return (
     <>
       {contextHolder}
@@ -369,37 +406,42 @@ const Product = () => {
             <div className="col-lg-3">
               <div className="shop-sidebar">
                 <div className="shop-widget">
-                  <h5 className="shop-widget-title">Price Range</h5>
-                  <div className="mt-4">
-                    <div className="row">
-                      <div className="col-12 mt-4">
-                        <AirbnbSlider
-                          slots={{ thumb: AirbnbThumbComponent }}
-                          onChange={handleChange1}
-                          min={0}
+                  <div>
+                    <h5 className="shop-widget-title">Price Range</h5>
+                    <div className="range-widget">
+                      <div className="price-filter-range">
+                        <ThemeProvider theme={theme}>
+                          <Slider
+                            value={sliderValues}
+                            onChange={handleSliderChange}
+                            min={0}
+                            max={500}
+                          />
+                        </ThemeProvider>
+                      </div>
+                      <div className="mt-25 d-flex justify-content-between gap-4">
+                        <input
+                          type="number"
+                          min={100}
+                          inputMode="numeric"
+                          max={499}
+                          value={sliderValues[0]}
+                          ref={minPriceInputRef}
+                          className="price-range-field numeric-input"
+                        />
+                        <input
+                          type="number"
+                          min={100}
                           max={500}
-                          getAriaLabel={(index) =>
-                            index === 0 ? "Minimum price" : "Maximum price"
-                          }
-                          defaultValue={value1}
+
+
+                          inputMode="numeric"
+                          ref={maxPriceInputRef}
+                          value={sliderValues[1]}
+                          className="price-range-field numeric-input"
                         />
                       </div>
                     </div>
-                    <div
-                      className="col-12 mt-4"
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span className="tric">{value1[0]}</span>
-                      <span className="tric">{value1[1]}</span>
-                    </div>
-
-                    {/* <div className="col-12">
-                      <p>Min Price: {value1[0]}</p>
-                      <p>Max Max: {value1[1]}</p>
-                    </div> */}
                   </div>
                 </div>
                 <div class="shop-widget">
@@ -427,9 +469,9 @@ const Product = () => {
                 </div>
                 <div class="d-grid gap-2">
                   <button type="button" class="btn btn-dark btn-lg" onClick={() => {
-                    GetAllProducts(); dispatch({
+                    setActivepage(1); dispatch({
                       type: UPDATE_SEARCH_PRODUCT, payload: ''
-                    })
+                    }); GetAllProducts();
                   }}>Apply filter</button>
 
                 </div>
@@ -447,7 +489,7 @@ const Product = () => {
                           className="defult-select-drowpown"
                           id="color-dropdown"
                           value={limits}
-                          onChange={(e) => GetAllProducts(e, 1, e.target.value)}
+                          onChange={(e) => { GetAllProducts(e, 1, e.target.value); setPageData(e.target.value); setActivepage(1) }}
                         >
                           <option value="5">
                             5
@@ -537,7 +579,7 @@ const Product = () => {
                               </a>
                             </h4>
                             <div className="price">
-                              <h6>${item.dropshipPrice}</h6>
+                              <h6>${item?.dropshipPrice}</h6>
                               {/* <del>${item.rrp}</del> */}
                             </div>
 
@@ -560,7 +602,7 @@ const Product = () => {
                       shape="rounded"
                       onChange={(e, Value) => {
                         setActivepage(Value)
-                        GetAllProducts(e, Value);
+                        GetAllProducts(e, Value,);
                       }}
                     />
                   </div>
