@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react'
 import ProductsRow from "./ProductsRow";
 import DiscountHeader from "./shared/DiscountHeader";
 import product_item1 from "./assets/images/icon/dog.svg";
+import iconCat3 from "./assets/images/icon/Icon-cart3.svg";
 import product_item2 from "./assets/images/icon/cat.svg";
 import product_item3 from "./assets/images/icon/fish.svg";
 import { url } from "./environment";
 import { useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT } from './Redux/Actions/action';
-import { Pagination, Navigation } from "swiper"
+import { Pagination, Navigation, Autoplay } from "swiper"
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import product_item4 from "./assets/images/icon/bird.svg";
@@ -34,6 +35,8 @@ function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     GetAllProducts();
     checkDefaultCounter()
   }, []);
@@ -145,13 +148,19 @@ function Home() {
             <Swiper
               slidesPerView={4}
               // centeredSlides={true}
+              loop={true}
+              autoplay={{
+                delay: 2000,
+                disableOnInteraction: false
+              }}
+              speed={2000}
               spaceBetween={3}
               grabCursor={true}
               // navigation={true}
               // pagination={{
               //   clickable: true,
               // }}
-              modules={[Pagination]}
+              modules={[Pagination, Autoplay]}
               onSlideChange={() => console.log('slide change')}
               onSwiper={(swiper) => console.log(swiper)}
             >
@@ -176,7 +185,7 @@ function Home() {
                         </div>
                         <div class="collection-img">
                           <img class="img-gluid" width={200}
-                            height={150} src={item?.imageName} alt="" />
+                            height={10} src={item?.imageName} alt="" />
                           <div class="view-dt-btn">
                             <div class="plus-icon">
                               <i class="bi bi-plus"></i>
@@ -190,7 +199,7 @@ function Home() {
                             }>View Details</a>
                           </div>
                           <ul class="cart-icon-list">
-                            <li><a href="#"><img src="assets/images/icon/Icon-cart3.svg" alt="" /></a></li>
+                            <li><a href="#"><img src={iconCat3} alt="" /></a></li>
                             {/* <li><a href="#"><img src="assets/images/icon/Icon-favorites3.svg" alt="" /></a></li> */}
                           </ul>
                         </div>

@@ -22,6 +22,8 @@ const Cart = () => {
 
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     checkDefaultCounter()
 
     GetAllShipping()
@@ -328,7 +330,7 @@ const Cart = () => {
                     <td>
                       <ul className="cost-list text-start">
                         <li>Shipping Fee</li>
-                        <li>Taxes</li>
+                        <li>Taxes ({ShippingTotal.tax * 100}%)</li>
                         {/* <li>
                           Shipping Enter your address to view shipping options.{" "}
                           <br /> <a href="#">Calculate shipping</a>
@@ -339,8 +341,8 @@ const Cart = () => {
                       <ul className="single-cost text-center">
                         {ShippingSettings && ShippingSettings?.map((item) => {
                           return (<>
-                            <li>${item?.shippingFee}</li>
-                            <li>${item?.tax}</li>
+                            <li>{item.currencySign}{item?.shippingFee}</li>
+                            <li>{item.currencySign}{(item?.tax * cartCountTotal).toFixed(2)}</li>
                           </>
                           )
 
@@ -353,15 +355,15 @@ const Cart = () => {
                     <td>Subtotal</td>
                     <td></td>
 
-                    <td>${(cartCountTotal + Number(ShippingTotal?.shippingFee)).toFixed(2)}</td>
+                    <td>${((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>
               <ul className="cart-btn-group">
                 <li>
-                  <a href="shop.html" className="primary-btn2 btn-lg">
+                  <Link to={"/products"} className="primary-btn2 btn-lg">
                     Continue to shopping
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   {cartCountNew > 0 ? (

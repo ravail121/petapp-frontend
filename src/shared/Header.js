@@ -12,7 +12,7 @@ const handleContactClick = () => {
   });
 };
 
-function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
+function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [TotalQuantity, setTotalQuantity] = useState(0);
   const [NameNew, setNameNew] = useState('');
@@ -77,6 +77,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
   }
 
   return (
+
     <header className="header-area style-3">
       <div className="container d-flex justify-content-between align-items-center">
         <div className="header-logo">
@@ -108,9 +109,7 @@ function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
               </a> */}
             </li>
             <li>
-              <Link to="/products" onClick={() => dispatch({
-                type: UPDATE_PRODUCT_REFRESH, payload: SearchValue + 1
-              })}>Products</Link>
+              <Link to="/products" onClick={resetAll}>Products</Link>
 
               {/* <a href="" onClick={() => navigate("/products")}>
                 Products

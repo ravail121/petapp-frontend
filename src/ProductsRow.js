@@ -8,7 +8,7 @@ import React, { useRef } from "react";
 import { Pagination, Navigation } from "swiper"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
-import 'swiper/css';
+// import 'swiper/css';
 import { UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT } from './Redux/Actions/action'
 function ProductsRow(props) {
   const products = props.products;
@@ -103,6 +103,12 @@ function ProductsRow(props) {
         centeredSlides={true}
         spaceBetween={30}
         grabCursor={true}
+        loop={true}
+        autoplay={{
+          delay: 2000,
+          disableOnInteraction: false
+        }}
+        speed={2000}
         // navigation={true}
         // pagination={{
         //   clickable: true,
@@ -122,21 +128,22 @@ function ProductsRow(props) {
           </div>
         ) : categories?.length > 0 ? (
           categories && categories?.map((product) => (
-            <SwiperSlide>
-              <div className="category-card col-lg-2 col-md-4 col-sm-6 mb-5">
-                <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
+            <SwiperSlide style={{ background: 'none' }}>
+
+              <div className="category-card">
+                <a to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
                   <div className="category-card-front">
                     <div className="category-icon">
-                      {/* <img width={126} height={126} alt="" /> */}
+                      <img width={70} height={70} src={"http://apis.rubypets.co.uk/assets/images/categories/" + product.frontImageName} alt="" />
                     </div>
                     <div className="content">
                       <h4>{product.name}</h4>
                     </div>
                   </div>
                   <div className="category-card-back">
-                    <img width={126} height={126} src={product.imageName} alt="" />
+                    <img width={70} height={70} src={product.imageName} alt="" />
                   </div>
-                </Link>
+                </a>
               </div>
             </SwiperSlide>
           ))
@@ -144,7 +151,6 @@ function ProductsRow(props) {
           <h2>No Categories found</h2>
         </div>)}
       </Swiper>
-
 
       {/* {loading ? (
         <div

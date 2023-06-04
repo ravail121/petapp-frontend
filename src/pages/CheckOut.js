@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
+import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL } from '../Redux/Actions/action';
 import { url } from "../environment";
 const Checkout = () => {
   const dispatch = useDispatch();
@@ -19,6 +19,8 @@ const Checkout = () => {
   const [isValidEmail, setIsValidEmail] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     checkDefaultCounter()
     setCartData(storedArray);
     GetAllShipping()
@@ -26,10 +28,14 @@ const Checkout = () => {
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
-
+    console.log(JSON.parse(localStorage.getItem("myArray")))
 
     let Data = JSON.parse(localStorage.getItem("myArray"))
+    Data?.map((ele) => {
+      ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
+    })
     for (var i = 0; i < Data?.length; i++) {
+      console.log(JSON.parse(localStorage.getItem("myArray")))
 
       totalQuantity += Data[i].quantity;
 
@@ -37,7 +43,16 @@ const Checkout = () => {
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
-
+    console.log(Data.reduce(
+      (sum, product) => sum + product.totalPrice,
+      0
+    ))
+    dispatch({
+      type: UPDATE_CART_TOTAL, payload: Data.reduce(
+        (sum, product) => sum + product.totalPrice,
+        0
+      )
+    })
   }
 
   const calculateTotalPrice = (product, index) => {
@@ -155,8 +170,12 @@ const Checkout = () => {
       });
   };
 
-  const rmoveToCart = (id) => {
-    storedArray = storedArray.filter((obj) => obj.id !== id);
+  const rmoveToCart = (item, index) => {
+    storedArray = storedArray.filter((obj) => obj.id !== item.id);
+    storedArray.map((ele) => {
+      ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
+    })
+    // 
     setCartData(storedArray);
     console.log(storedArray)
     localStorage.setItem("myArray", JSON.stringify(storedArray));
@@ -378,7 +397,7 @@ const Checkout = () => {
                             </strong>
                           </div>
                         </div>
-                        <div className="delete-btn" onClick={() => rmoveToCart(item.id)}>
+                        <div className="delete-btn" onClick={() => rmoveToCart(item, index)}>
                           <i className="bi bi-x-lg"></i>
                         </div>
                       </li>
@@ -402,11 +421,11 @@ const Checkout = () => {
 
                     <tr>
                       <td>Shipping Fee</td>
-                      <td>${ShippingTotal?.shippingFee}</td>
+                      <td>{ShippingTotal?.currencySign}{ShippingTotal?.shippingFee}</td>
                     </tr>
                     <tr>
-                      <td>Tax</td>
-                      <td>${ShippingTotal?.tax}</td>
+                      <td>Tax ({ShippingTotal?.tax * 100}%)</td>
+                      <td>{ShippingTotal?.currencySign}{(ShippingTotal?.tax * cartCountTotal).toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -418,9 +437,7 @@ const Checkout = () => {
                     <tr>
                       <th>Total</th>
                       <th>£
-                        {(cartCountTotal + Number(ShippingTotal?.shippingFee) * ShippingTotal?.tax).toFixed(2)
-                          // {((cartCountTotal + Number(ShippingTotal?.shippingFee)) * Number(ShippingTotal?.tax)).toFixed(2)}
-                        }</th>
+                        {((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2)}</th>
                     </tr>
                   </thead>
                 </table>

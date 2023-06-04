@@ -93,17 +93,7 @@ const Product = () => {
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   resetAll()
-  //   let Array = []
-  //   categories?.map((item) => {
-  //     Array.push({
-  //       name: item.name,
-  //       checked: true,
-  //       id: item.id
-  //     })
-  //   })
-  // }, [RefreshProduct])
+
   useEffect(() => {
 
     GetAllProducts();
@@ -351,7 +341,7 @@ const Product = () => {
       {contextHolder}
 
       <DiscountHeader minimum_limit={80} />
-      <Header Counts={Counts} navigate={navigate} setName={setName} Name={Name} setSelecedCat={setSelecedCat} />
+      <Header Counts={Counts} navigate={navigate} resetAll={resetAll} setName={setName} Name={Name} setSelecedCat={setSelecedCat} />
       <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px", padding: '120px 0px' }}>
         <div className="breadcrumb-vec-btm">
           <img
