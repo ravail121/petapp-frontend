@@ -1,4 +1,5 @@
 export const UPDATE_CART_COUNT = 'UPDATE_CART_COUNT';
+export const UPDATE_PRODUCT_REFRESH = 'UPDATE_PRODUCT_REFRESH';
 export const UPDATE_SEARCH_PRODUCT = 'UPDATE_SEARCH_PRODUCT';
 export const UPDATE_SEARCH_CATEGORIES = 'UPDATE_SEARCH_CATEGORIES';
 export const UPDATE_CART_TOTAL = 'UPDATE_CART_TOTAL';
@@ -10,6 +11,14 @@ export const updateCartCount = (count) => {
         payload: count,
     };
 };
+export const updateProductRefresh = (count) => {
+    // console.log(count)
+    return {
+        type: UPDATE_PRODUCT_REFRESH,
+        payload: count,
+    };
+};
+
 
 export const updateCartTotal = (count) => {
     // console.log(count)
@@ -26,7 +35,7 @@ export const searchProduct = (value) => {
     };
 };
 export const searchCategories = (value) => {
-    console.log(value)
+    // console.log(value)
     return {
         type: UPDATE_SEARCH_CATEGORIES,
         payload: value,

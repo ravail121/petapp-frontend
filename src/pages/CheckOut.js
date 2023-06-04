@@ -1,19 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
-
+import { url } from "../environment";
 const Checkout = () => {
   const dispatch = useDispatch();
+  let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+  const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
+  const [Error, setError] = useState('');
+  const [SaveValue, setSaveValue] = useState({ id: '' });
+
+  const [CartData, setCartData] = useState([])
+
+  const [IsLoading, setIsLoading] = useState(false);
+  const [ShippingSettings, setShippingSettings] = useState([]);
+  const [ShippingTotal, setShippingTotal] = useState(0);
+  const [isValidEmail, setIsValidEmail] = useState(false);
 
   useEffect(() => {
     checkDefaultCounter()
-
+    setCartData(storedArray);
+    GetAllShipping()
   }, [])
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
+
 
     let Data = JSON.parse(localStorage.getItem("myArray"))
     for (var i = 0; i < Data?.length; i++) {
@@ -26,6 +39,139 @@ const Checkout = () => {
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
 
   }
+
+  const calculateTotalPrice = (product, index) => {
+    CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
+
+    return product.quantity * product.dropshipPrice;
+  };
+
+  const GetAllShipping = () => {
+    setIsLoading(true);
+    fetch(`${url}/user/orders/shipping/costs`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("All Shipping ----->>>", response);
+        if (response.message === "Shipping Fee has been fetched Succesfully") {
+          setShippingSettings(response?.data?.shippingFee);
+          // setAllpages(response?.data?.totalCount);
+          let obj = response?.data?.shippingFee[0]
+          // const sum = Object.keys(obj)
+          //   .filter(key => key !== "id")
+          //   .reduce((acc, key) => acc + obj[key], 0);
+          setShippingTotal(obj)
+          // console.log(obj.shippingFee)
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    const emailInput = e.target.value;
+    // setEmail(emailInput);
+    setIsValidEmail(validateEmail(emailInput));
+  };
+
+  // Function to handle email authentication
+  const handleEmailAuthentication = () => {
+    if (isValidEmail) {
+      // Email is valid, perform further authentication logic here
+      console.log('Email authentication successful!');
+    } else {
+      // Invalid email format
+      console.log('Invalid email format!');
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+  const addAllShipping = (e) => {
+    e.preventDefault();
+
+    if (!isValidEmail) {
+      return
+    }
+    // if(SaveValue.email.length )
+    let Docline = []
+    CartData &&
+      CartData?.map((item, index) => {
+        Docline.push({
+          quantity: item.quantity,
+          productId: item.id,
+          amount: calculateTotalPrice(item, index),
+        })
+      })
+    // setIsLoading(true);
+    fetch(`${url}/user/orders/add`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        emailAddress: SaveValue.email,
+        totalAmount: cartCountTotal,
+        orderDetails: Docline
+      })
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("All Shipping ----->>>", response);
+        if (response.message === "Shipping Fee has been fetched Succesfully") {
+          setShippingSettings(response?.data?.shippingFee);
+          // setAllpages(response?.data?.totalCount);
+          let obj = response?.data?.shippingFee[0]
+          // const sum = Object.keys(obj)
+          //   .filter(key => key !== "id")
+          //   .reduce((acc, key) => acc + obj[key], 0);
+          setShippingTotal(obj)
+          // console.log(obj.shippingFee)
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const rmoveToCart = (id) => {
+    storedArray = storedArray.filter((obj) => obj.id !== id);
+    setCartData(storedArray);
+    console.log(storedArray)
+    localStorage.setItem("myArray", JSON.stringify(storedArray));
+    // checBalance();
+    checkDefaultCounter()
+  };
+
+  const getAllValue = (e) => {
+
+    let obj = SaveValue
+    obj[e.target.name] = e.target.value;
+
+    setSaveValue(obj)
+  }
+
   return (
     <>
       <DiscountHeader minimum_limit={80} />
@@ -36,6 +182,117 @@ const Checkout = () => {
             <div className="col-lg-7">
               <div className="form-wrap box--shadow mb-30">
                 <h4 className="title-25 mb-20">Billing Details</h4>
+                <form>
+                  <div className="row">
+                    <div className="col-lg-6">
+                      <div className="form-inner">
+                        <label>First Name</label>
+                        <input
+                          type="text"
+                          onChange={(e) => getAllValue(e)}
+                          name="fname"
+                          placeholder="Your first name"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-lg-6">
+                      <div className="form-inner">
+                        <label>Last Name</label>
+                        <input
+                          type="text"
+                          onChange={(e) => getAllValue(e)}
+
+                          name="lname"
+                          placeholder="Your last name"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <label>Country / Region</label>
+                        <input
+                          type="text"
+                          onChange={(e) => getAllValue(e)}
+
+                          name="country"
+                          placeholder="Your country name"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <label>Street Address</label>
+                        <input
+                          type="text"
+                          onChange={(e) => getAllValue(e)}
+                          name="Address"
+                          placeholder="House and street name"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <input
+                          type="text"
+                          onChange={(e) => getAllValue(e)}
+
+                          name="code"
+                          placeholder="Post Code"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <label>Additional Information</label>
+                        <input
+                          type="text"
+                          onChange={(e) => getAllValue(e)}
+                          name="PhNumber"
+                          placeholder="Your Phone Number"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <input
+                          type="email"
+                          id="email"
+                          onChange={(e) => { getAllValue(e); handleEmailChange(e) }}
+
+                          name="email"
+                          placeholder="Your Email Address"
+                        />
+                        {!isValidEmail && <p className="error-message">Invalid email format</p>}
+                        {/* {!isValidEmail && <p className="error-message">Invalid email format</p>} */}
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <input
+                          type="text"
+                          onChange={(e) => getAllValue(e)}
+
+                          name="postcode"
+                          placeholder="Post Code"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <textarea
+                          name="message"
+                          onChange={(e) => getAllValue(e)}
+                          placeholder="Order Notes (Optional)"
+                          rows="6"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div className="form-wrap box--shadow">
+                <h4 className="title-25 mb-20">Ship to a Different Address?</h4>
                 <form>
                   <div className="row">
                     <div className="col-lg-6">
@@ -78,36 +335,7 @@ const Checkout = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <select style={{ display: "none" }}>
-                          <option>Town / City</option>
-                          <option>Dhaka</option>
-                          <option>Saidpur</option>
-                          <option>Newyork</option>
-                        </select>
-                        <div className="nice-select" tabindex="0">
-                          <span className="current">Town / City</span>
-                          <ul className="list">
-                            <li
-                              data-value="Town / City"
-                              className="option selected"
-                            >
-                              Town / City
-                            </li>
-                            <li data-value="Dhaka" className="option">
-                              Dhaka
-                            </li>
-                            <li data-value="Saidpur" className="option">
-                              Saidpur
-                            </li>
-                            <li data-value="Newyork" className="option">
-                              Newyork
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+
                     <div className="col-12">
                       <div className="form-inner">
                         <input
@@ -115,79 +343,6 @@ const Checkout = () => {
                           name="fname"
                           placeholder="Post Code"
                         />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <label>Additional Information</label>
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="Your Phone Number"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <input
-                          type="email"
-                          name="email"
-                          placeholder="Your Email Address"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <input
-                          type="text"
-                          name="postcode"
-                          placeholder="Post Code"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <textarea
-                          name="message"
-                          placeholder="Order Notes (Optional)"
-                          rows="6"
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div className="form-wrap box--shadow">
-                <h4 className="title-25 mb-20">Ship to a Different Address?</h4>
-                <form>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-inner">
-                        <label>First Name</label>
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="Your first name"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-inner">
-                        <label>Last Name</label>
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="Your last name"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <textarea
-                          name="message"
-                          placeholder="Order Notes (Optional)"
-                          rows="3"
-                        ></textarea>
                       </div>
                     </div>
                   </div>
@@ -198,85 +353,40 @@ const Checkout = () => {
               <div className="added-product-summary mb-30">
                 <h5 className="title-25 checkout-title">Order Summary</h5>
                 <ul className="added-products">
-                  <li className="single-product d-flex justify-content-start">
-                    <div className="product-img">
-                      <img src="assets/images/bg/check-out-01.png" alt="" />
-                    </div>
-                    <div className="product-info">
-                      <h5 className="product-title">
-                        <a href="#">Whiskas Cat Food Core Tuna</a>
-                      </h5>
-                      <div className="product-total d-flex align-items-center">
-                        <div className="quantity">
-                          <div className="quantity d-flex align-items-center">
-                            <div className="quantity-nav nice-number d-flex align-items-center">
-                              <input type="number" value="1" min="1" />
+                  {CartData && CartData?.map((item, index) => {
+                    return (
+                      <li className="single-product d-flex justify-content-start">
+                        <div className="product-img">
+                          <img width={40} height={100} src={item?.imageName} alt="" />
+                        </div>
+                        <div className="product-info">
+                          <h5 className="product-title">
+                            <a href="#">{item?.name}</a>
+                          </h5>
+                          <div className="product-total d-flex align-items-center">
+                            <div className="quantity">
+                              <div className="quantity d-flex align-items-center">
+                                <div className="quantity-nav nice-number d-flex align-items-center">
+                                  <input type="number" value={item?.quantity} min="1" readOnly />
+                                </div>
+                              </div>
                             </div>
+                            <strong>
+                              {" "}
+                              <i className="bi bi-x-lg px-2"></i>
+                              <span className="product-price">£{calculateTotalPrice(item, index).toFixed(2)}</span>
+                            </strong>
                           </div>
                         </div>
-                        <strong>
-                          {" "}
-                          <i className="bi bi-x-lg px-2"></i>
-                          <span className="product-price">$25.00</span>
-                        </strong>
-                      </div>
-                    </div>
-                    <div className="delete-btn">
-                      <i className="bi bi-x-lg"></i>
-                    </div>
-                  </li>
-                  <li className="single-product d-flex justify-content-start">
-                    <div className="product-img">
-                      <img src="assets/images/bg/check-out-02.png" alt="" />
-                    </div>
-                    <div className="product-info">
-                      <h5 className="product-title">
-                        <a href="#">Friskies Kitten Discoveries.</a>
-                      </h5>
-                      <div className="product-total d-flex align-items-center">
-                        <div className="quantity">
-                          <div className="quantity d-flex align-items-center">
-                            <div className="quantity-nav nice-number d-flex align-items-center">
-                              <input type="number" value="1" min="1" />
-                            </div>
-                          </div>
+                        <div className="delete-btn" onClick={() => rmoveToCart(item.id)}>
+                          <i className="bi bi-x-lg"></i>
                         </div>
-                        <strong>
-                          {" "}
-                          <i className="bi bi-x-lg px-2"></i>
-                          <span className="product-price">$39.00</span>
-                        </strong>
-                      </div>
-                    </div>
-                    <div className="delete-btn">
-                      <i className="bi bi-x-lg"></i>
-                    </div>
-                  </li>
-                  <li className="single-product d-flex justify-content-start">
-                    <div className="product-img">
-                      <img src="assets/images/bg/check-out-03.png" alt="" />
-                    </div>
-                    <div className="product-info">
-                      <h5 className="product-title">
-                        <a href="#">Natural Dog Fresh Food.</a>
-                      </h5>
-                      <div className="product-total d-flex align-items-center">
-                        <div className="quantity d-flex align-items-center">
-                          <div className="quantity-nav nice-number d-flex align-items-center">
-                            <input type="number" value="1" min="1" />
-                          </div>
-                        </div>
-                        <strong>
-                          {" "}
-                          <i className="bi bi-x-lg px-2"></i>
-                          <span className="product-price">$18.00</span>
-                        </strong>
-                      </div>
-                    </div>
-                    <div className="delete-btn">
-                      <i className="bi bi-x-lg"></i>
-                    </div>
-                  </li>
+                      </li>
+                    )
+
+                  })}
+
+
                 </ul>
               </div>
 
@@ -285,21 +395,18 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Subtotal</th>
-                      <th>$128.70</th>
+                      <th>£{cartCountTotal.toFixed(2)}</th>
                     </tr>
                   </thead>
                   <tbody>
+
                     <tr>
-                      <td className="tax">Tax</td>
-                      <td>$5</td>
+                      <td>Shipping Fee</td>
+                      <td>${ShippingTotal?.shippingFee}</td>
                     </tr>
                     <tr>
-                      <td>Total ( tax excl.)</td>
-                      <td>$15</td>
-                    </tr>
-                    <tr>
-                      <td>Total ( tax incl.)</td>
-                      <td>$15</td>
+                      <td>Tax</td>
+                      <td>${ShippingTotal?.tax}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -310,7 +417,10 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Total</th>
-                      <th>$162.70</th>
+                      <th>£
+                        {(cartCountTotal + Number(ShippingTotal?.shippingFee) * ShippingTotal?.tax).toFixed(2)
+                          // {((cartCountTotal + Number(ShippingTotal?.shippingFee)) * Number(ShippingTotal?.tax)).toFixed(2)}
+                        }</th>
                     </tr>
                   </thead>
                 </table>
@@ -318,60 +428,10 @@ const Checkout = () => {
 
               <form className="payment-form">
                 <div className="payment-methods mb-50">
-                  <div className="form-check payment-check">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="flexRadioDefault"
-                      id="flexRadioDefault1"
-                    />
-                    <label className="form-check-label" for="flexRadioDefault1">
-                      Check payments
-                    </label>
-                    <p className="para">
-                      Please send a check to Store Name, Store Street, Store
-                      Town, Store State / County, Store Postcode.
-                    </p>
-                  </div>
-                  <div className="form-check payment-check">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="flexRadioDefault"
-                      id="flexRadioDefault2"
-                      checked=""
-                    />
-                    <label className="form-check-label" for="flexRadioDefault2">
-                      Cash on delivery
-                    </label>
-                    <p className="para">Pay with cash upon delivery.</p>
-                  </div>
-                  <div className="form-check payment-check paypal d-flex flex-wrap align-items-center">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="flexRadioDefault"
-                      id="flexRadioDefault3"
-                      checked=""
-                    />
-                    <label className="form-check-label" for="flexRadioDefault3">
-                      PayPal
-                    </label>
-                    <img src="assets/images/bg/payonert.png" alt="" />
-                    <a href="#" className="about-paypal">
-                      What is PayPal
-                    </a>
-                  </div>
-                  <div className="payment-form-bottom d-flex align-items-start">
-                    <input type="checkbox" id="terms" />
-                    <label for="terms">
-                      I have read and agree to the website <br />{" "}
-                      <a href="#">Terms and conditions</a>
-                    </label>
-                  </div>
+
                 </div>
                 <div className="place-order-btn">
-                  <button type="submit" className="primary-btn1 lg-btn">
+                  <button onClick={(e) => addAllShipping(e)} className="primary-btn1 lg-btn">
                     Place Order
                   </button>
                 </div>

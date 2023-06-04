@@ -128,11 +128,11 @@ const Cart = () => {
           setShippingSettings(response?.data?.shippingFee);
           // setAllpages(response?.data?.totalCount);
           let obj = response?.data?.shippingFee[0]
-          const sum = Object.keys(obj)
-            .filter(key => key !== "id")
-            .reduce((acc, key) => acc + obj[key], 0);
-          setShippingTotal(sum)
-          console.log(sum)
+          // const sum = Object.keys(obj)
+          //   .filter(key => key !== "id")
+          //   .reduce((acc, key) => acc + obj[key], 0);
+          setShippingTotal(obj)
+          // console.log(obj.shippingFee)
           setIsLoading(false);
         }
       })
@@ -171,6 +171,9 @@ const Cart = () => {
     //   )
     // })
   };
+
+
+
   return (
     <>
       {/* {contextHolder} */}
@@ -290,7 +293,10 @@ const Cart = () => {
                         );
                       })}
                   </tbody>
+
                 </table>
+                {CartData.length < 1 && <div style={{ textAlign: 'center' }}> <h2>Cart is empty</h2></div>}
+
               </div>
             </div>
           </div>
@@ -306,6 +312,7 @@ const Cart = () => {
                 </div>
               </div>
             </div> */}
+
             <div className="col-lg-8">
               <table className="table total-table">
                 <thead>
@@ -345,7 +352,8 @@ const Cart = () => {
                   <tr>
                     <td>Subtotal</td>
                     <td></td>
-                    <td>${(cartCountTotal + ShippingTotal).toFixed(2)}</td>
+
+                    <td>${(cartCountTotal + Number(ShippingTotal?.shippingFee)).toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>

@@ -9041,7 +9041,7 @@ footer.style2 .social-area ul li:hover a i {
 .home3-newsletter-area .newsletter-wrap .form-inner {
   max-width: 590px;
   width: 100%;
-  background: #FFFFFF;
+  /* background: #FFFFFF; */
   border: 1px solid #ECECEC;
   border-radius: 10px;
   display: flex;

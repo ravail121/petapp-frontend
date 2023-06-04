@@ -5,7 +5,7 @@ const initialState = {
     value: '',
 };
 
-const searchValue = (state = initialState, action) => {
+const searchProduct = (state = initialState, action) => {
     console.log(action.type, state)
 
     switch (action.type) {
@@ -21,4 +21,4 @@ const searchValue = (state = initialState, action) => {
     }
 };
 
-export default searchValue;
+export default searchProduct;

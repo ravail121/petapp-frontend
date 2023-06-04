@@ -5,13 +5,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
 import { message } from 'antd';
+import { Pagination, Navigation } from "swiper"
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
 import mxsvg from '../assets/images/icon/amex.svg'
 const ProductDetails = () => {
   const [IsLoading, setIsLoading] = React.useState(false);
   const [AllValues, setAllValues] = React.useState({ id: '' });
-  const [Products, setProducts] = React.useState([]);
+  const [products, setProducts] = React.useState([]);
   const dispatch = useDispatch();
 
   const [ProductDetail, setProductDetail] = React.useState();
@@ -681,100 +683,95 @@ const ProductDetails = () => {
                     <div className="inner-section-title">
                       <h2>Other Products</h2>
                     </div>
-                    {/* <div className="swiper-btn-wrap d-flex align-items-center">
-                      <div className="slider-btn prev-btn-12">
-                        <i className="bi bi-arrow-left"></i>
-                      </div>
-                      <div className="slider-btn next-btn-12">
-                        <i className="bi bi-arrow-right"></i>
-                      </div>
-                    </div> */}
+
                   </div>
                 </div>
-                <div className="row">
-                  {IsLoading ? (
-                    <div
-                      className="row text-align-center"
-                      style={{ display: "block", textAlign: "center" }}
-                    >
-                      <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    </div>
-                  ) : Products?.length > 0 ? (
-                    Products &&
-                    Products?.map((item) => {
-                      return (
+                <div class="row g-4 justify-content-center">
 
-                        <div className="col-lg-4 col-md-4 col-sm-6 mb-" >
-                          <div className="collection-card">
-                            {/* <div className="offer-card">
-                            <span>Offer</span>
-                          </div> */}
-                            <div className="collection-img">
-                              <img
-                                width={200}
-                                height={150}
-                                className="img-gluid"
-                                src={item?.imageName}
-                                alt=""
-                              />
-                              <div className="view-dt-btn">
-                                <div className="plus-icon">
-                                  <i className="bi bi-plus"></i>
-                                </div>
-                                <a
-                                  onClick={() =>
-                                    navigate(
-                                      `/productsDetails/${encodeURIComponent(
-                                        JSON.stringify(item)
-                                      )}`
-                                    )
-                                  }
-                                >
-                                  View Details
-                                </a>
-                              </div>
-                              <ul className="cart-icon-list">
-                                <li>
-                                  <a href="#">
-                                    {/* <img src={img1} alt="" /> */}
-                                  </a>
-                                </li>
-                                {/* <li>
-                                <a href="#">
-                                  <img src={fav3} alt="" />
-                                </a>
-                              </li> */}
-                              </ul>
-                            </div>
-                            <div className="collection-content text-center">
-                              <h4>
-                                <a
-                                  onClick={() =>
-                                    navigate(
-                                      `/productsDetails/${encodeURIComponent(
-                                        JSON.stringify(item)
-                                      )}`
-                                    )
-                                  }
-                                >
-                                  {item?.name}
-                                </a>
-                              </h4>
-                              <div className="price">
-                                <h6>${item.dropshipPrice}</h6>
-                                {/* <del>${item.rrp}</del> */}
-                              </div>
-
-                            </div>
-                          </div>
+                  <Swiper
+                    slidesPerView={4}
+                    // centeredSlides={true}
+                    spaceBetween={3}
+                    grabCursor={true}
+                    // navigation={true}
+                    pagination={{
+                      clickable: true,
+                    }}
+                    modules={[Pagination]}
+                    onSlideChange={() => console.log('slide change')}
+                    onSwiper={(swiper) => console.log(swiper)}
+                  >
+                    {IsLoading ? (
+                      <div
+                        className="row text-align-center"
+                        style={{ display: "block", textAlign: "center" }}
+                      >
+                        <div className="spinner-border" role="status">
+                          <span className="visually-hidden">Loading...</span>
                         </div>
-                      );
-                    })
-                  ) : (
-                    <h2>No Products found</h2>
-                  )}
+                      </div>
+                    ) : products?.length > 0 ? (
+                      products &&
+                      products?.map((item) => {
+                        return (
+                          <SwiperSlide>
+                            {/* <div class=""> */}
+                            <div class="collection-card">
+                              <div class="offer-card">
+                                {/* <span>Offer</span> */}
+                              </div>
+                              <div class="collection-img">
+                                <img class="img-gluid" width={200}
+                                  height={150} src={item?.imageName} alt="" />
+                                <div class="view-dt-btn">
+                                  <div class="plus-icon">
+                                    <i class="bi bi-plus"></i>
+                                  </div>
+                                  <a onClick={() =>
+                                    navigate(
+                                      `/productsDetails/${encodeURIComponent(
+                                        JSON.stringify(item)
+                                      )}`
+                                    )
+                                  }>View Details</a>
+                                </div>
+                                <ul class="cart-icon-list">
+                                  <li><a href="#"><img src="../assets/images/icon/Icon-cart3.svg" alt="" /></a></li>
+                                  {/* <li><a href="#"><img src="assets/images/icon/Icon-favorites3.svg" alt="" /></a></li> */}
+                                </ul>
+                              </div>
+                              <div class="collection-content text-center">
+                                <h4><a onClick={() =>
+                                  navigate(
+                                    `/productsDetails/${encodeURIComponent(
+                                      JSON.stringify(item)
+                                    )}`
+                                  )
+                                }>{item.name}</a></h4>
+                                <div class="price">
+                                  <h6>${item.dropshipPrice}</h6>
+                                  {/* <del>$30.00</del> */}
+                                </div>
+                                {/* <div class="review">
+                    <ul>
+                      <li><i class="bi bi-star-fill"></i></li>
+                      <li><i class="bi bi-star-fill"></i></li>
+                      <li><i class="bi bi-star-fill"></i></li>
+                      <li><i class="bi bi-star-fill"></i></li>
+                      <li><i class="bi bi-star-fill"></i></li>
+                    </ul>
+                    <span>(50)</span>
+                  </div> */}
+                              </div>
+                            </div>
+                            {/* </div> */}
+                          </SwiperSlide>
+                        );
+                      })
+                    ) : (
+                      <h2>No Products found</h2>
+                    )}
+                  </Swiper>
                 </div>
               </div>
             </div>

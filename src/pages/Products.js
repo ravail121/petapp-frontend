@@ -87,12 +87,23 @@ const Product = () => {
   const [value1, setValue1] = React.useState([0, 500]);
   let SearchValue = useSelector((state) => state.searchValue.value);
   let SearchCat = useSelector((state) => state.searchCat.value);
+  let RefreshProduct = useSelector((state) => state.productRefresh.productRefresh);
 
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
-
+  // useEffect(() => {
+  //   resetAll()
+  //   let Array = []
+  //   categories?.map((item) => {
+  //     Array.push({
+  //       name: item.name,
+  //       checked: true,
+  //       id: item.id
+  //     })
+  //   })
+  // }, [RefreshProduct])
   useEffect(() => {
 
     GetAllProducts();
@@ -114,6 +125,7 @@ const Product = () => {
         return item.id
       }
     })
+
     const filteredItems = Docline.filter((item) => typeof item !== 'undefined');
     console.log(SearchCat)
     setIsLoading(true);
@@ -150,6 +162,7 @@ const Product = () => {
 
   const resetAll = () => {
     // filteredItems = []
+    // console.log('dsds')
     SearchCat = ''
     SearchValue = ''
     setSliderValues([0, 500])
@@ -198,7 +211,7 @@ const Product = () => {
 
   const fetchCategories = () => {
     setLoading(true);
-    let url = `http://apis.rubypets.co.uk/user/categories/list/1/10`;
+    let url = `http://apis.rubypets.co.uk/user/categories/list`;
     console.log(url);
     fetch(url, {
       method: "GET",
@@ -224,20 +237,6 @@ const Product = () => {
       });
   };
 
-
-  const handleChange1 = (event, newValue, activeThumb) => {
-    if (!Array.isArray(newValue)) {
-      return;
-    }
-
-    if (activeThumb === 0) {
-      setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
-
-    } else {
-      setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
-
-    }
-  };
 
   const success = () => {
     messageApi.open({
@@ -352,7 +351,7 @@ const Product = () => {
       {contextHolder}
 
       <DiscountHeader minimum_limit={80} />
-      <Header resetAll={resetAll} Counts={Counts} navigate={navigate} setName={setName} Name={Name} setSelecedCat={setSelecedCat} />
+      <Header Counts={Counts} navigate={navigate} setName={setName} Name={Name} setSelecedCat={setSelecedCat} />
       <div className="inner-page-banner container-fluid" style={{ marginBottom: "120px", padding: '120px 0px' }}>
         <div className="breadcrumb-vec-btm">
           <img

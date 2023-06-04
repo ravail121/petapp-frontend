@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { encode, decode } from 'base-64';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
-import { UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT } from "../Redux/Actions/action";
+import { UPDATE_PRODUCT_REFRESH, UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT } from "../Redux/Actions/action";
 const handleContactClick = () => {
   window.scrollTo({
     top: document.body.scrollHeight,
@@ -12,7 +12,7 @@ const handleContactClick = () => {
   });
 };
 
-function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
+function Header({ setSelecedCat, Refresh, Name, setName, Counts }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [TotalQuantity, setTotalQuantity] = useState(0);
   const [NameNew, setNameNew] = useState('');
@@ -24,6 +24,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  let SearchValue = useSelector((state) => state.productRefresh.productRefresh);
 
   useEffect(() => {
     fetchCategories();
@@ -46,7 +47,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
 
   const fetchCategories = () => {
     setLoading(true);
-    let url = `http://apis.rubypets.co.uk/user/categories/list/1/10`;
+    let url = `http://apis.rubypets.co.uk/user/categories/list`;
     console.log(url);
     fetch(url, {
       method: "GET",
@@ -107,7 +108,9 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
               </a> */}
             </li>
             <li>
-              <Link to="/products" onClick={() => resetAll()}>Products</Link>
+              <Link to="/products" onClick={() => dispatch({
+                type: UPDATE_PRODUCT_REFRESH, payload: SearchValue + 1
+              })}>Products</Link>
 
               {/* <a href="" onClick={() => navigate("/products")}>
                 Products

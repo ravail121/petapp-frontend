@@ -8,6 +8,8 @@ import product_item3 from "./assets/images/icon/fish.svg";
 import { url } from "./environment";
 import { useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT } from './Redux/Actions/action';
+import { Pagination, Navigation } from "swiper"
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import product_item4 from "./assets/images/icon/bird.svg";
 import { Link } from "react-router-dom";
@@ -134,62 +136,77 @@ function Home() {
                 <h2><img src="assets/images/icon/h3-sec-tt-vect-left.svg" alt="" /><span>Find Pet Collections</span><img src="assets/images/icon/h3-sec-tt-vect-right.svg" alt="" /></h2>
               </div>
               <div class="h3-view-btn d-md-flex d-none">
-                <a href="shop.html">View All Product<img src="assets/images/icon/haf-button-2.svg" alt="" /></a>
+                <Link to={`/products`}>View All Product<img src="assets/images/icon/haf-button-2.svg" alt="" /></Link>
               </div>
             </div>
           </div>
           <div class="row g-4 justify-content-center">
-            {IsLoading ? (
-              <div
-                className="row text-align-center"
-                style={{ display: "block", textAlign: "center" }}
-              >
-                <div className="spinner-border" role="status">
-                  <span className="visually-hidden">Loading...</span>
+
+            <Swiper
+              slidesPerView={4}
+              // centeredSlides={true}
+              spaceBetween={3}
+              grabCursor={true}
+              // navigation={true}
+              // pagination={{
+              //   clickable: true,
+              // }}
+              modules={[Pagination]}
+              onSlideChange={() => console.log('slide change')}
+              onSwiper={(swiper) => console.log(swiper)}
+            >
+              {IsLoading ? (
+                <div
+                  className="row text-align-center"
+                  style={{ display: "block", textAlign: "center" }}
+                >
+                  <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
                 </div>
-              </div>
-            ) : products?.length > 0 ? (
-              products &&
-              products?.map((item) => {
-                return (
-                  <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="collection-card">
-                      <div class="offer-card">
-                        {/* <span>Offer</span> */}
-                      </div>
-                      <div class="collection-img">
-                        <img class="img-gluid" width={200}
-                          height={150} src={item?.imageName} alt="" />
-                        <div class="view-dt-btn">
-                          <div class="plus-icon">
-                            <i class="bi bi-plus"></i>
+              ) : products?.length > 0 ? (
+                products &&
+                products?.map((item) => {
+                  return (
+                    <SwiperSlide>
+                      {/* <div class=""> */}
+                      <div class="collection-card">
+                        <div class="offer-card">
+                          {/* <span>Offer</span> */}
+                        </div>
+                        <div class="collection-img">
+                          <img class="img-gluid" width={200}
+                            height={150} src={item?.imageName} alt="" />
+                          <div class="view-dt-btn">
+                            <div class="plus-icon">
+                              <i class="bi bi-plus"></i>
+                            </div>
+                            <a onClick={() =>
+                              navigate(
+                                `/productsDetails/${encodeURIComponent(
+                                  JSON.stringify(item)
+                                )}`
+                              )
+                            }>View Details</a>
                           </div>
-                          <a onClick={() =>
+                          <ul class="cart-icon-list">
+                            <li><a href="#"><img src="assets/images/icon/Icon-cart3.svg" alt="" /></a></li>
+                            {/* <li><a href="#"><img src="assets/images/icon/Icon-favorites3.svg" alt="" /></a></li> */}
+                          </ul>
+                        </div>
+                        <div class="collection-content text-center">
+                          <h4><a onClick={() =>
                             navigate(
                               `/productsDetails/${encodeURIComponent(
                                 JSON.stringify(item)
                               )}`
                             )
-                          }>View Details</a>
-                        </div>
-                        <ul class="cart-icon-list">
-                          <li><a href="#"><img src="assets/images/icon/Icon-cart3.svg" alt="" /></a></li>
-                          {/* <li><a href="#"><img src="assets/images/icon/Icon-favorites3.svg" alt="" /></a></li> */}
-                        </ul>
-                      </div>
-                      <div class="collection-content text-center">
-                        <h4><a onClick={() =>
-                          navigate(
-                            `/productsDetails/${encodeURIComponent(
-                              JSON.stringify(item)
-                            )}`
-                          )
-                        }>{item.name}</a></h4>
-                        <div class="price">
-                          <h6>${item.dropshipPrice}</h6>
-                          {/* <del>$30.00</del> */}
-                        </div>
-                        {/* <div class="review">
+                          }>{item.name}</a></h4>
+                          <div class="price">
+                            <h6>${item.dropshipPrice}</h6>
+                            {/* <del>$30.00</del> */}
+                          </div>
+                          {/* <div class="review">
                     <ul>
                       <li><i class="bi bi-star-fill"></i></li>
                       <li><i class="bi bi-star-fill"></i></li>
@@ -199,14 +216,16 @@ function Home() {
                     </ul>
                     <span>(50)</span>
                   </div> */}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <h2>No Products found</h2>
-            )}
+                      {/* </div> */}
+                    </SwiperSlide>
+                  );
+                })
+              ) : (
+                <h2>No Products found</h2>
+              )}
+            </Swiper>
           </div>
           <div class="row d-md-none d-block pt-30">
             <div class="col-lg-12 d-flex justify-content-center">
@@ -233,6 +252,13 @@ function Home() {
                 <form>
                   <div class="form-inner">
                     <input type="text" placeholder="Type Your Email" />
+
+                  </div>
+                  <div class="form-inner mt-2">
+                    <input type="text" placeholder="Type Your Comment" />
+
+                  </div>
+                  <div class="form-inner mt-2" style={{ background: 'none !important' }}>
                     <button type="submit">Connect</button>
                   </div>
                 </form>
