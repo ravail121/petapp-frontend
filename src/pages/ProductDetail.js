@@ -1,15 +1,56 @@
 import React, { useEffect } from "react";
 import Header from "../shared/Header";
+import iconCat3 from "../assets/images/icon/Icon-cart3.svg";
+
 import DiscountHeader from "../shared/DiscountHeader";
 import { Link, useNavigate } from "react-router-dom";
 import { url } from "../environment";
 import { useParams } from "react-router-dom";
 import { message } from 'antd';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { Pagination, Navigation } from "swiper"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
 import mxsvg from '../assets/images/icon/amex.svg'
+const responsive = [
+  {
+    breakpoint: 1024,
+    settings: {
+      slidesToShow: 3,
+      speed: 2000,
+      slidesToScroll: 1,
+      autoplay: true, // Enable autoplay
+      autoplaySpeed: 1000, // Set autoplay speed in milliseconds
+    }
+  },
+  {
+    breakpoint: 768,
+    settings: {
+      slidesToShow: 2,
+      slidesToScroll: 1,
+      infinite: true,
+      dots: true
+    }
+  },
+  {
+    breakpoint: 600,
+    settings: {
+      slidesToShow: 2,
+      slidesToScroll: 2,
+      initialSlide: 2
+    }
+  },
+  {
+    breakpoint: 480,
+    settings: {
+      slidesToShow: 1,
+      slidesToScroll: 1
+    }
+  }
+]
 const ProductDetails = () => {
   const [IsLoading, setIsLoading] = React.useState(false);
   const [AllValues, setAllValues] = React.useState({ id: '' });
@@ -82,7 +123,7 @@ const ProductDetails = () => {
 
       totalQuantity += Data[i].quantity;
 
-      console.log(totalQuantity)
+      // console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -116,6 +157,30 @@ const ProductDetails = () => {
     }
   };
 
+  const addToCartNew = (decodedObj) => {
+    const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+    const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
+    console.log(hasDuplicate)
+    if (!hasDuplicate) {
+      decodedObj["quantity"] = 1;
+      storedArray.push(decodedObj);
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      console.log(storedArray)
+      success()
+
+      checkDefaultCounter()
+
+    } else {
+
+      hasDuplicate["quantity"] = 1 + hasDuplicate["quantity"];
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      success()
+
+      checkDefaultCounter()
+
+
+    }
+  };
 
   const GetAllProducts = (e, pageNumber) => {
     setIsLoading(true);
@@ -607,90 +672,62 @@ const ProductDetails = () => {
                 </div>
                 <div class="row g-4 justify-content-center">
 
-                  <Swiper
-                    slidesPerView={4}
-                    // centeredSlides={true}
-                    spaceBetween={3}
-                    grabCursor={true}
-                    // navigation={true}
-                    pagination={{
-                      clickable: true,
-                    }}
-                    modules={[Pagination]}
-                    onSlideChange={() => console.log('slide change')}
-                    onSwiper={(swiper) => console.log(swiper)}
-                  >
-                    {IsLoading ? (
-                      <div
-                        className="row text-align-center"
-                        style={{ display: "block", textAlign: "center" }}
-                      >
-                        <div className="spinner-border" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </div>
-                      </div>
-                    ) : products?.length > 0 ? (
-                      products &&
-                      products?.map((item) => {
-                        return (
-                          <SwiperSlide>
-                            {/* <div class=""> */}
-                            <div class="collection-card">
-                              <div class="offer-card">
-                                {/* <span>Offer</span> */}
+                  <Slider className="places-carousel ml-2" dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={false} slidesToShow={4} centerMode={false} centerPadding="50px" autoplay={true} responsive={responsive}>
+                    {products?.map((item, index) => {
+                      return (
+                        <div class="collection-card">
+                          <div class="offer-card">
+                            {/* <span>Offer</span> */}
+                          </div>
+                          <div class="collection-img">
+                            <img class="img-gluid" width={200}
+                              height={150} src={item?.imageName} alt="" />
+                            <div class="view-dt-btn">
+                              <div class="plus-icon">
+                                <i class="bi bi-plus"></i>
                               </div>
-                              <div class="collection-img">
-                                <img class="img-gluid" width={200}
-                                  height={150} src={item?.imageName} alt="" />
-                                <div class="view-dt-btn">
-                                  <div class="plus-icon">
-                                    <i class="bi bi-plus"></i>
-                                  </div>
-                                  <a onClick={() =>
-                                    navigate(
-                                      `/productsDetails/${encodeURIComponent(
-                                        JSON.stringify(item)
-                                      )}`
-                                    )
-                                  }>View Details</a>
-                                </div>
-                                <ul class="cart-icon-list">
-                                  <li><a href="#"><img src="../assets/images/icon/Icon-cart3.svg" alt="" /></a></li>
-                                  {/* <li><a href="#"><img src="assets/images/icon/Icon-favorites3.svg" alt="" /></a></li> */}
-                                </ul>
-                              </div>
-                              <div class="collection-content text-center">
-                                <h4><a onClick={() =>
-                                  navigate(
-                                    `/productsDetails/${encodeURIComponent(
-                                      JSON.stringify(item)
-                                    )}`
-                                  )
-                                }>{item.name}</a></h4>
-                                <div class="price">
-                                  <h6>${item.dropshipPrice}</h6>
-                                  {/* <del>$30.00</del> */}
-                                </div>
-                                {/* <div class="review">
-                    <ul>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                    </ul>
-                    <span>(50)</span>
-                  </div> */}
-                              </div>
+                              <a onClick={() =>
+                                navigate(
+                                  `/productsDetails/${encodeURIComponent(
+                                    JSON.stringify(item)
+                                  )}`
+                                )
+                              }>View Details</a>
                             </div>
-                            {/* </div> */}
-                          </SwiperSlide>
-                        );
-                      })
-                    ) : (
-                      <h2>No Products found</h2>
-                    )}
-                  </Swiper>
+                            <ul class="cart-icon-list">
+                              <li onClick={() => addToCartNew(item)}><a href="#"><img src={iconCat3} alt="" /></a></li>
+                              {/* <li><a href="#"><img src="assets/images/icon/Icon-favorites3.svg" alt="" /></a></li> */}
+                            </ul>
+                          </div>
+                          <div class="collection-content text-center">
+                            <h4><a onClick={() =>
+                              navigate(
+                                `/productsDetails/${encodeURIComponent(
+                                  JSON.stringify(item)
+                                )}`
+                              )
+                            }>{item.name}</a></h4>
+                            <div class="price">
+                              <h6>${item.dropshipPrice}</h6>
+                              {/* <del>$30.00</del> */}
+                            </div>
+                            {/* <div class="review">
+                      <ul>
+                        <li><i class="bi bi-star-fill"></i></li>
+                        <li><i class="bi bi-star-fill"></i></li>
+                        <li><i class="bi bi-star-fill"></i></li>
+                        <li><i class="bi bi-star-fill"></i></li>
+                        <li><i class="bi bi-star-fill"></i></li>
+                      </ul>
+                      <span>(50)</span>
+                    </div> */}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </Slider>
+
+
                 </div>
               </div>
             </div>

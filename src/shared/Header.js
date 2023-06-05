@@ -38,7 +38,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
 
       totalQuantity += Data[i].quantity;
 
-      console.log(totalQuantity)
+      // console.log(totalQuantity)
     }
     setTotalQuantity(totalQuantity)
     localStorage.setItem("myArray", JSON.stringify(Data));
@@ -74,6 +74,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
     dispatch({
       type: UPDATE_SEARCH_CATEGORIES, payload: id
     })
+
   }
 
   return (
@@ -109,7 +110,11 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
               </a> */}
             </li>
             <li>
-              <Link to="/products" onClick={resetAll}>Products</Link>
+              <Link to="/products" onClick={() => {
+                resetAll ? resetAll() : dispatch({
+                  type: UPDATE_PRODUCT_REFRESH, payload: 1
+                })
+              }}>Products</Link>
 
               {/* <a href="" onClick={() => navigate("/products")}>
                 Products

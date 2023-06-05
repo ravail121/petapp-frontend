@@ -4,7 +4,7 @@ import DiscountHeader from "../shared/DiscountHeader";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_CART_COUNT, UPDATE_SEARCH_PRODUCT } from '../Redux/Actions/action';
+import { UPDATE_CART_COUNT, UPDATE_PRODUCT_REFRESH, UPDATE_SEARCH_PRODUCT } from '../Redux/Actions/action';
 import { styled } from "@mui/material/styles";
 import Slider, { SliderThumb } from "@mui/material/Slider";
 import img1 from "../assets/images/icon/Icon-cart3.svg";
@@ -88,26 +88,30 @@ const Product = () => {
   let SearchValue = useSelector((state) => state.searchValue.value);
   let SearchCat = useSelector((state) => state.searchCat.value);
   let RefreshProduct = useSelector((state) => state.productRefresh.productRefresh);
-
+  console.log(RefreshProduct)
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
-
+  let value = 0
   useEffect(() => {
-
-    GetAllProducts();
-
     fetchCategories()
+
+
+
+
 
     checkDefaultCounter()
   }, [SearchValue, SearchCat]);
 
 
-  const GetAllProducts = (e, pageNumber, perpage) => {
+  const GetAllProducts = (event, pageNumber, perpage) => {
     // debugger
-    window.scrollTo(0, 0);
+    value++
+    setIsLoading(true);
 
+    window.scrollTo(0, 0);
+    let filteredItems = [];
 
     setLimits(perpage)
     let Docline = categories?.map((item) => {
@@ -115,8 +119,23 @@ const Product = () => {
         return item.id
       }
     })
-
-    const filteredItems = Docline.filter((item) => typeof item !== 'undefined');
+    if (RefreshProduct === 1) {
+      let Array = []
+      event?.map((item) => {
+        Array.push({
+          name: item.name,
+          checked: true,
+          id: item.id
+        })
+      })
+      setCategories(Array);
+    }
+    if (event === 'Apply') {
+      filteredItems = Docline.filter((item) => typeof item !== 'undefined');
+    }
+    else {
+      filteredItems = []
+    }
     console.log(SearchCat)
     setIsLoading(true);
     fetch(`${url}/user/products/list`, {
@@ -137,11 +156,16 @@ const Product = () => {
       .then((response) => response.json())
       .then((response) => {
         console.log("All Products ----->>>", response);
+        value--
         if (response.statusCode === 200) {
           setProducts(response?.data?.products);
           // fetchCategories()
+          dispatch({
+            type: UPDATE_PRODUCT_REFRESH, payload: 0
+          })
           setAllpages(response?.data?.totalCount);
-          setIsLoading(false);
+          checkLoading()
+
 
         }
       })
@@ -150,9 +174,16 @@ const Product = () => {
       });
   };
 
+  const checkLoading = () => {
+    if (value === 0) {
+      setIsLoading(false);
+    }
+  }
+
   const resetAll = () => {
     // filteredItems = []
-    // console.log('dsds')
+    console.log('Reset ALl')
+    setIsLoading(true)
     SearchCat = ''
     SearchValue = ''
     setSliderValues([0, 500])
@@ -177,7 +208,7 @@ const Product = () => {
       body: JSON.stringify({
         page: 1,
         limit: 10,
-        name: '',
+        search: '',
         categories: [],
         price: [0, 500],
       })
@@ -188,6 +219,9 @@ const Product = () => {
         if (response.statusCode === 200) {
           setProducts(response?.data?.products);
           // fetchCategories()
+          dispatch({
+            type: UPDATE_PRODUCT_REFRESH, payload: 0
+          })
           setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
@@ -201,6 +235,8 @@ const Product = () => {
 
   const fetchCategories = () => {
     setLoading(true);
+    setIsLoading(true);
+
     let url = `http://apis.rubypets.co.uk/user/categories/list`;
     console.log(url);
     fetch(url, {
@@ -220,6 +256,8 @@ const Product = () => {
           console.log(Array)
           setCategories(Array);
           setLoading(false);
+          GetAllProducts(Array);
+
         }
       })
       .catch((error) => {
@@ -243,7 +281,7 @@ const Product = () => {
 
       totalQuantity += Data[i].quantity;
 
-      console.log(totalQuantity)
+      // // console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -280,6 +318,8 @@ const Product = () => {
       // navigate(`/cart`)
     }
   };
+
+
   const minPriceInputRef = useRef(null);
   const maxPriceInputRef = useRef(null);
 
@@ -336,6 +376,8 @@ const Product = () => {
       },
     },
   });
+
+
   return (
     <>
       {contextHolder}
@@ -462,7 +504,7 @@ const Product = () => {
                   <button type="button" class="btn btn-dark btn-lg" onClick={() => {
                     setActivepage(1); dispatch({
                       type: UPDATE_SEARCH_PRODUCT, payload: ''
-                    }); GetAllProducts();
+                    }); GetAllProducts('Apply');
                   }}>Apply filter</button>
 
                 </div>
@@ -480,7 +522,7 @@ const Product = () => {
                           className="defult-select-drowpown"
                           id="color-dropdown"
                           value={limits}
-                          onChange={(e) => { GetAllProducts(e, 1, e.target.value); setPageData(e.target.value); setActivepage(1) }}
+                          onChange={(e) => { GetAllProducts('Apply', 1, e.target.value); setPageData(e.target.value); setActivepage(1) }}
                         >
                           <option value="5">
                             5

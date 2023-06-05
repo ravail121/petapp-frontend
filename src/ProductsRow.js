@@ -5,11 +5,12 @@ import 'swiper/css/navigation';
 import { encode } from "base-64";
 import { useDispatch } from "react-redux";
 import React, { useRef } from "react";
-import { Pagination, Navigation } from "swiper"
+import { Pagination, Navigation, Autoplay } from "swiper"
 import { Swiper, SwiperSlide } from 'swiper/react';
+
 import 'swiper/swiper.min.css';
 // import 'swiper/css';
-import { UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT } from './Redux/Actions/action'
+import { UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT, UPDATE_PRODUCT_REFRESH } from './Redux/Actions/action'
 function ProductsRow(props) {
   const products = props.products;
   const [startIndex, setStartIndex] = useState(0);
@@ -65,6 +66,7 @@ function ProductsRow(props) {
     dispatch({
       type: UPDATE_SEARCH_PRODUCT, payload: ''
     })
+
   }
 
   const listProducts = categories?.map((product) => (
@@ -113,7 +115,7 @@ function ProductsRow(props) {
         // pagination={{
         //   clickable: true,
         // }}
-        modules={[Pagination]}
+        modules={[Pagination, Autoplay]}
         onSlideChange={() => console.log('slide change')}
         onSwiper={(swiper) => console.log(swiper)}
       >
@@ -131,7 +133,7 @@ function ProductsRow(props) {
             <SwiperSlide style={{ background: 'none' }}>
 
               <div className="category-card">
-                <a to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
+                <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
                   <div className="category-card-front">
                     <div className="category-icon">
                       <img width={70} height={70} src={"http://apis.rubypets.co.uk/assets/images/categories/" + product.frontImageName} alt="" />
@@ -143,7 +145,7 @@ function ProductsRow(props) {
                   <div className="category-card-back">
                     <img width={70} height={70} src={product.imageName} alt="" />
                   </div>
-                </a>
+                </Link>
               </div>
             </SwiperSlide>
           ))

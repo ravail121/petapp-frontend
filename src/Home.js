@@ -8,14 +8,14 @@ import product_item2 from "./assets/images/icon/cat.svg";
 import product_item3 from "./assets/images/icon/fish.svg";
 import { url } from "./environment";
 import { useDispatch } from 'react-redux';
-import { UPDATE_CART_COUNT } from './Redux/Actions/action';
-import { Pagination, Navigation, Autoplay } from "swiper"
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { message } from 'antd';
 
+import { UPDATE_CART_COUNT, UPDATE_PRODUCT_REFRESH } from './Redux/Actions/action';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import product_item4 from "./assets/images/icon/bird.svg";
 import { Link } from "react-router-dom";
-import banner from "./assets/images/bg/h3-banner-img.png";
-import Footer from "./shared/Footer";
 import { useNavigate } from "react-router-dom";
 const Products = [
   { name: "cat supplies", img: product_item1 },
@@ -28,12 +28,61 @@ const Products = [
   { name: "Fits", img: product_item2 },
 ];
 
+const responsive = [
+  {
+    breakpoint: 1024,
+    settings: {
+      slidesToShow: 3,
+      speed: 2000,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 1000,
+    }
+  },
+  {
+    breakpoint: 768,
+    settings: {
+      slidesToShow: 2,
+      slidesToScroll: 1,
+      infinite: true,
+      dots: true
+    }
+  },
+  {
+    breakpoint: 600,
+    settings: {
+      slidesToShow: 2,
+      slidesToScroll: 2,
+      initialSlide: 2
+    }
+  },
+  {
+    breakpoint: 480,
+    settings: {
+      slidesToShow: 1,
+      slidesToScroll: 1
+    }
+  }
+]
+
+
 function Home() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [IsLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [autoplay, setAutoplay] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
+
+  const handleMouseEnter = () => {
+    console.log('mouse Enter')
+    setAutoplay(true);
+  };
+
+  const handleMouseLeave = () => {
+    setAutoplay(false);
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
 
@@ -57,10 +106,8 @@ function Home() {
     })
       .then((response) => response.json())
       .then((response) => {
-        // console.log("All Products ----->>>", response);
         if (response.message === "Products fetched Successfully") {
           setProducts(response?.data?.products);
-          // setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
       })
@@ -70,6 +117,37 @@ function Home() {
   };
 
 
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Add to cart Successfully Added',
+    });
+  };
+
+  const addToCart = (decodedObj) => {
+    const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+    const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
+    console.log(hasDuplicate)
+    if (!hasDuplicate) {
+      decodedObj["quantity"] = 1;
+      storedArray.push(decodedObj);
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      console.log(storedArray)
+      success()
+
+      checkDefaultCounter()
+
+    } else {
+
+      hasDuplicate["quantity"] = 1 + hasDuplicate["quantity"];
+      localStorage.setItem("myArray", JSON.stringify(storedArray));
+      success()
+
+      checkDefaultCounter()
+
+
+    }
+  };
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
@@ -79,7 +157,7 @@ function Home() {
 
       totalQuantity += Data[i].quantity;
 
-      console.log(totalQuantity)
+      // console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -87,15 +165,14 @@ function Home() {
 
   return (
     <>
+      {contextHolder}
+
       <DiscountHeader minimum_limit={80} />
       <Header navigate={navigate} />
 
-      <div className="hero3 mb-90">
-        {/* <div className="d-flex justify-content-center background-text">
-          <h2 className="marquee_text">
-            <span>Get exciting Discount</span> Up To 50%
-          </h2>
-        </div> */}
+      <div className="hero3 " style={{ marginBottom: '50px' }}>
+        {
+        }
         <div className="swiper-slide hero-wrapper">
           <div className="container">
             <div className="row align-items-center">
@@ -123,7 +200,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="home3-categoty-area pt-120 mb-120">
+      <div className="home3-categoty-area  mb-120">
         <div className="container">
           <ProductsRow products={Products} />
           <div className="d-flex justify-content-center"></div>
@@ -139,102 +216,63 @@ function Home() {
                 <h2><img src="assets/images/icon/h3-sec-tt-vect-left.svg" alt="" /><span>Find Pet Collections</span><img src="assets/images/icon/h3-sec-tt-vect-right.svg" alt="" /></h2>
               </div>
               <div class="h3-view-btn d-md-flex d-none">
-                <Link to={`/products`}>View All Product<img src="assets/images/icon/haf-button-2.svg" alt="" /></Link>
+                <Link to={`/products`} onClick={() => dispatch({
+                  type: UPDATE_PRODUCT_REFRESH, payload: 1
+                })}>View All Product<img src="assets/images/icon/haf-button-2.svg" alt="" /></Link>
               </div>
             </div>
           </div>
           <div class="row g-4 justify-content-center">
 
-            <Swiper
-              slidesPerView={4}
-              // centeredSlides={true}
-              loop={true}
-              autoplay={{
-                delay: 2000,
-                disableOnInteraction: false
-              }}
-              speed={2000}
-              spaceBetween={3}
-              grabCursor={true}
-              // navigation={true}
-              // pagination={{
-              //   clickable: true,
-              // }}
-              modules={[Pagination, Autoplay]}
-              onSlideChange={() => console.log('slide change')}
-              onSwiper={(swiper) => console.log(swiper)}
-            >
-              {IsLoading ? (
-                <div
-                  className="row text-align-center"
-                  style={{ display: "block", textAlign: "center" }}
-                >
-                  <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              ) : products?.length > 0 ? (
-                products &&
-                products?.map((item) => {
-                  return (
-                    <SwiperSlide>
-                      {/* <div class=""> */}
-                      <div class="collection-card">
-                        <div class="offer-card">
-                          {/* <span>Offer</span> */}
+            <Slider className="places-carousel " dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={false} slidesToShow={4} centerMode={false} centerPadding="50px" autoplay={true} responsive={responsive}>
+              {products?.map((item, index) => {
+                return (
+                  <div class="collection-card " style={{ marginRight: '20px' }}>
+                    <div class="offer-card">
+                      { }
+                    </div>
+                    <div class="collection-img">
+                      <img class="img-gluid" width={200}
+                        height={150} src={item?.imageName} alt="" />
+                      <div class="view-dt-btn">
+                        <div class="plus-icon">
+                          <i class="bi bi-plus"></i>
                         </div>
-                        <div class="collection-img">
-                          <img class="img-gluid" width={200}
-                            height={10} src={item?.imageName} alt="" />
-                          <div class="view-dt-btn">
-                            <div class="plus-icon">
-                              <i class="bi bi-plus"></i>
-                            </div>
-                            <a onClick={() =>
-                              navigate(
-                                `/productsDetails/${encodeURIComponent(
-                                  JSON.stringify(item)
-                                )}`
-                              )
-                            }>View Details</a>
-                          </div>
-                          <ul class="cart-icon-list">
-                            <li><a href="#"><img src={iconCat3} alt="" /></a></li>
-                            {/* <li><a href="#"><img src="assets/images/icon/Icon-favorites3.svg" alt="" /></a></li> */}
-                          </ul>
-                        </div>
-                        <div class="collection-content text-center">
-                          <h4><a onClick={() =>
-                            navigate(
-                              `/productsDetails/${encodeURIComponent(
-                                JSON.stringify(item)
-                              )}`
-                            )
-                          }>{item.name}</a></h4>
-                          <div class="price">
-                            <h6>${item.dropshipPrice}</h6>
-                            {/* <del>$30.00</del> */}
-                          </div>
-                          {/* <div class="review">
-                    <ul>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                      <li><i class="bi bi-star-fill"></i></li>
-                    </ul>
-                    <span>(50)</span>
-                  </div> */}
-                        </div>
+                        <a onClick={() =>
+                          navigate(
+                            `/productsDetails/${encodeURIComponent(
+                              JSON.stringify(item)
+                            )}`
+                          )
+                        }>View Details</a>
                       </div>
-                      {/* </div> */}
-                    </SwiperSlide>
-                  );
-                })
-              ) : (
-                <h2>No Products found</h2>
-              )}
-            </Swiper>
+                      <ul class="cart-icon-list">
+                        <li onClick={() => addToCart(item)}><a href="#"><img src={iconCat3} alt="" /></a></li>
+                        { }
+                      </ul>
+                    </div>
+                    <div class="collection-content text-center">
+                      <h4><a onClick={() =>
+                        navigate(
+                          `/productsDetails/${encodeURIComponent(
+                            JSON.stringify(item)
+                          )}`
+                        )
+                      }>{item.name}</a></h4>
+                      <div class="price">
+                        <h6>${item.dropshipPrice}</h6>
+                        { }
+                      </div>
+                      {
+                      }
+                    </div>
+                  </div>
+                )
+              })}
+            </Slider>
+
+
+
           </div>
           <div class="row d-md-none d-block pt-30">
             <div class="col-lg-12 d-flex justify-content-center">

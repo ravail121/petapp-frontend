@@ -445,6 +445,9 @@ const Checkout = () => {
 
               <form className="payment-form">
                 <div className="payment-methods mb-50">
+                  <div className="row">
+
+                  </div>
 
                 </div>
                 <div className="place-order-btn">

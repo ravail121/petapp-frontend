@@ -122,7 +122,7 @@ const Product = () => {
 
       totalQuantity += Data[i].quantity;
 
-      console.log(totalQuantity)
+      // console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
