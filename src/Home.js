@@ -69,7 +69,10 @@ const responsive = [
 function Home() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [FromEmail, setFromEmail] = useState('');
+  const [Message, setMessage] = useState('');
   const [IsLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
   const [autoplay, setAutoplay] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -110,6 +113,54 @@ function Home() {
           setProducts(response?.data?.products);
           setIsLoading(false);
         }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+
+    if (FromEmail === '') {
+      setErrorMessage('Email cannot be empty');
+    } else if (!isValidEmail(FromEmail)) {
+      setErrorMessage('Invalid email format');
+    } else {
+      // Perform the desired action when the email is valid
+      console.log('Email:', FromEmail);
+      // Clear the input and error message
+      addQuery()
+
+    }
+  };
+
+  const isValidEmail = (value) => {
+    // Regular expression pattern for email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(value);
+  };
+
+
+  const addQuery = () => {
+
+    fetch(`${url}/user/queries/add`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        "from": FromEmail,
+        "message": Message,
+      })
+    })
+      .then((response) => response.json())
+      .then((response) => {
+
+        setFromEmail('');
+        setErrorMessage('');
+
       })
       .catch((err) => {
         console.log(err);
@@ -298,15 +349,16 @@ function Home() {
                 </div>
                 <form>
                   <div class="form-inner">
-                    <input type="text" placeholder="Type Your Email" />
-
+                    <input type="text" placeholder="Type Your Email" onChange={(e) => setFromEmail(e.target.value)} />
                   </div>
+                  {errorMessage && <p style={{ color: 'red', }}>{errorMessage}</p>}
+
                   <div class="form-inner mt-2">
-                    <input type="text" placeholder="Type Your Comment" />
+                    <input type="text" placeholder="Type Your Comment" onChange={(e) => setMessage(e.target.value)} />
 
                   </div>
                   <div class="form-inner mt-2" style={{ background: 'none !important' }}>
-                    <button type="submit">Connect</button>
+                    <button onClick={handleAdd}>Connect</button>
                   </div>
                 </form>
               </div>

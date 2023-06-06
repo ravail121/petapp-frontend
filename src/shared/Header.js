@@ -15,6 +15,7 @@ const handleContactClick = () => {
 function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [TotalQuantity, setTotalQuantity] = useState(0);
+  const navigate = useNavigate()
   const [NameNew, setNameNew] = useState('');
   const dispatch = useDispatch()
   const [categories, setCategories] = useState([]);
@@ -76,6 +77,20 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
     })
 
   }
+
+  const handleKeyPress = (event) => {
+    // event.preventDefault();
+
+    if (event.key === 'Enter') {
+      console.log('Enter')
+      // Perform the desired action when Enter key is pressed
+      navigate("/products")
+      dispatch({
+        type: UPDATE_SEARCH_PRODUCT, payload: NameNew
+      })
+      console.log('Enter key was pressed');
+    }
+  };
 
   return (
 
@@ -168,6 +183,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
 
                   placeholder="Search Products"
                   id="search"
+                  onKeyPress={(e) => handleKeyPress(e)}
                   onChange={(e) => getOnchange(e.target.value)}
                   autoComplete="off"
                 />
