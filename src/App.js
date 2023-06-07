@@ -14,7 +14,8 @@ import ProductsId from './pages/ProductsId'
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter
+      >
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login />} />

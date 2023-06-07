@@ -157,7 +157,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
               {/* <a href="#">Shop</a> */}
             </li>
             <li>
-              <a href="#" onClick={handleContactClick}>
+              <a href="#">
                 Contact
               </a>
             </li>

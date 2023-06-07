@@ -275,7 +275,7 @@ function Home() {
           </div>
           <div class="row g-4 justify-content-center">
 
-            <Slider className="places-carousel " dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={false} slidesToShow={4} centerMode={false} centerPadding="50px" autoplay={true} responsive={responsive}>
+            <Slider className="places-carousel " dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={true} slidesToShow={4} responsive={responsive}>
               {products?.map((item, index) => {
                 return (
                   <div class="collection-card " style={{ marginRight: '20px' }}>
