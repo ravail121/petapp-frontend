@@ -456,7 +456,7 @@ const Product = () => {
                             <img
                               width={200}
                               height={150}
-                              className="img-fluid"
+                              className="img-gluid"
                               src={item?.imageName}
                               alt=""
                             />

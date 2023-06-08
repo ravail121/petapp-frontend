@@ -282,7 +282,7 @@ function Home() {
                       { }
                     </div>
                     <div class="collection-img">
-                      <img class="img-fluid" width={200}
+                      <img class="img-gluid" width={200}
                         height={150} src={item?.imageName} alt="" />
                       <div class="view-dt-btn">
                         <div class="plus-icon">

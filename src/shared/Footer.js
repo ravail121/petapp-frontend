@@ -39,10 +39,10 @@ function Footer() {
               <div className="menu-container">
                 <ul>
                   <li>
-                    <a href="about.html">About Us</a>
+                    <a >About Us</a>
                   </li>
                   <li>
-                    <a href="shop.html">New Product</a>
+                    <a >New Product</a>
                   </li>
                   <li>
                     <a href="#">Discounts</a>
@@ -53,81 +53,11 @@ function Footer() {
           </div>
 
           <div className="col-lg-2 col-sm-6">
-            <div className="footer-widget one ">
-              <div className="widget-title">
-                <h3>My Account</h3>
-              </div>
-              <div className="menu-container">
-                <ul>
-                  <li>
-                    <a href="#">My Profile</a>
-                  </li>
-                  <li>
-                    <a href="#">My Wish List</a>
-                  </li>
-                  <li>
-                    <a href="#">Order Tracking</a>
-                  </li>
-                  <li>
-                    <a href="#">Shopping Cart</a>
-                  </li>
-                  <li>
-                    <a href="#">My Order History</a>
-                  </li>
-                  <li>
-                    <a href="#">Shoping Info</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+
           </div>
 
           <div className="col-lg-3 col-md-6">
-            <div className="footer-widget one mb-0">
-              <div className="widget-title">
-                <h3>Install app</h3>
-                <p>Form App Store or Google Play</p>
-              </div>
-              <div className="download-link">
-                <ul>
-                  <li>
-                    <a href="#">
-                      <img src={google_play} alt="" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <img src={app_store} alt="" />
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <p>Secured Paynebt Gateways</p>
-              <div className="payment-mathord">
-                <ul>
-                  <li>
-                    <a href="#">
-                      <img src={visa} alt="" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <img src={master_card} alt="" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <img src={american_ex} alt="" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <img src={maestro} alt="" />
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+
           </div>
         </div>
 

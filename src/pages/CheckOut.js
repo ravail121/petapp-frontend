@@ -1,22 +1,52 @@
 import React, { useEffect, useState } from "react";
 import Header from "../shared/Header";
+import tick from '../assets/122.gif'
 import DiscountHeader from "../shared/DiscountHeader";
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+// import Button from '@mui/material/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL } from '../Redux/Actions/action';
 import { url } from "../environment";
+import { useNavigate } from "react-router-dom";
+// import { Grid } from "swiper";
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
 const Checkout = () => {
   const dispatch = useDispatch();
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
   const [Error, setError] = useState('');
   const [SaveValue, setSaveValue] = useState({ id: '' });
-
+  const [loading, setLoading] = React.useState(false);
+  const [ErrorChec, setErrorChec] = React.useState(false);
   const [CartData, setCartData] = useState([])
 
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
   const [ShippingTotal, setShippingTotal] = useState(0);
   const [isValidEmail, setIsValidEmail] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -97,6 +127,7 @@ const Checkout = () => {
 
   const handleEmailChange = (e) => {
     const emailInput = e.target.value;
+    setErrorChec(false)
     // setEmail(emailInput);
     setIsValidEmail(validateEmail(emailInput));
   };
@@ -112,7 +143,7 @@ const Checkout = () => {
     }
   };
 
-
+  const navigate = useNavigate()
 
 
 
@@ -123,10 +154,12 @@ const Checkout = () => {
 
   const addAllShipping = (e) => {
     e.preventDefault();
-
+    setErrorChec(true)
     if (!isValidEmail) {
       return
     }
+    setErrorChec(false)
+
     // if(SaveValue.email.length )
     let Docline = []
     CartData &&
@@ -137,6 +170,7 @@ const Checkout = () => {
           amount: calculateTotalPrice(item, index),
         })
       })
+    setLoading(true)
     // setIsLoading(true);
     fetch(`${url}/user/orders/add`, {
       method: "POST",
@@ -153,8 +187,19 @@ const Checkout = () => {
       .then((response) => response.json())
       .then((response) => {
         console.log("All Shipping ----->>>", response);
-        if (response.message === "Shipping Fee has been fetched Succesfully") {
-          setShippingSettings(response?.data?.shippingFee);
+        if (response.statusCode === 200) {
+          handleOpen()
+          setTimeout(() => {
+            handleClose()
+            navigate('/products')
+            localStorage.removeItem('myArray')
+            dispatch({
+              type: UPDATE_CART_TOTAL, payload: 0
+            })
+            setLoading(false)
+
+
+          }, 3400)
           // setAllpages(response?.data?.totalCount);
           let obj = response?.data?.shippingFee[0]
           // const sum = Object.keys(obj)
@@ -197,6 +242,26 @@ const Checkout = () => {
       <Header />
       <div className="checkout-section pt-120 pb-120">
         <div className="container">
+
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <div className="" style={{ textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                <img src={tick} width={170} height={170} />
+                <Typography id="modal-modal-title" variant="h6" component="h2" mt={2}>
+                  Order Placed Succesfully!
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  Your Order Number has been Email to you.
+                </Typography>
+              </div>
+
+            </Box>
+          </Modal>
           <div className="row g-4">
             <div className="col-lg-7">
               <div className="form-wrap box--shadow mb-30">
@@ -282,7 +347,7 @@ const Checkout = () => {
                           name="email"
                           placeholder="Your Email Address"
                         />
-                        {!isValidEmail && <p className="error-message">Invalid email format</p>}
+                        {ErrorChec && !isValidEmail && <p className="error-message">Invalid email format</p>}
                         {/* {!isValidEmail && <p className="error-message">Invalid email format</p>} */}
                       </div>
                     </div>
@@ -451,15 +516,30 @@ const Checkout = () => {
 
                 </div>
                 <div className="place-order-btn">
-                  <button onClick={(e) => addAllShipping(e)} className="primary-btn1 lg-btn">
+                  <button onClick={(e) => { addAllShipping(e); }} className="primary-btn1 lg-btn">
+                    {loading && (
+                      <CircularProgress
+                        size={24}
+                        sx={{
+
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          marginTop: '-12px',
+                          marginLeft: '-12px',
+                        }}
+                      />)}
                     Place Order
                   </button>
                 </div>
               </form>
             </aside>
           </div>
+
         </div>
+
       </div>
+
     </>
   );
 };
