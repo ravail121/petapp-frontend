@@ -437,7 +437,7 @@ const Checkout = () => {
                     <tr>
                       <th>Total</th>
                       <th>£
-                        {((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2)}</th>
+                        {cartCountTotal !== 0 ? ((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2) : 0}</th>
                     </tr>
                   </thead>
                 </table>

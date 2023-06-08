@@ -355,7 +355,7 @@ const Cart = () => {
                     <td>Subtotal</td>
                     <td></td>
 
-                    <td>${((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2)}</td>
+                    <td>${cartCountTotal !== 0 ? ((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2) : 0}</td>
                   </tr>
                 </tbody>
               </table>

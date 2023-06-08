@@ -10,7 +10,7 @@ function ProductCard(props) {
           <span>{props.additional_text}</span>
         </div>
         <div className="collection-img">
-          <img className="img-gluid" src={product_image} alt="" />
+          <img className="img-fluid" src={product_image} alt="" />
           <div className="view-dt-btn">
             <div className="plus-icon">
               <i className="bi bi-plus"></i>

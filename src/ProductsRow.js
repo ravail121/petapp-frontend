@@ -177,7 +177,7 @@ function ProductsRow(props) {
                   <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} className="category-card-front">
                       <div style={{ width: '70px', height: '70px' }} className="category-icon">
-                        <img width={70} height={70} src={"http://apis.rubypets.co.uk/assets/images/categories/" + product.frontImageName} alt="" />
+                        <img width={70} height={70} src={product.frontImageName} alt="" />
                       </div>
                       <div className="content">
                         <h4>{product.name}</h4>
@@ -214,7 +214,7 @@ function ProductsRow(props) {
                 <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} className="category-card-front">
                     <div style={{ width: '70px', height: '70px' }} className="category-icon">
-                      <img width={70} height={70} src={"http://apis.rubypets.co.uk/assets/images/categories/" + product.frontImageName} alt="" />
+                      <img width={70} height={70} src={product.frontImageName} alt="" />
                     </div>
                     <div className="content">
                       <h4>{product.name}</h4>
