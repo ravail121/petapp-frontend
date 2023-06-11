@@ -9118,6 +9118,34 @@ footer.style2 .social-area ul li:hover a i {
   background-color: var(--title-color1);
 }
 
+.backBTN {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--white);
+  font-family: var(--font-cabin);
+  letter-spacing: 0.03em;
+  width: 100%;
+  text-transform: uppercase;
+  background: #F46F30;
+  border-radius: 10px;
+  padding: 11px 30px;
+  margin-right: 5px;
+  transition: 0.4s;
+}
+
+@media (max-width: 576px) {
+  .backBTN {
+    padding: 6px 15px;
+    font-size: 1rem;
+    text-transform: capitalize;
+  }
+}
+
+.backBTN:hover {
+  background-color: var(--title-color1);
+}
+
+
 .home3-newsletter-area .newsletter-img {
   position: absolute;
   bottom: 0px;

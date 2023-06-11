@@ -137,3 +137,7 @@
 .error-message {
   color: darkred;
 }
+
+.block {
+  display: block;
+}

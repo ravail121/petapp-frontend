@@ -6,7 +6,7 @@ const initialStateTotal = {
 
 
 const reducerCartTotal = (state = initialStateTotal, action) => {
-    console.log(action.type, state)
+    // console.log(action.type, state)
 
     switch (action.type) {
 

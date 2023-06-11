@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const searchProduct = (state = initialState, action) => {
-    console.log(action.type, state)
+    // console.log(action.type, state)
 
     switch (action.type) {
 

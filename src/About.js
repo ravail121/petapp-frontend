@@ -42,7 +42,7 @@ function About() {
                 <div className="banner-img-bg">
                   <img className="img-fluid" src={banner_bg} alt="" />
                 </div>
-                <img className="img-fluid" src={banner} alt="" />
+                <img className="img-fluid" src={'https://demo.egenslab.com/html/scooby/preview/assets/images/bg/inner-banner-img.png'} alt="" />
               </div>
             </div>
           </div>

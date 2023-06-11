@@ -247,7 +247,7 @@ const Cart = () => {
                             </td>
 
                             <td data-label="Discount Price">
-                              ${Number(item.dropshipPrice).toFixed(2)}
+                              {localStorage.getItem('currency')}{Number(item.dropshipPrice).toFixed(2)}
                             </td>
                             <td data-label="Quantity">
                               <div className="quantity d-flex align-items-center">
@@ -289,7 +289,7 @@ const Cart = () => {
                               </div>
                             </td>
                             <td data-label="Subtotal">
-                              ${calculateTotalPrice(item, index).toFixed(2)}
+                              {localStorage.getItem('currency')}{calculateTotalPrice(item, index).toFixed(2)}
                             </td>
                           </tr>
                         );
@@ -321,7 +321,7 @@ const Cart = () => {
                   <tr>
                     <th>Cart Totals</th>
                     <th></th>
-                    <th>${cartCountTotal ? cartCountTotal.toFixed(2) : 0}</th>
+                    <th> {localStorage.getItem('currency')}{cartCountTotal ? cartCountTotal.toFixed(2) : 0}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -355,7 +355,7 @@ const Cart = () => {
                     <td>Subtotal</td>
                     <td></td>
 
-                    <td>${cartCountTotal !== 0 ? ((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2) : 0}</td>
+                    <td> {localStorage.getItem('currency')}{cartCountTotal !== 0 ? ((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2) : 0}</td>
                   </tr>
                 </tbody>
               </table>

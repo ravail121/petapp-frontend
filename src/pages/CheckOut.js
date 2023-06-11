@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Header from "../shared/Header";
-import tick from '../assets/122.gif'
+import tick from '../assets/qa.gif'
 import DiscountHeader from "../shared/DiscountHeader";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 // import Button from '@mui/material/Button';
@@ -18,9 +19,11 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 300,
   bgcolor: 'background.paper',
   // border: '2px solid #000',
+  borderRadius: '25px',
+
   boxShadow: 24,
   pt: 2,
   px: 4,
@@ -30,6 +33,8 @@ const Checkout = () => {
   const dispatch = useDispatch();
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
+  const [OrderNumber, setOrderNumber] = useState('');
+  const [BackButton, setBackButton] = useState(false);
   const [Error, setError] = useState('');
   const [SaveValue, setSaveValue] = useState({ id: '' });
   const [loading, setLoading] = React.useState(false);
@@ -58,27 +63,21 @@ const Checkout = () => {
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
-    console.log(JSON.parse(localStorage.getItem("myArray")))
 
     let Data = JSON.parse(localStorage.getItem("myArray"))
     Data?.map((ele) => {
       ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
     })
     for (var i = 0; i < Data?.length; i++) {
-      console.log(JSON.parse(localStorage.getItem("myArray")))
 
       totalQuantity += Data[i].quantity;
 
-      console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
-    console.log(Data.reduce(
-      (sum, product) => sum + product.totalPrice,
-      0
-    ))
+
     dispatch({
-      type: UPDATE_CART_TOTAL, payload: Data.reduce(
+      type: UPDATE_CART_TOTAL, payload: Data?.reduce(
         (sum, product) => sum + product.totalPrice,
         0
       )
@@ -133,15 +132,7 @@ const Checkout = () => {
   };
 
   // Function to handle email authentication
-  const handleEmailAuthentication = () => {
-    if (isValidEmail) {
-      // Email is valid, perform further authentication logic here
-      console.log('Email authentication successful!');
-    } else {
-      // Invalid email format
-      console.log('Invalid email format!');
-    }
-  };
+
 
   const navigate = useNavigate()
 
@@ -171,6 +162,8 @@ const Checkout = () => {
         })
       })
     setLoading(true)
+    setBackButton(false)
+
     // setIsLoading(true);
     fetch(`${url}/user/orders/add`, {
       method: "POST",
@@ -186,20 +179,22 @@ const Checkout = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("All Shipping ----->>>", response);
+        // console.log("All Shipping ----->>>", response);
         if (response.statusCode === 200) {
+          localStorage.removeItem('myArray')
+
+          dispatch({
+            type: UPDATE_CART_TOTAL, payload: 0
+          })
+          setOrderNumber(response.data.orderNo)
           handleOpen()
+          checkDefaultCounter()
+          setCartData([]);
+          setLoading(false)
           setTimeout(() => {
-            handleClose()
-            navigate('/products')
-            localStorage.removeItem('myArray')
-            dispatch({
-              type: UPDATE_CART_TOTAL, payload: 0
-            })
-            setLoading(false)
+            setBackButton(true)
 
-
-          }, 3400)
+          }, 3000)
           // setAllpages(response?.data?.totalCount);
           let obj = response?.data?.shippingFee[0]
           // const sum = Object.keys(obj)
@@ -236,6 +231,11 @@ const Checkout = () => {
     setSaveValue(obj)
   }
 
+  const backToHome = (e) => {
+    e.preventDefault()
+    navigate('/home')
+  }
+
   return (
     <>
       <DiscountHeader minimum_limit={80} />
@@ -252,12 +252,30 @@ const Checkout = () => {
             <Box sx={style}>
               <div className="" style={{ textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
                 <img src={tick} width={170} height={170} />
-                <Typography id="modal-modal-title" variant="h6" component="h2" mt={2}>
-                  Order Placed Succesfully!
+                <Typography id="modal-modal-title" variant="h6" component="h1" >
+                  <b>Order Placed Succesfully!</b>
                 </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  Your Order Number has been Email to you.
+                <Typography id="modal-modal-description" sx={{ mt: 3 }}>
+                  Your Order Has been Confirmed.
+                  <br />Your Order Number is {' '}
+                  <b>{OrderNumber}</b>.
+
+                  Email has been sent to you.
+
                 </Typography>
+
+                {/* <form> */}
+                {BackButton &&
+                  <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
+                    <button style={{ width: '100%', height: '50px' }} class="primary-btn1 mt-4" onClick={(e) => backToHome(e)}>  Back to Home</button>
+                    {/* <Button class="backBTN"  variant="outlined"
+                      startIcon={<KeyboardBackspaceIcon />}>
+                      Back to Home
+                    </Button> */}
+                  </div>
+                }
+                {/* </form> */}
+
               </div>
 
             </Box>
@@ -458,7 +476,7 @@ const Checkout = () => {
                             <strong>
                               {" "}
                               <i className="bi bi-x-lg px-2"></i>
-                              <span className="product-price">£{calculateTotalPrice(item, index).toFixed(2)}</span>
+                              <span className="product-price">£{calculateTotalPrice(item, index)?.toFixed(2)}</span>
                             </strong>
                           </div>
                         </div>
@@ -479,7 +497,7 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Subtotal</th>
-                      <th>£{cartCountTotal.toFixed(2)}</th>
+                      <th> {localStorage.getItem('currency')}{cartCountTotal ? cartCountTotal.toFixed(2) : 0}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -490,7 +508,7 @@ const Checkout = () => {
                     </tr>
                     <tr>
                       <td>Tax ({ShippingTotal?.tax * 100}%)</td>
-                      <td>{ShippingTotal?.currencySign}{(ShippingTotal?.tax * cartCountTotal).toFixed(2)}</td>
+                      <td>{ShippingTotal?.currencySign}{cartCountTotal ? (ShippingTotal?.tax * cartCountTotal)?.toFixed(2) : 0}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -501,8 +519,8 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Total</th>
-                      <th>£
-                        {cartCountTotal !== 0 ? ((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal)).toFixed(2) : 0}</th>
+                      <th> {localStorage.getItem('currency')}
+                        {cartCountTotal !== 0 ? ((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal))?.toFixed(2) : 0}</th>
                     </tr>
                   </thead>
                 </table>
@@ -531,6 +549,7 @@ const Checkout = () => {
                       />)}
                     Place Order
                   </button>
+                  <button onClick={() => handleOpen()}></button>
                 </div>
               </form>
             </aside>

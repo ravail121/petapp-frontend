@@ -88,11 +88,43 @@ function Home() {
   };
   useEffect(() => {
     window.scrollTo(0, 0);
-
+    GetAllShipping()
     GetAllProducts();
     checkDefaultCounter()
   }, []);
 
+
+
+
+  const GetAllShipping = () => {
+    setIsLoading(true);
+    fetch(`${url}/user/orders/shipping/costs`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("All Shipping ----->>>", response);
+        if (response.message === "Shipping Fee has been fetched Succesfully") {
+          // setShippingSettings(response?.data?.shippingFee);
+          localStorage.setItem('currency', response?.data?.shippingFee[0].currencySign)
+          // setAllpages(response?.data?.totalCount);
+          let obj = response?.data?.shippingFee[0]
+          // const sum = Object.keys(obj)
+          //   .filter(key => key !== "id")
+          //   .reduce((acc, key) => acc + obj[key], 0);
+          // setShippingTotal(obj)
+          // console.log(obj.shippingFee)
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const GetAllProducts = (e, pageNumber) => {
     setIsLoading(true);
@@ -310,7 +342,7 @@ function Home() {
                         )
                       }>{item.name}</a></h4>
                       <div class="price">
-                        <h6>${item.dropshipPrice}</h6>
+                        <h6>{localStorage.getItem('currency')}{item.dropshipPrice}</h6>
                         { }
                       </div>
                       {
