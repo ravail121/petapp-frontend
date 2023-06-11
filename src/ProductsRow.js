@@ -140,62 +140,63 @@ function ProductsRow(props) {
 
         </div>
       </div>
-      {categories?.length <= 6 &&
-        <Swiper
-          slidesPerView={6}
-          centeredSlides={true}
-          spaceBetween={30}
-          grabCursor={true}
-          loop={true}
-          autoplay={{
-            delay: 2000,
-            disableOnInteraction: false
-          }}
-          speed={2000}
-          // navigation={true}
-          // pagination={{
-          //   clickable: true,
-          // }}
-          modules={[Pagination, Autoplay]}
-          onSlideChange={() => console.log('slide change')}
-          onSwiper={(swiper) => console.log(swiper)}
-        >
-          {loading ? (
-            <div
-              className="row text-align-center"
-              style={{ display: "block", textAlign: "center" }}
-            >
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          ) : categories?.length > 0 ? (
-            categories && categories?.map((product) => (
-              <SwiperSlide style={{ background: 'none' }}>
+      {/* {categories?.length > 6 && */}
 
-                <div className="category-card">
-                  <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} className="category-card-front">
-                      <div style={{ width: '70px', height: '70px' }} className="category-icon">
-                        <img width={70} height={70} src={product.frontImageName} alt="" />
-                      </div>
-                      <div className="content">
-                        <h4>{product.name}</h4>
-                      </div>
+      <Swiper
+        slidesPerView={6}
+        centeredSlides={true}
+        spaceBetween={30}
+        grabCursor={true}
+        loop={true}
+        autoplay={{
+          delay: 2000,
+          disableOnInteraction: false
+        }}
+        speed={2000}
+        // navigation={true}
+        // pagination={{
+        //   clickable: true,
+        // }}
+        modules={[Pagination, Autoplay]}
+        onSlideChange={() => console.log('slide change')}
+        onSwiper={(swiper) => console.log(swiper)}
+      >
+        {loading ? (
+          <div
+            className="row text-align-center"
+            style={{ display: "block", textAlign: "center" }}
+          >
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : categories?.length > 0 ? (
+          categories && categories?.map((product) => (
+            <SwiperSlide style={{ background: 'none' }}>
+
+              <div className="category-card">
+                <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} className="category-card-front">
+                    <div style={{ width: '70px', height: '70px' }} className="category-icon">
+                      <img width={70} height={70} src={product.frontImageName} alt="" />
                     </div>
-                    <div className="category-card-back">
-                      <img style={{ width: '120px', height: '126px' }} width={40} height={40} src={product.imageName} alt="" />
+                    <div className="content">
+                      <h4>{product.name}</h4>
                     </div>
-                  </Link>
-                </div>
-              </SwiperSlide>
-            ))
-          ) : (<div className="row" style={{ display: "block", textAlign: "center" }}>
-            <h2>No Categories found</h2>
-          </div>)}
-        </Swiper>
-      }
-      {categories?.length < 6 &&
+                  </div>
+                  <div className="category-card-back">
+                    <img style={{ width: '120px', height: '126px' }} width={40} height={40} src={product.imageName} alt="" />
+                  </div>
+                </Link>
+              </div>
+            </SwiperSlide>
+          ))
+        ) : (<div className="row" style={{ display: "block", textAlign: "center" }}>
+          <h2>No Categories found</h2>
+        </div>)}
+      </Swiper>
+      {/* } */}
+      {/* {categories?.length < 6 &&
         <Slider className="places-carousel " dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={true} slidesToShow={6} responsive={responsive}>
           {loading ? (
             <div
@@ -231,7 +232,7 @@ function ProductsRow(props) {
             <h2>No Categories found</h2>
           </div>)}
         </Slider>
-      }
+      } */}
 
       {/* {loading ? (
         <div
