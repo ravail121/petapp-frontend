@@ -35,15 +35,18 @@ const Checkout = () => {
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
   const [OrderNumber, setOrderNumber] = useState('');
   const [BackButton, setBackButton] = useState(false);
-  const [Error, setError] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Address, setAddress] = useState('');
   const [SaveValue, setSaveValue] = useState({ id: '' });
   const [loading, setLoading] = React.useState(false);
+  const [ErrorAddress, setErrorAddress] = React.useState(false);
   const [ErrorChec, setErrorChec] = React.useState(false);
   const [CartData, setCartData] = useState([])
 
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
   const [ShippingTotal, setShippingTotal] = useState(0);
+  const [ErroMsg, setErroMsg] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -127,8 +130,17 @@ const Checkout = () => {
   const handleEmailChange = (e) => {
     const emailInput = e.target.value;
     setErrorChec(false)
-    // setEmail(emailInput);
-    setIsValidEmail(validateEmail(emailInput));
+    if (emailInput.trim() === '') {
+      setErroMsg('Email is required'); // Set the error message
+      setIsValidEmail(false);
+    } else {
+      setErroMsg(''); // Clear the error message
+      setIsValidEmail(validateEmail(emailInput));
+      if (!isValidEmail) {
+        setErroMsg('Invalid Email Format'); // Set the error message
+
+      }
+    }
   };
 
   // Function to handle email authentication
@@ -146,7 +158,22 @@ const Checkout = () => {
   const addAllShipping = (e) => {
     e.preventDefault();
     setErrorChec(true)
-    if (!isValidEmail) {
+    // debugger
+
+
+    if (Address.trim() !== '') {
+      setErrorAddress(true);
+    } else {
+      setErrorAddress(false);
+
+    }
+
+
+    if (Email.trim() === '') {
+      setErroMsg('Email is required'); // Set the error message
+      setIsValidEmail(false);
+    }
+    if (!isValidEmail || !ErrorAddress) {
       return
     }
     setErrorChec(false)
@@ -172,9 +199,10 @@ const Checkout = () => {
         accept: "application/json",
       },
       body: JSON.stringify({
-        emailAddress: SaveValue.email,
+        emailAddress: Email,
         totalAmount: cartCountTotal,
-        orderDetails: Docline
+        orderDetails: Docline,
+        shippingAddress: Address
       })
     })
       .then((response) => response.json())
@@ -219,6 +247,9 @@ const Checkout = () => {
     setCartData(storedArray);
     console.log(storedArray)
     localStorage.setItem("myArray", JSON.stringify(storedArray));
+    if (storedArray?.length < 1) {
+      navigate('/home')
+    }
     // checBalance();
     checkDefaultCounter()
   };
@@ -326,10 +357,12 @@ const Checkout = () => {
                         <label>Street Address</label>
                         <input
                           type="text"
-                          onChange={(e) => getAllValue(e)}
+                          onChange={(e) => setAddress(e.target.value)}
                           name="Address"
+
                           placeholder="House and street name"
                         />
+                        {ErrorChec && !ErrorAddress && <p className="error-message">Address is Required</p>}
                       </div>
                     </div>
 
@@ -360,12 +393,12 @@ const Checkout = () => {
                         <input
                           type="email"
                           id="email"
-                          onChange={(e) => { getAllValue(e); handleEmailChange(e) }}
+                          onChange={(e) => { setEmail(e.target.value); handleEmailChange(e) }}
 
                           name="email"
                           placeholder="Your Email Address"
                         />
-                        {ErrorChec && !isValidEmail && <p className="error-message">Invalid email format</p>}
+                        {ErrorChec && !isValidEmail && <p className="error-message">{ErroMsg}</p>}
                         {/* {!isValidEmail && <p className="error-message">Invalid email format</p>} */}
                       </div>
                     </div>
@@ -459,9 +492,9 @@ const Checkout = () => {
                     return (
                       <li className="single-product d-flex justify-content-start">
                         <div className="product-img">
-                          <img width={40} height={100} src={item?.imageName} alt="" />
+                          <img width={0} height={100} src={item?.imageName} alt="" />
                         </div>
-                        <div className="product-info">
+                        <div className="product-info" style={{ marginLeft: '8px' }}>
                           <h5 className="product-title">
                             <a href="#">{item?.name}</a>
                           </h5>
@@ -476,13 +509,13 @@ const Checkout = () => {
                             <strong>
                               {" "}
                               <i className="bi bi-x-lg px-2"></i>
-                              <span className="product-price">£{calculateTotalPrice(item, index)?.toFixed(2)}</span>
+                              <span style={{ display: 'flex', cursor: 'pointer' }} className="product-price">£{calculateTotalPrice(item, index)?.toFixed(2)} <sup> <div className="delete-btn" onClick={() => rmoveToCart(item, index)}>
+                                <i className="bi bi-x-lg"></i>
+                              </div></sup></span>
                             </strong>
                           </div>
                         </div>
-                        <div className="delete-btn" onClick={() => rmoveToCart(item, index)}>
-                          <i className="bi bi-x-lg"></i>
-                        </div>
+
                       </li>
                     )
 
@@ -549,7 +582,6 @@ const Checkout = () => {
                       />)}
                     Place Order
                   </button>
-                  <button onClick={() => handleOpen()}></button>
                 </div>
               </form>
             </aside>

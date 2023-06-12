@@ -19,6 +19,8 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
   const navigate = useNavigate()
   const [NameNew, setNameNew] = useState('');
   const dispatch = useDispatch()
+  const [SliderVisible, setSliderVisible] = useState(false);
+
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const cartCountNew = useSelector((state) => state.add.cartCount);
@@ -34,6 +36,28 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
 
   useEffect(() => {
     fetchCategories();
+    const handleResize = () => {
+      if (window.innerWidth >= 1200) {
+        setSliderVisible(false)
+
+      } else if (window.innerWidth >= 992) {
+        setSliderVisible(false)
+
+
+      } else if (window.innerWidth >= 768) {
+        setSliderVisible(true)
+        setMobileMenuOpenCat(false)
+
+      } else {
+        setSliderVisible(true)
+        setMobileMenuOpenCat(false)
+
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -142,14 +166,15 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
                 Products
               </a> */}
             </li>
-            {/* <li><a href="#">Categories</a></li> */}
+
+
+
             <li class="menu-item-has-children">
               <a href="#">Categories</a><i class="bi bi-plus dropdown-icon active" onClick={handleToggleMobileMenuOption}></i>
               <ul class={`sub-menu ${isMobileMenuOpenCat ? "active" : ""}`}>
                 {categories && categories.map((item) => {
                   return (
                     <li><Link to={`/products`} onClick={() => catValue(item.id)}>{item.name} </Link></li>
-
                   )
 
                 })}
@@ -157,6 +182,12 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
 
               </ul>
             </li>
+            {isMobileMenuOpenCat && SliderVisible && categories && categories.map((item) => {
+              return (
+                <li style={{ paddingLeft: '15px' }}><Link to={`/products`} onClick={() => catValue(item.id)}>{item.name} </Link></li>
+              )
+
+            })}
             <li>
 
               {/* <Link to="/cart" style={{ display: 'flex', gap: '10px' }}>Cart {JSON.parse(localStorage.getItem("myArray")).length > 0 && <span className="badge">{JSON.parse(localStorage.getItem("myArray")).length > 0 ? JSON.parse(localStorage.getItem("myArray")).length : 0}</span>}</Link> */}

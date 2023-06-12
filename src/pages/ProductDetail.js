@@ -368,7 +368,7 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="pyment-method">
-                  <h6 onClick={success}>Guaranted Safe Checkout</h6>
+                  {/* <h6 >Guaranted Safe Checkout</h6> */}
                   <ul>
                     <li>
                       <img src="../assets/images/icon/visa2.svg" alt="" />
@@ -430,7 +430,7 @@ const ProductDetails = () => {
                 >
                   <div className="description">
                     <p className="para-2 mb-3">
-                      {ProductDetail?.fullDescription}
+                      Item Weight: {ProductDetail?.weight} KG
                     </p>
                   </div>
                 </div>

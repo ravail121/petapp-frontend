@@ -13165,18 +13165,14 @@ footer.style2 .social-area ul li:hover a i {
 }
 
 .checkout-section .added-product-summary .added-products .single-product .delete-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 10px;
-  height: 35px;
-  width: 35px;
-  line-height: 35px;
+
+  height: 18px;
+  width: 18px;
+
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  transition: 0.3s ease;
-  cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13184,7 +13180,7 @@ footer.style2 .social-area ul li:hover a i {
 
 .checkout-section .added-product-summary .added-products .single-product .delete-btn i {
   color: #848484;
-  font-size: 16px;
+  font-size: 9px;
   transition: 0.3s ease;
 }
 

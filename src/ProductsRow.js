@@ -31,6 +31,8 @@ const responsive = [
     settings: {
       slidesToShow: 2,
       slidesToScroll: 1,
+      autoplay: true,
+
       infinite: true,
       dots: true
     }
@@ -40,13 +42,17 @@ const responsive = [
     settings: {
       slidesToShow: 2,
       slidesToScroll: 2,
-      initialSlide: 2
+      initialSlide: 2,
+      autoplay: true,
+
     }
   },
   {
     breakpoint: 480,
     settings: {
       slidesToShow: 1,
+      autoplay: true,
+
       slidesToScroll: 1
     }
   }
@@ -55,6 +61,8 @@ const responsive = [
 function ProductsRow(props) {
   const products = props.products;
   const [startIndex, setStartIndex] = useState(0);
+  const [SliderVisible, setSliderVisible] = useState(false);
+  const [slidesPerView, setSlidesPerView] = useState(6);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -63,6 +71,30 @@ function ProductsRow(props) {
 
   useEffect(() => {
     fetchCategories();
+
+
+    const handleResize = () => {
+      if (window.innerWidth >= 1200) {
+        setSlidesPerView(6);
+        setSliderVisible(false)
+
+      } else if (window.innerWidth >= 992) {
+        setSlidesPerView(4);
+        setSliderVisible(false)
+
+      } else if (window.innerWidth >= 768) {
+        setSliderVisible(false)
+
+        setSlidesPerView(3);
+      } else {
+        setSliderVisible(true)
+        setSlidesPerView(1);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [page]);
   let swiperRef = useRef(null);
 
@@ -110,26 +142,8 @@ function ProductsRow(props) {
 
   }
 
-  const listProducts = categories?.map((product) => (
-    <div className="category-card col-lg-2 col-md-4 col-sm-6 mb-5">
-      <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
-        <div className="category-card-front">
-          <div className="category-icon">
-            {/* <img width={126} height={126} alt="" /> */}
-          </div>
-          <div className="content">
-            <h4>{product.name}</h4>
-          </div>
-        </div>
-        <div className="category-card-back">
-          <img width={126} height={126} src={product.imageName} alt="" />
-        </div>
-      </Link>
-    </div>
-  ));
-  const swiperParams = {
-    spaceBetween: 30,
-  };
+
+
   return (
     <>
       <div className="row mb-60">
@@ -140,63 +154,72 @@ function ProductsRow(props) {
 
         </div>
       </div>
-      {/* {categories?.length > 6 && */}
+      {categories?.length < 6 &&
 
-      <Swiper
-        slidesPerView={6}
-        centeredSlides={true}
-        spaceBetween={30}
-        grabCursor={true}
-        loop={true}
-        autoplay={{
-          delay: 2000,
-          disableOnInteraction: false
-        }}
-        speed={2000}
-        // navigation={true}
-        // pagination={{
-        //   clickable: true,
-        // }}
-        modules={[Pagination, Autoplay]}
-        onSlideChange={() => console.log('slide change')}
-        onSwiper={(swiper) => console.log(swiper)}
-      >
-        {loading ? (
-          <div
-            className="row text-align-center"
-            style={{ display: "block", textAlign: "center" }}
-          >
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        ) : categories?.length > 0 ? (
-          categories && categories?.map((product) => (
-            <SwiperSlide style={{ background: 'none' }}>
-
-              <div className="category-card">
-                <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} className="category-card-front">
-                    <div style={{ width: '70px', height: '70px' }} className="category-icon">
-                      <img width={70} height={70} src={product.frontImageName} alt="" />
-                    </div>
-                    <div className="content">
-                      <h4>{product.name}</h4>
-                    </div>
-                  </div>
-                  <div className="category-card-back">
-                    <img style={{ width: '120px', height: '126px' }} width={40} height={40} src={product.imageName} alt="" />
-                  </div>
-                </Link>
+        <Swiper
+          slidesPerView={slidesPerView}
+          centeredSlides={true}
+          spaceBetween={30}
+          grabCursor={true}
+          loop={true}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false
+          }}
+          speed={2000}
+          // navigation={true}
+          // pagination={{
+          //   clickable: true,
+          // }}
+          modules={[Pagination, Autoplay]}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}
+        >
+          {loading ? (
+            <div
+              className="row text-align-center"
+              style={{ display: "block", textAlign: "center" }}
+            >
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
               </div>
-            </SwiperSlide>
-          ))
-        ) : (<div className="row" style={{ display: "block", textAlign: "center" }}>
-          <h2>No Categories found</h2>
-        </div>)}
-      </Swiper>
-      {/* } */}
-      {/* {categories?.length < 6 &&
+            </div>
+          ) : categories?.length > 0 ? (
+            // <div className="col">
+
+            // {
+
+            categories && categories?.map((product) => (
+              <SwiperSlide style={{ background: 'none' }}>
+
+                <div className="category-card col-lg-2 col-md-4 col-sm-12">
+                  <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} className="category-card-front">
+                      <div style={{ width: '70px', height: '70px' }} className="category-icon">
+                        <img width={70} height={70} src={product.frontImageName} alt="" />
+                      </div>
+                      <div className="content">
+                        <h4>{product.name}</h4>
+                      </div>
+                    </div>
+                    <div className="category-card-back">
+                      <img style={{ width: '120px', height: '126px' }} width={40} height={40} src={product.imageName} alt="" />
+                    </div>
+                  </Link>
+                </div>
+              </SwiperSlide>
+
+            ))
+            // }
+            // </div>
+
+          ) : (<div className="row" style={{ display: "block", textAlign: "center" }}>
+            <h2>No Categories found</h2>
+          </div>)}
+        </Swiper>
+      }
+      {/* {(SliderVisible === true) &&
+
         <Slider className="places-carousel " dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={true} slidesToShow={6} responsive={responsive}>
           {loading ? (
             <div
@@ -207,10 +230,9 @@ function ProductsRow(props) {
                 <span className="visually-hidden">Loading...</span>
               </div>
             </div>
-          ) : categories?.length > 0 ? (categories?.length > 6 &&
+          ) : categories?.length > 0 ? (
+            categories?.length < 6 &&
             categories && categories?.map((product) => (
-
-
               <div className="category-card">
                 <Link to={`/products`} onClick={() => catValue(product.id)} className="category-card-inner">
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} className="category-card-front">

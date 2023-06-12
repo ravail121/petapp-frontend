@@ -13571,22 +13571,18 @@ footer {
                 position: relative;
 
                 .delete-btn {
-                    position: absolute;
-                    top: 50%;
-                    -webkit-transform: translateY(-50%);
-                    transform: translateY(-50%);
-                    right: 10px;
-                    height: 35px;
-                    width: 35px;
-                    line-height: 35px;
+                    // position: absolute;
+                    height: 18px;
+                    width: 18px;
+
                     border-radius: 50%;
                     background: #fff;
-                    box-shadow: 0 0 12px rgb(0 0 0 / 10%);
-                    transition: .3s ease;
-                    cursor: pointer;
+                    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+
                     display: flex;
                     align-items: center;
                     justify-content: center;
+
 
                     i {
                         color: #848484;
