@@ -4,30 +4,26 @@ import tick from '../assets/qa.gif'
 import DiscountHeader from "../shared/DiscountHeader";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+// import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-// import Button from '@mui/material/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL } from '../Redux/Actions/action';
 import { url } from "../environment";
 import { useNavigate } from "react-router-dom";
-// import { Grid } from "swiper";
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 300,
+  width: 327,
   bgcolor: 'background.paper',
-  // border: '2px solid #000',
   borderRadius: '25px',
 
   boxShadow: 24,
-  pt: 2,
+  pt: 4,
   px: 4,
-  pb: 3,
+  pb: 5,
 };
 const Checkout = () => {
   const dispatch = useDispatch();
@@ -58,7 +54,9 @@ const Checkout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
+    if (storedArray.length < 1) {
+      navigate('/home')
+    }
     checkDefaultCounter()
     setCartData(storedArray);
     GetAllShipping()
@@ -107,13 +105,8 @@ const Checkout = () => {
         console.log("All Shipping ----->>>", response);
         if (response.message === "Shipping Fee has been fetched Succesfully") {
           setShippingSettings(response?.data?.shippingFee);
-          // setAllpages(response?.data?.totalCount);
           let obj = response?.data?.shippingFee[0]
-          // const sum = Object.keys(obj)
-          //   .filter(key => key !== "id")
-          //   .reduce((acc, key) => acc + obj[key], 0);
           setShippingTotal(obj)
-          // console.log(obj.shippingFee)
           setIsLoading(false);
         }
       })
@@ -131,19 +124,18 @@ const Checkout = () => {
     const emailInput = e.target.value;
     setErrorChec(false)
     if (emailInput.trim() === '') {
-      setErroMsg('Email is required'); // Set the error message
+      setErroMsg('Email is required');
       setIsValidEmail(false);
     } else {
-      setErroMsg(''); // Clear the error message
+      setErroMsg('');
       setIsValidEmail(validateEmail(emailInput));
       if (!isValidEmail) {
-        setErroMsg('Invalid Email Format'); // Set the error message
+        setErroMsg('Invalid Email Format');
 
       }
     }
   };
 
-  // Function to handle email authentication
 
 
   const navigate = useNavigate()
@@ -151,26 +143,34 @@ const Checkout = () => {
 
 
 
+  const setAdressValue = (e) => {
+    setAddress(e)
+    if (e.length > 0) {
+      setErrorAddress(true);
+    }
+    else {
+      setErrorAddress(false);
 
+    }
+
+  }
 
 
 
   const addAllShipping = (e) => {
     e.preventDefault();
     setErrorChec(true)
-    // debugger
-
+    if (CartData?.length < 1) {
+      navigate('/home')
+    }
 
     if (Address.trim() !== '') {
       setErrorAddress(true);
-    } else {
-      setErrorAddress(false);
-
     }
 
 
     if (Email.trim() === '') {
-      setErroMsg('Email is required'); // Set the error message
+      setErroMsg('Email is required');
       setIsValidEmail(false);
     }
     if (!isValidEmail || !ErrorAddress) {
@@ -178,7 +178,6 @@ const Checkout = () => {
     }
     setErrorChec(false)
 
-    // if(SaveValue.email.length )
     let Docline = []
     CartData &&
       CartData?.map((item, index) => {
@@ -191,7 +190,6 @@ const Checkout = () => {
     setLoading(true)
     setBackButton(false)
 
-    // setIsLoading(true);
     fetch(`${url}/user/orders/add`, {
       method: "POST",
       headers: {
@@ -207,7 +205,6 @@ const Checkout = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        // console.log("All Shipping ----->>>", response);
         if (response.statusCode === 200) {
           localStorage.removeItem('myArray')
 
@@ -219,17 +216,7 @@ const Checkout = () => {
           checkDefaultCounter()
           setCartData([]);
           setLoading(false)
-          setTimeout(() => {
-            setBackButton(true)
 
-          }, 3000)
-          // setAllpages(response?.data?.totalCount);
-          let obj = response?.data?.shippingFee[0]
-          // const sum = Object.keys(obj)
-          //   .filter(key => key !== "id")
-          //   .reduce((acc, key) => acc + obj[key], 0);
-          setShippingTotal(obj)
-          // console.log(obj.shippingFee)
           setIsLoading(false);
         }
       })
@@ -243,14 +230,12 @@ const Checkout = () => {
     storedArray.map((ele) => {
       ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
     })
-    // 
     setCartData(storedArray);
     console.log(storedArray)
     localStorage.setItem("myArray", JSON.stringify(storedArray));
     if (storedArray?.length < 1) {
       navigate('/home')
     }
-    // checBalance();
     checkDefaultCounter()
   };
 
@@ -276,36 +261,34 @@ const Checkout = () => {
 
           <Modal
             open={open}
-            onClose={handleClose}
+            // onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
               <div className="" style={{ textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
                 <img src={tick} width={170} height={170} />
-                <Typography id="modal-modal-title" variant="h6" component="h1" >
-                  <b>Order Placed Succesfully!</b>
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 3 }}>
+                <h3 style={{ color: 'black' }} >
+                  <b>Your Order has been Placed Succesfully!</b>
+                </h3>
+                <Typography id="modal-modal-description" style={{ fontSize: '14px' }} sx={{ mt: 3 }}>
                   Your Order Has been Confirmed.
-                  <br />Your Order Number is {' '}
+                  Your Order Number is {' '}
                   <b>{OrderNumber}</b>.
 
                   Email has been sent to you.
 
                 </Typography>
 
-                {/* <form> */}
-                {BackButton &&
-                  <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
-                    <button style={{ width: '100%', height: '50px' }} class="primary-btn1 mt-4" onClick={(e) => backToHome(e)}>  Back to Home</button>
-                    {/* <Button class="backBTN"  variant="outlined"
-                      startIcon={<KeyboardBackspaceIcon />}>
-                      Back to Home
-                    </Button> */}
-                  </div>
-                }
-                {/* </form> */}
+                { }
+
+                <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
+                  <button style={{ width: '100%', height: '50px' }} class="primary-btn1 mt-4" onClick={(e) => backToHome(e)}>  Back to Home</button>
+                  {
+                  }
+                </div>
+
+                { }
 
               </div>
 
@@ -357,7 +340,7 @@ const Checkout = () => {
                         <label>Street Address</label>
                         <input
                           type="text"
-                          onChange={(e) => setAddress(e.target.value)}
+                          onChange={(e) => setAdressValue(e.target.value)}
                           name="Address"
 
                           placeholder="House and street name"
@@ -399,7 +382,7 @@ const Checkout = () => {
                           placeholder="Your Email Address"
                         />
                         {ErrorChec && !isValidEmail && <p className="error-message">{ErroMsg}</p>}
-                        {/* {!isValidEmail && <p className="error-message">Invalid email format</p>} */}
+                        { }
                       </div>
                     </div>
                     <div className="col-12">
@@ -492,6 +475,8 @@ const Checkout = () => {
                     return (
                       <li className="single-product d-flex justify-content-start">
                         <div className="product-img">
+                          {/* <Avatar alt="" src={item?.imageName}   /> */}
+
                           <img width={0} height={100} src={item?.imageName} alt="" />
                         </div>
                         <div className="product-info" style={{ marginLeft: '8px' }}>
@@ -553,7 +538,7 @@ const Checkout = () => {
                     <tr>
                       <th>Total</th>
                       <th> {localStorage.getItem('currency')}
-                        {cartCountTotal !== 0 ? ((cartCountTotal + Number(ShippingTotal?.shippingFee)) + (ShippingTotal?.tax * cartCountTotal))?.toFixed(2) : 0}</th>
+                        {CartData?.length > 0 ? ((Number(cartCountTotal) + Number(ShippingTotal?.shippingFee ? ShippingTotal?.shippingFee : 0)) + (Number(ShippingTotal?.tax ? ShippingTotal?.tax : 0) * Number(cartCountTotal))).toFixed(2) : 0}</th>
                     </tr>
                   </thead>
                 </table>
@@ -580,12 +565,13 @@ const Checkout = () => {
                           marginLeft: '-12px',
                         }}
                       />)}
-                    Place Order
+                    <span className={loading ? 'None' : ''}>Place Order</span>
                   </button>
                 </div>
               </form>
             </aside>
           </div>
+          {/* <button onClick={handleOpen}>sdsd</button> */}
 
         </div>
 

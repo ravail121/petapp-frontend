@@ -134,6 +134,10 @@
   object-fit: cover;
 }
 
+.None {
+  color: transparent;
+}
+
 .error-message {
   color: darkred;
 }

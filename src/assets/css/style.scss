@@ -8594,8 +8594,8 @@ footer {
 =======================================*/
 .home3-categoty-area {
     .category-card {
-        height: 196px;
-        width: 196px;
+        height: 196px !important;
+        width: 196px !important;
         background: #E0F1F0;
         border-radius: 70px;
         perspective: 1000px;

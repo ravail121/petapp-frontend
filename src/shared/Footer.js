@@ -2,7 +2,10 @@
 import React from "react";
 // import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/images/header2-logo.svg";
+
+// import logo from "../assets/images/fav-icon.png"
+
+import logo from "../assets/images/fav-icon.png";
 
 const Footer = () => {
   const navigate = useNavigate()
@@ -14,7 +17,7 @@ const Footer = () => {
             <div className="col-lg-5 col-md-12">
               <div className="footer-widget">
                 <div className="footer-icon">
-                  <img src={logo} alt="" />
+                  <img src={logo} alt="" width={150} />
                 </div>
                 <div className="widget-title">
                   <h2>
@@ -24,7 +27,7 @@ const Footer = () => {
                   </h2>
                 </div>
                 <div className="footer-btn">
-                  <a className="primary-btn6" href="shop.html">
+                  <a className="primary-btn6" onClick={() => navigate('/products')}>
                     Shop Now
                   </a>
                 </div>
@@ -60,14 +63,8 @@ const Footer = () => {
           </div>
 
           <div className="row border-top align-items-center">
-            <div className="col-lg-6">
-              <div className="copyright-area">
-                <p>
-                  © 2023 online store is Proudly Powered by <a href="#">xyz</a>
-                </p>
-              </div>
-            </div>
-            <div className="col-lg-6 d-flex justify-content-md-end justify-content-center">
+
+            <div className="col-lg-12 d-flex justify-content-md-end justify-content-center">
               <div className="social-area">
                 <ul>
                   <li>
