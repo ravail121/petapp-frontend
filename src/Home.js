@@ -368,7 +368,7 @@ function Home() {
 
       <div class="home3-newsletter-area mb-120">
         <div class="newsletter-img">
-          <img class="img-fluid" src="assets/images/bg/h3-newsletter-img.png" alt="" />
+          <img class="img-fluid" style={{ height: '400px' }} src="https://demo.egenslab.com/html/scooby/preview/assets/images/bg/h2-services-img.png" alt="" />
         </div>
         <div class="container">
           <div class="row">

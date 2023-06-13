@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL } from '../Redux/Actions/action';
 import { url } from "../environment";
+import { message } from 'antd';
+
 import { useNavigate } from "react-router-dom";
 const style = {
   position: 'absolute',
@@ -38,6 +40,7 @@ const Checkout = () => {
   const [ErrorAddress, setErrorAddress] = React.useState(false);
   const [ErrorChec, setErrorChec] = React.useState(false);
   const [CartData, setCartData] = useState([])
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
@@ -136,7 +139,12 @@ const Checkout = () => {
     }
   };
 
-
+  const success = (e) => {
+    messageApi.open({
+      type: 'error',
+      content: e,
+    });
+  };
 
   const navigate = useNavigate()
 
@@ -219,6 +227,9 @@ const Checkout = () => {
 
           setIsLoading(false);
         }
+        else if (response.statusCode === 400) {
+          success(response.message)
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -254,6 +265,7 @@ const Checkout = () => {
 
   return (
     <>
+      {contextHolder}
       <DiscountHeader minimum_limit={80} />
       <Header />
       <div className="checkout-section pt-120 pb-120">
@@ -297,7 +309,7 @@ const Checkout = () => {
           <div className="row g-4">
             <div className="col-lg-7">
               <div className="form-wrap box--shadow mb-30">
-                <h4 className="title-25 mb-20">Billing Details</h4>
+                <h4 className="title-25 mb-20">Shipping Details</h4>
                 <form>
                   <div className="row">
                     <div className="col-lg-6">
@@ -349,17 +361,7 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <input
-                          type="text"
-                          onChange={(e) => getAllValue(e)}
 
-                          name="code"
-                          placeholder="Post Code"
-                        />
-                      </div>
-                    </div>
                     <div className="col-12">
                       <div className="form-inner">
                         <label>Additional Information</label>
@@ -409,63 +411,7 @@ const Checkout = () => {
                   </div>
                 </form>
               </div>
-              <div className="form-wrap box--shadow">
-                <h4 className="title-25 mb-20">Ship to a Different Address?</h4>
-                <form>
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <div className="form-inner">
-                        <label>First Name</label>
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="Your first name"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-lg-6">
-                      <div className="form-inner">
-                        <label>Last Name</label>
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="Your last name"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <label>Country / Region</label>
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="Your country name"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <label>Street Address</label>
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="House and street name"
-                        />
-                      </div>
-                    </div>
 
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <input
-                          type="text"
-                          name="fname"
-                          placeholder="Post Code"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
             </div>
             <aside className="col-lg-5">
               <div className="added-product-summary mb-30">
