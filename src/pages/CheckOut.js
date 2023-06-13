@@ -229,6 +229,8 @@ const Checkout = () => {
         }
         else if (response.statusCode === 400) {
           success(response.message)
+          setLoading(false)
+
         }
       })
       .catch((err) => {
