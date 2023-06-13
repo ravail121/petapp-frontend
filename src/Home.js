@@ -78,14 +78,7 @@ function Home() {
   const [messageApi, contextHolder] = message.useMessage();
 
 
-  const handleMouseEnter = () => {
-    console.log('mouse Enter')
-    setAutoplay(true);
-  };
 
-  const handleMouseLeave = () => {
-    setAutoplay(false);
-  };
   useEffect(() => {
     window.scrollTo(0, 0);
     GetAllShipping()

@@ -368,7 +368,7 @@ const Checkout = () => {
                       <div className="form-inner">
                         <label>Additional Information</label>
                         <input
-                          type="text"
+                          type="number"
                           onChange={(e) => getAllValue(e)}
                           name="PhNumber"
                           placeholder="Your Phone Number"
@@ -389,17 +389,7 @@ const Checkout = () => {
                         { }
                       </div>
                     </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <input
-                          type="text"
-                          onChange={(e) => getAllValue(e)}
 
-                          name="postcode"
-                          placeholder="Post Code"
-                        />
-                      </div>
-                    </div>
                     <div className="col-12">
                       <div className="form-inner">
                         <textarea
