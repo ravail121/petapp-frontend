@@ -407,7 +407,7 @@ function ProductsRow(props) {
 
       {(SliderVisible === false && (categories?.length >= 6)) &&
 
-        <Slider className="places-carousel" dots={true} speed={2000} slidesToScroll={1} slidesToShow={5} responsive={responsive}>
+        <Slider className="places-carousel" dots={true} speed={2000} slidesToScroll={1} slidesToShow={5} autoplaySpeed={2000} responsive={responsive}>
           {categories?.length > 0 ? (
             categories?.length >= 6 &&
 

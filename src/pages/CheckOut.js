@@ -294,18 +294,12 @@ const Checkout = () => {
 
                 </Typography>
 
-                { }
-
                 <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
                   <button style={{ width: '100%', height: '50px' }} class="primary-btn1 mt-4" onClick={(e) => backToHome(e)}>  Back to Home</button>
-                  {
-                  }
+
                 </div>
 
-                { }
-
               </div>
-
             </Box>
           </Modal>
           <div className="row g-4">
