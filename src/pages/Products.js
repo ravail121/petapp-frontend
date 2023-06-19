@@ -95,6 +95,8 @@ const Product = () => {
   const dispatch = useDispatch();
   let value = 0
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     fetchCategories()
 
 
@@ -431,7 +433,7 @@ const Product = () => {
           </div>
         </div>
       </div>
-      <div className="shop-page  mb-120">
+      <div className="shop-page  mb-120" style={{ background: 'white' }}>
         <div className="container">
 
           <div className="row">
@@ -452,7 +454,7 @@ const Product = () => {
                           />
                         </ThemeProvider>
                       </div>
-                      <div className="mt-25 d-flex justify-content-between gap-4">
+                      <div className="mt-25 d-flex justify-content-between gap-4 ">
                         <input
                           type="number"
                           min={100}
@@ -460,6 +462,7 @@ const Product = () => {
                           max={499}
                           value={sliderValues[0]}
                           ref={minPriceInputRef}
+                          style={{ padding: '4px', textAlign: 'center' }}
                           className="price-range-field numeric-input"
                         />
                         <input
@@ -467,6 +470,7 @@ const Product = () => {
                           min={100}
                           max={500}
 
+                          style={{ padding: '4px', textAlign: 'center' }}
 
                           inputMode="numeric"
                           ref={maxPriceInputRef}
@@ -555,70 +559,76 @@ const Product = () => {
                   products &&
                   products?.map((item) => {
                     return (
-                      <div className="col-lg-4 col-md-4 col-sm-6">
-                        <div className="collection-card">
-                          {/* <div className="offer-card">
+                      <>
+                        <div className="col-lg-4 col-md-4 col-sm-6" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                          <div className="collection-card" >
+                            {/* <div className="offer-card">
                             <span>Offer</span>
                           </div> */}
-                          <div className="collection-img">
-                            <img
-                              width={200}
-                              height={150}
-                              className="img-gluid"
-                              src={item?.imageName}
-                              alt=""
-                            />
-                            <div className="view-dt-btn">
-                              <div className="plus-icon">
-                                <i className="bi bi-plus"></i>
-                              </div>
-                              <a
-                                onClick={() =>
-                                  navigate(
-                                    `/productsDetails/${encodeURIComponent(
-                                      JSON.stringify(item)
-                                    )}`
-                                  )
-                                }
-                              >
-                                View Details
-                              </a>
-                            </div>
-                            <ul className="cart-icon-list">
-                              <li>
-                                <a href="#" onClick={() => addToCart(item)}>
-                                  <img src={img1} alt="" />
+                            <div className="collection-img">
+                              <img
+                                // width={300}
+                                // height={300}
+                                className="img-fluid"
+                                src={item?.imageName}
+                                alt=""
+                              />
+                              <div className="view-dt-btn">
+                                <div className="plus-icon">
+                                  <i className="bi bi-plus"></i>
+                                </div>
+                                <a
+                                  onClick={() =>
+                                    navigate(
+                                      `/productsDetails/${encodeURIComponent(
+                                        JSON.stringify(item)
+                                      )}`
+                                    )
+                                  }
+                                >
+                                  View Details
                                 </a>
-                              </li>
-                              {/* <li>
+                              </div>
+                              <ul className="cart-icon-list">
+                                <li>
+                                  <a href="#" onClick={() => addToCart(item)}>
+                                    <img src={img1} alt="" />
+                                  </a>
+                                </li>
+                                {/* <li>
                                 <a href="#">
                                   <img src={fav3} alt="" />
                                 </a>
                               </li> */}
-                            </ul>
-                          </div>
-                          <div className="collection-content text-center">
-                            <h4>
-                              <a
-                                onClick={() =>
-                                  navigate(
-                                    `/productsDetails/${encodeURIComponent(
-                                      JSON.stringify(item)
-                                    )}`
-                                  )
-                                }
-                              >
-                                {item?.name}
-                              </a>
-                            </h4>
-                            <div className="price">
-                              <h6> {localStorage.getItem('currency')}{item?.dropshipPrice}</h6>
-                              {/* <del>${item.rrp}</del> */}
+                              </ul>
                             </div>
 
                           </div>
+                          <div className="collection-card col-lg-4 col-md-4 col-sm-6" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+
+                            <div className="collection-content text-center">
+                              <h4>
+                                <a
+                                  onClick={() =>
+                                    navigate(
+                                      `/productsDetails/${encodeURIComponent(
+                                        JSON.stringify(item)
+                                      )}`
+                                    )
+                                  }
+                                >
+                                  {item?.name}
+                                </a>
+                              </h4>
+                              <div className="price">
+                                <h6> {localStorage.getItem('currency')}{item?.dropshipPrice}</h6>
+                                {/* <del>${item.rrp}</del> */}
+                              </div>
+
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      </>
                     );
                   })
                 ) : (

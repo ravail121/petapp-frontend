@@ -48,12 +48,12 @@ const Checkout = () => {
   const [ErroMsg, setErroMsg] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => {
-    setOpen(false);
-  };
+
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -191,6 +191,7 @@ const Checkout = () => {
       CartData?.map((item, index) => {
         Docline.push({
           quantity: item.quantity,
+          productName: item.name,
           productId: item.id,
           amount: calculateTotalPrice(item, index),
         })
@@ -208,7 +209,9 @@ const Checkout = () => {
         emailAddress: Email,
         totalAmount: cartCountTotal,
         orderDetails: Docline,
-        shippingAddress: Address
+        shippingAddress: Address,
+        shippingFee: ShippingTotal?.shippingFee,
+        totalTax: ShippingTotal?.tax * cartCountTotal
       })
     })
       .then((response) => response.json())

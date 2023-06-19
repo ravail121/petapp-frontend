@@ -429,7 +429,7 @@ const ProductDetails = () => {
                   aria-labelledby="v-pills-home-tab"
                 >
                   <div className="description">
-                    <p className="para-2 mb-3">
+                    <p className="para-2 mb-5">
                       Item Weight: {ProductDetail?.weight} KG
                     </p>
                   </div>

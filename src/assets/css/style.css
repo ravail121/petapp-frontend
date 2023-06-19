@@ -8068,7 +8068,7 @@ footer.style2 .social-area ul li:hover a i {
  7. Home Three Collection
 =======================================*/
 .collection-card {
-  border: 1px solid #ECECEC;
+  /* border: 1px solid #ECECEC; */
   border-radius: 10px;
   position: relative;
   transition: 0.4s;
@@ -8106,7 +8106,7 @@ footer.style2 .social-area ul li:hover a i {
 
 .collection-card .collection-img {
   margin: 10px;
-  background: #F2F2F2;
+  background: #FFFFFF;
   padding: 13px;
   border-radius: 10px;
   display: flex;
