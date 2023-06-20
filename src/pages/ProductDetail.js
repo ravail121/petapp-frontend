@@ -257,8 +257,7 @@ const ProductDetails = () => {
                   aria-labelledby="v-pills-img1-tab"
                 >
                   <img
-                    width={400}
-                    height={200}
+
                     className="img-fluid"
                     src={ProductDetail?.imageName}
                     alt=""
@@ -329,7 +328,7 @@ const ProductDetails = () => {
 
                 <div className="price-tag">
                   <h4>
-                    {localStorage.getItem('currency')}{ProductDetail?.dropshipPrice}{" "}
+                    {localStorage.getItem('currency')}{Number(ProductDetail?.dropshipPrice).toFixed(2)}{" "}
                     {/* <del>${ProductDetail?.rrp}</del> */}
                   </h4>
                 </div>

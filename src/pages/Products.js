@@ -121,6 +121,7 @@ const Product = () => {
         return item.id
       }
     })
+
     if (RefreshProduct === 1) {
       let Array = []
       event?.map((item) => {
@@ -184,6 +185,9 @@ const Product = () => {
 
   const resetAll = () => {
     // filteredItems = []
+    dispatch({
+      type: UPDATE_SEARCH_PRODUCT, payload: ''
+    })
     console.log('Reset ALl')
     setIsLoading(true)
     SearchCat = ''
@@ -560,7 +564,7 @@ const Product = () => {
                   products?.map((item) => {
                     return (
                       <>
-                        <div className="col-lg-4 col-md-4 col-sm-6" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div className="col-lg-4 col-md-4 col-sm-6" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'end', alignItems: 'center' }}>
                           <div className="collection-card" >
                             {/* <div className="offer-card">
                             <span>Offer</span>
@@ -588,6 +592,7 @@ const Product = () => {
                                 >
                                   View Details
                                 </a>
+
                               </div>
                               <ul className="cart-icon-list">
                                 <li>
@@ -621,7 +626,7 @@ const Product = () => {
                                 </a>
                               </h4>
                               <div className="price">
-                                <h6> {localStorage.getItem('currency')}{item?.dropshipPrice}</h6>
+                                <h6> {localStorage.getItem('currency')}{Number(item?.dropshipPrice).toFixed(2)}</h6>
                                 {/* <del>${item.rrp}</del> */}
                               </div>
 
