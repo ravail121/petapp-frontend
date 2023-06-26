@@ -12761,10 +12761,10 @@ footer.style2 .social-area ul li:hover a i {
 }
 
 .table-wrapper .eg-table tbody tr td img {
-  width: 87px;
+  /* width: 87px; */
   height: 64px;
   -o-object-fit: cover;
-  object-fit: cover;
+  /* object-fit: cover; */
 }
 
 .table-wrapper .eg-table tbody tr td .quantity {
@@ -13179,8 +13179,10 @@ footer.style2 .social-area ul li:hover a i {
 .checkout-section .added-product-summary .added-products .single-product .product-img img {
   -o-object-fit: cover;
   object-fit: cover;
-  min-width: 90px;
+  /* min-width: 90px; */
   height: 100px;
+  width: 100%;
+
 }
 
 .checkout-section .added-product-summary .added-products .single-product .product-info .product-title {

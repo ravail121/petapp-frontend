@@ -27,7 +27,7 @@ const Footer = () => {
                   </h2>
                 </div>
                 <div className="footer-btn">
-                  <a className="primary-btn6" onClick={() => navigate('/products')}>
+                  <a className="primary-btn6" style={{ color: 'white' }} onClick={() => navigate('/products')}>
                     Shop Now
                   </a>
                 </div>

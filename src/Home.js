@@ -352,7 +352,7 @@ function Home() {
           <div class="row d-md-none d-block pt-30">
             <div class="col-lg-12 d-flex justify-content-center">
               <div class="h3-view-btn">
-                <a href="shop.html">View All Product<img src="assets/images/icon/haf-button-2.svg" alt="" /></a>
+                <a onClick={() => navigate('/products')}>View All Product<img src="assets/images/icon/haf-button-2.svg" alt="" /></a>
               </div>
             </div>
           </div>
