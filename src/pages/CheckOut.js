@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Header from "../shared/Header";
 import tick from '../assets/qa.gif'
 import DiscountHeader from "../shared/DiscountHeader";
@@ -13,6 +13,7 @@ import { url } from "../environment";
 import { message } from 'antd';
 
 import { useNavigate } from "react-router-dom";
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -27,6 +28,7 @@ const style = {
   px: 4,
   pb: 5,
 };
+
 const Checkout = () => {
   const dispatch = useDispatch();
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
@@ -48,7 +50,6 @@ const Checkout = () => {
   const [ErroMsg, setErroMsg] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [open, setOpen] = React.useState(false);
-
   const handleOpen = () => {
     setOpen(true);
   };
@@ -174,14 +175,20 @@ const Checkout = () => {
 
     if (Address.trim() !== '') {
       setErrorAddress(true);
+      window.scrollTo(0, 0);
+
     }
 
 
     if (Email.trim() === '') {
       setErroMsg('Email is required');
+      window.scrollTo(0, 0);
+
       setIsValidEmail(false);
     }
     if (!isValidEmail || !ErrorAddress) {
+      window.scrollTo(0, 0);
+
       return
     }
     setErrorChec(false)
