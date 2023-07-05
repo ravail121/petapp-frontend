@@ -4,12 +4,14 @@ import reducerCartTotal from '../Redux/Reducers/cartTotal';
 import searchValue from './Reducers/SearchProduct'
 import searchCategories from './Reducers/changeCategories';
 import searchProduct from './Reducers/productrefresh'
+import reducerCategoryError from './Reducers/CategoryError';
 const rootReducer = combineReducers({
     add: reducerAdd,
     cartTotal: reducerCartTotal,
     searchValue: searchValue,
     searchCat: searchCategories,
-    productRefresh: searchProduct
+    productRefresh: searchProduct,
+    categoryError: reducerCategoryError,
     // add other reducers here if you have more
 });
 

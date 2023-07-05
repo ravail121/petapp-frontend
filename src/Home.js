@@ -263,9 +263,9 @@ function Home() {
               <div className="col-lg-6 d-flex justify-content-end">
                 <div className="hero-img">
                   <img
-                    className={"img-fluid banner-imgas"}
+                    className="img-fluid banner-imgas"
                     src={
-                      "assets/images/home.png"
+                      "assets/images/home1.png"
                     }
                     alt=""
                   />
