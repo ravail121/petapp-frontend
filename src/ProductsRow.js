@@ -311,7 +311,7 @@ function ProductsRow(props) {
           </div>
         </div>
       )}
-      {!SliderVisible && categories?.length < 6 &&
+      {!SliderVisible && categories?.length < 5 &&
 
         <Swiper
           slidesPerView={slidesPerView}
@@ -367,11 +367,11 @@ function ProductsRow(props) {
           </div>)}
         </Swiper>
       }
-      {(SliderVisible === true && (categories?.length >= 6)) &&
+      {(SliderVisible === true && (categories?.length >= 5)) &&
 
         <Slider className="places-carousel" dots={true} speed={2000} slidesToScroll={1} slidesToShow={5} responsive={responsive}>
           {categories?.length > 0 ? (
-            categories?.length >= 6 &&
+            categories?.length >= 5 &&
 
             categories && categories?.slice(0, categories?.length).map((product) => (
               <div className="" style={{ textAlign: 'center' }}>
@@ -405,11 +405,11 @@ function ProductsRow(props) {
         </Slider>
       }
 
-      {(SliderVisible === false && (categories?.length >= 6)) &&
+      {(SliderVisible === false && (categories?.length >= 5)) &&
 
         <Slider className="places-carousel" dots={true} speed={2000} slidesToScroll={1} slidesToShow={5} autoplaySpeed={2000} responsive={responsive}>
           {categories?.length > 0 ? (
-            categories?.length >= 6 &&
+            categories?.length >= 5 &&
 
             categories && categories?.slice(0, categories?.length).map((product) => (
               <div className="" style={{ textAlign: 'center' }}>

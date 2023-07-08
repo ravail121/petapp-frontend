@@ -437,7 +437,27 @@ const Checkout = () => {
                             <ErrorMessage name="Address" component="div" className="error-message" />
                           </div>
                         </div>
-
+                        <div className="col-12">
+                          <div className="form-inner">
+                            <label>Town</label>
+                            <Field type="text" name="Address" placeholder="Town" />
+                            <ErrorMessage name="Address" component="div" className="error-message" />
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className="form-inner">
+                            <label>City</label>
+                            <Field type="text" name="Address" placeholder="City" />
+                            <ErrorMessage name="Address" component="div" className="error-message" />
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className="form-inner">
+                            <label>State</label>
+                            <Field type="text" name="Address" placeholder="State" />
+                            <ErrorMessage name="Address" component="div" className="error-message" />
+                          </div>
+                        </div>
 
                         {
                         }
