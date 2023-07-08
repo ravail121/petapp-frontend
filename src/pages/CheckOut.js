@@ -378,23 +378,24 @@ const Checkout = () => {
               </div>
             </Box>
           </Modal>
-          <div className="row g-4">
-            <Formik
-              initialValues={{
-                fname: '',
-                lname: '',
-                country: '',
-                Address: '',
-                emailNew: '',
-                message: '',
-              }}
-              validationSchema={validationSchema}
-              onSubmit={handleSubmitnew}
-            >
-              {({ isSubmitting }) => (
-                <Form>
-                  {
-                  }
+
+          <Formik
+            initialValues={{
+              fname: '',
+              lname: '',
+              country: '',
+              Address: '',
+              emailNew: '',
+              message: '',
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmitnew}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                {
+                }
+                <div className="row g-4">
                   <div className="col-lg-7">
                     <div className="form-wrap box--shadow mb-30">
                       <h4 className="title-25 mb-20">Shipping Details</h4>
@@ -440,22 +441,19 @@ const Checkout = () => {
                         <div className="col-12">
                           <div className="form-inner">
                             <label>Town</label>
-                            <Field type="text" name="Address" placeholder="Town" />
-                            <ErrorMessage name="Address" component="div" className="error-message" />
+                            <Field type="text" name="town" placeholder="Town" />
                           </div>
                         </div>
                         <div className="col-12">
                           <div className="form-inner">
                             <label>City</label>
-                            <Field type="text" name="Address" placeholder="City" />
-                            <ErrorMessage name="Address" component="div" className="error-message" />
+                            <Field type="text" name="city" placeholder="City" />
                           </div>
                         </div>
                         <div className="col-12">
                           <div className="form-inner">
                             <label>State</label>
-                            <Field type="text" name="Address" placeholder="State" />
-                            <ErrorMessage name="Address" component="div" className="error-message" />
+                            <Field type="text" name="state" placeholder="State" />
                           </div>
                         </div>
 
@@ -599,12 +597,12 @@ const Checkout = () => {
                     </div>
 
                   </aside>
+                </div>
+              </Form>
+            )}
+          </Formik>
 
-                </Form>
-              )}
-            </Formik>
-
-          </div>
+          {/* </div> */}
           { }
 
         </div>
