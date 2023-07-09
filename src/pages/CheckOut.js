@@ -3,6 +3,11 @@ import Header from "../shared/Header";
 import tick from '../assets/qa.gif';
 import error from '../assets/er.png';
 import DiscountHeader from "../shared/DiscountHeader";
+import {
+  PaymentElement,
+  LinkAuthenticationElement
+} from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js';
 import Modal from '@mui/material/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -37,32 +42,25 @@ const Checkout = () => {
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
   const [OrderNumber, setOrderNumber] = useState('');
-  const [ErrorCountry, setErrorCountry] = useState(false);
   const [BackButton, setBackButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [Email, setEmail] = useState('');
-  const [FirstName, setFirstName] = useState('');
-  const [ErrorName, setErrorName] = useState(false);
-  const [LastName, setLastName] = useState('');
+  // const [isLoading, setIsLoading] = useState(false);
+
   const [Country, setCountry] = useState('');
   const [ErrorMes, setErrorMes] = useState('');
-  const [Address, setAddress] = useState('');
-  const [SaveValue, setSaveValue] = useState({ id: '' });
   const [loading, setLoading] = React.useState(false);
-  const [ErrorDescription, setErrorDescription] = React.useState(false);
-  const [ErrorAddress, setErrorAddress] = React.useState(false);
   const [ErrorChec, setErrorChec] = React.useState(false);
   const [CartData, setCartData] = useState([])
   const [messageApi, contextHolder] = message.useMessage();
-  const categoryError = useSelector((state) => state.categoryError.cartTotal);
-  console.log(categoryError)
 
+  const [payStripe, setPayStripe] = useState(false);
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
   const [ShippingTotal, setShippingTotal] = useState(0);
   const [ErroMsg, setErroMsg] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [open1, setOpen1] = React.useState(false);
+  const [clientSecret, setClientSecret] = useState('');
 
 
 
@@ -75,6 +73,8 @@ const Checkout = () => {
     checkDefaultCounter()
     setCartData(storedArray);
     GetAllShipping()
+
+
   }, [])
 
   const checkDefaultCounter = () => {
@@ -105,7 +105,20 @@ const Checkout = () => {
 
     return product.quantity * product.dropshipPrice;
   };
-
+  const initializeStripe = async (clientSecret) => {
+    console.log(clientSecret)
+    const stripe = await loadStripe('pk_test_qblFNYngBkEdjEZ16jxxoWSM');
+    const appearance = { /* appearance */ };
+    const options = {
+      layout: {
+        type: 'tabs',
+        defaultCollapsed: false,
+      }
+    };
+    const elements = stripe.elements({ clientSecret, appearance });
+    const paymentElement = elements.create('payment', options);
+    paymentElement.mount('#payment-element');
+  };
   const GetAllShipping = () => {
     setIsLoading(true);
     fetch(`${url}/user/orders/shipping/costs`, {
@@ -138,12 +151,6 @@ const Checkout = () => {
   };
 
   const navigate = useNavigate()
-
-
-
-
-
-
 
   const addAllShipping = (e) => {
 
@@ -217,7 +224,6 @@ const Checkout = () => {
     checkDefaultCounter()
   };
 
-
   const backToHome = (e) => {
     e.preventDefault()
     navigate('/home')
@@ -225,6 +231,7 @@ const Checkout = () => {
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
+  const handleOpenPay = () => setPayStripe(true);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
   const stripe = useStripe();
@@ -233,18 +240,18 @@ const Checkout = () => {
   const handleSubmit = async (event) => {
     console.log(Country)
 
-    if (!stripe || !elements) {
-      return;
-    }
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardNumberElement),
-    });
-    if (error) {
-      setErrorMessage(error.message);
-      return;
-    }
-    setErrorMessage('')
+    // if (!stripe || !elements) {
+    //   return;
+    // }
+    // const { error, paymentMethod } = await stripe.createPaymentMethod({
+    //   type: 'card',
+    //   card: elements.getElement(CardNumberElement),
+    // });
+    // if (error) {
+    //   setErrorMessage(error.message);
+    //   return;
+    // }
+    // setErrorMessage('')
 
     setErrorChec(true)
     if (CartData?.length < 1) {
@@ -258,7 +265,7 @@ const Checkout = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        paymentMethodId: paymentMethod.id,
+        // paymentMethodId: paymentMethod.id,
         amount: Number(cartCountTotal) * 100,
         currency: 'usd',
         name: event.fname + ' ' + event.lname,
@@ -276,27 +283,56 @@ const Checkout = () => {
     }
     if (result.success) {
       const { clientSecret } = result.data;
+      console.log(clientSecret)
 
-      const confirmedPayment = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardNumberElement),
-          billing_details: {
-            name: event.fname + ' ' + event.lname,
-          },
-        },
-      });
 
-      if (confirmedPayment.error) {
-        console.error(confirmedPayment.error.message);
-        setErrorMes(confirmedPayment.error.message)
-        handleOpen1()
-        setLoading(false)
-      } else {
-        if (confirmedPayment.paymentIntent.status === 'succeeded') {
-          addAllShipping(event)
-          console.log('Payment succeeded:', confirmedPayment.paymentIntent.status);
-        }
-      }
+      // const { clientSecret } = await response.json();
+      const stripe = await loadStripe('pk_test_qblFNYngBkEdjEZ16jxxoWSM');
+      const appearance = {
+        theme: 'stripe',
+      };
+      elements = stripe.elements({ appearance, clientSecret });
+      console.log(elements)
+
+      // const linkAuthenticationElement = elements.create("linkAuthentication");
+      // linkAuthenticationElement.mount("#link-authentication-element");
+
+      // linkAuthenticationElement.on('change', (event) => {
+      //   emailAddress = event.value.email;
+      // });
+
+      const paymentElementOptions = {
+        layout: "tabs",
+      };
+
+      const paymentElement = elements.create("payment", paymentElementOptions);
+      paymentElement.mount("#payment-element");
+      // initializeStripe(clientSecret);
+      console.log(clientSecret)
+      setTimeout(() => {
+        handleOpenPay()
+
+      }, 2000)
+      // const confirmedPayment = await stripe.confirmCardPayment(clientSecret, {
+      //   payment_method: {
+      //     card: elements.getElement(CardNumberElement),
+      //     billing_details: {
+      //       name: event.fname + ' ' + event.lname,
+      //     },
+      //   },
+      // });
+
+      // if (confirmedPayment.error) {
+      //   console.error(confirmedPayment.error.message);
+      //   setErrorMes(confirmedPayment.error.message)
+      //   handleOpen1()
+      //   setLoading(false)
+      // } else {
+      //   if (confirmedPayment.paymentIntent.status === 'succeeded') {
+      //     // addAllShipping(event)
+      //     console.log('Payment succeeded:', confirmedPayment.paymentIntent.status);
+      //   }
+      // }
     }
 
   };
@@ -355,6 +391,33 @@ const Checkout = () => {
             </Box>
           </Modal>
           <Modal
+            open={payStripe}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <form id="payment-form" onSubmit={handleSubmit}>
+                {/* <LinkAuthenticationElement id="link-authentication-element"
+        // Access the email value like so:
+        // onChange={(event) => {
+        //  setEmail(event.value.email);
+        // }}
+        //
+        // Prefill the email field like so:
+        // options={{defaultValues: {email: 'foo@bar.com'}}}
+        /> */}
+                <PaymentElement id="payment-element" />
+                {/* <button disabled={isLoading || !stripe || !elements} id="submit">
+        <span id="button-text">
+          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+        </span>
+      </button> */}
+                {/* Show any error or success messages */}
+                {/* {message && <div id="payment-message">{message}</div>} */}
+              </form>
+            </Box>
+          </Modal>
+          <Modal
             open={open1}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
@@ -393,8 +456,6 @@ const Checkout = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                {
-                }
                 <div className="row g-4">
                   <div className="col-lg-7">
                     <div className="form-wrap box--shadow mb-30">
@@ -456,9 +517,6 @@ const Checkout = () => {
                             <Field type="text" name="state" placeholder="State" />
                           </div>
                         </div>
-
-                        {
-                        }
                         <div className="col-12">
                           <div className="form-inner">
                             <Field type="email" id="email" name="emailNew" placeholder="Your Email Address" />
@@ -552,7 +610,7 @@ const Checkout = () => {
                         </thead>
                       </table>
                     </div>
-
+                    <button onClick={handleOpenPay}>sd</button>
                     <div className="payment-form">
                       <div className="payment-methods mb-50">
                         { }
@@ -601,9 +659,6 @@ const Checkout = () => {
               </Form>
             )}
           </Formik>
-
-          {/* </div> */}
-          { }
 
         </div>
 
