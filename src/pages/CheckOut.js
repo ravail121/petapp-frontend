@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL, CATEGORY_ERROR } from '../Redux/Actions/action';
 import { url } from "../environment";
 import { message } from 'antd';
-import { Elements, useStripe, useElements, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js';
+import { Elements, useStripe, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js';
 
 import { useNavigate } from "react-router-dom";
 
@@ -61,6 +61,10 @@ const Checkout = () => {
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [clientSecret, setClientSecret] = useState('');
+
+  const [ stripePaymentElements , setStripePaymentElement ] = useState(null);
+  const [ paymentCustomerName , setPaymentCustomerName ] = useState(null);
+  const [ paymentClientSecret , setPaymentClientSecret] = useState(null);
 
 
 
@@ -119,6 +123,8 @@ const Checkout = () => {
     const paymentElement = elements.create('payment', options);
     paymentElement.mount('#payment-element');
   };
+
+  
   const GetAllShipping = () => {
     setIsLoading(true);
     fetch(`${url}/user/orders/shipping/costs`, {
@@ -235,29 +241,65 @@ const Checkout = () => {
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
   const stripe = useStripe();
-  const elements = useElements();
+  // let elements = useElements();
+  let elements;
+
+
+  const makePayment = async(event)=>{
+
+      let myClientSecret = paymentClientSecret;
+      let ele = stripePaymentElements;
+      console.log(paymentClientSecret , ele )
+
+      event.preventDefault()
+
+      const responce = await stripe.confirmCardPayment(myClientSecret, {
+        payment_method: {
+        card: ele,
+        billing_details: {
+            name: "test-customer" // Replace with the customer's name
+        }
+        }
+      });
+      
+    
+    console.log(responce)
+
+      if (responce.error) {
+      // Display error message to the user
+      console.error(responce.error.message);
+      } else {
+      // Payment successful, redirect or show a success message
+      if(responce.paymentIntent.status == "succeeded"){
+      // call the api that was already being called
+      console.log('Payment succeeded:', responce.paymentIntent.status);
+      }
+
+      }
+
+  
+  
+      alert( "okkkk" );        
+
+
+
+
+  }
 
   const handleSubmit = async (event) => {
     console.log(Country)
 
-    // if (!stripe || !elements) {
-    //   return;
-    // }
-    // const { error, paymentMethod } = await stripe.createPaymentMethod({
-    //   type: 'card',
-    //   card: elements.getElement(CardNumberElement),
-    // });
-    // if (error) {
-    //   setErrorMessage(error.message);
-    //   return;
-    // }
-    // setErrorMessage('')
+    handleOpenPay()
+
+
+
 
     setErrorChec(true)
     if (CartData?.length < 1) {
       navigate('/home')
     }
-    setLoading(true)
+    
+    // setLoading(true)
 
     const response = await fetch("http://apis.rubypets.co.uk/payment/create/intent", {
       method: 'POST',
@@ -278,61 +320,39 @@ const Checkout = () => {
     const result = await response.json();
     if (result.statusCode === 400) {
       success(result.message)
-      setLoading(false)
+      // setLoading(false)
 
     }
     if (result.success) {
+
       const { clientSecret } = result.data;
-      console.log(clientSecret)
+      console.log({clientSecret})
+
+      setPaymentClientSecret( clientSecret )
 
 
-      // const { clientSecret } = await response.json();
-      const stripe = await loadStripe('pk_test_qblFNYngBkEdjEZ16jxxoWSM');
+
+
+      const stripe = await loadStripe('pk_test_51NHN8USBku9GQFtqtWrSK4cbXd9UKjVDpMUfANdCwrkr8TM7Tpsjgd6Fy11sHsWrmpzmrvLh6kK0WLTKP9NJbITe00FEj729SF');
+
       const appearance = {
-        theme: 'stripe',
+        theme: 'flat',
       };
       elements = stripe.elements({ appearance, clientSecret });
       console.log(elements)
 
-      // const linkAuthenticationElement = elements.create("linkAuthentication");
-      // linkAuthenticationElement.mount("#link-authentication-element");
-
-      // linkAuthenticationElement.on('change', (event) => {
-      //   emailAddress = event.value.email;
-      // });
 
       const paymentElementOptions = {
         layout: "tabs",
       };
 
       const paymentElement = elements.create("payment", paymentElementOptions);
+
+
       paymentElement.mount("#payment-element");
-      // initializeStripe(clientSecret);
-      console.log(clientSecret)
-      setTimeout(() => {
-        handleOpenPay()
 
-      }, 2000)
-      // const confirmedPayment = await stripe.confirmCardPayment(clientSecret, {
-      //   payment_method: {
-      //     card: elements.getElement(CardNumberElement),
-      //     billing_details: {
-      //       name: event.fname + ' ' + event.lname,
-      //     },
-      //   },
-      // });
+      setStripePaymentElement(elements)
 
-      // if (confirmedPayment.error) {
-      //   console.error(confirmedPayment.error.message);
-      //   setErrorMes(confirmedPayment.error.message)
-      //   handleOpen1()
-      //   setLoading(false)
-      // } else {
-      //   if (confirmedPayment.paymentIntent.status === 'succeeded') {
-      //     // addAllShipping(event)
-      //     console.log('Payment succeeded:', confirmedPayment.paymentIntent.status);
-      //   }
-      // }
     }
 
   };
@@ -347,7 +367,7 @@ const Checkout = () => {
   });
 
   const handleSubmitnew = (values, { setSubmitting }) => {
-    console.log(values);
+    console.log({values});
     handleSubmit(values)
 
     setSubmitting(false);
@@ -390,13 +410,23 @@ const Checkout = () => {
               </div>
             </Box>
           </Modal>
+
           <Modal
             open={payStripe}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
-              <form id="payment-form" onSubmit={handleSubmit}>
+            <Box id="payment-form" sx={style}>
+
+              <form id="payment-form-2" onSubmit={makePayment} >
+                <div id="payment-element">
+                </div>
+                <button id="submit" >
+                  <div class="spinner hidden" id="spinner"></div>
+                  <span id="button-text">Pay now</span>
+                </button>
+                <div id="payment-message" class="hidden"></div>
+
                 {/* <LinkAuthenticationElement id="link-authentication-element"
         // Access the email value like so:
         // onChange={(event) => {
@@ -406,7 +436,7 @@ const Checkout = () => {
         // Prefill the email field like so:
         // options={{defaultValues: {email: 'foo@bar.com'}}}
         /> */}
-                <PaymentElement id="payment-element" />
+                {/* <PaymentElement id="payment-element" /> */}
                 {/* <button disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
@@ -417,6 +447,8 @@ const Checkout = () => {
               </form>
             </Box>
           </Modal>
+
+
           <Modal
             open={open1}
             aria-labelledby="modal-modal-title"
@@ -610,9 +642,12 @@ const Checkout = () => {
                         </thead>
                       </table>
                     </div>
-                    <button onClick={handleOpenPay}>sd</button>
-                    <div className="payment-form">
-                      <div className="payment-methods mb-50">
+
+                    {/* <button onClick={handleOpenPay}></button> */}
+
+                    <div className="payment-form-div">
+
+                      {/* <div className="payment-methods mb-50">
                         { }
                         <label htmlFor="card-number">Card Number:</label>
                         <div id="card-number">
@@ -634,7 +669,20 @@ const Checkout = () => {
                         {errorMessage && <div className="error-message">{errorMessage}</div>}
                         { }
 
-                      </div>
+                      </div> */}
+
+                      {/* <form id="payment-form">
+                        <div id="link-authentication-element">
+                        </div>
+                        <div id="payment-element">
+                        </div>
+                        <button id="submit">
+                          <div class="spinner hidden" id="spinner"></div>
+                          <span id="button-text">Pay now</span>
+                        </button>
+                        <div id="payment-message" class="hidden"></div>
+                      </form>                       */}
+
                       <div className="place-order-btn">
                         <button type="submit" className="primary-btn1 lg-btn">
                           {loading && (
@@ -652,7 +700,10 @@ const Checkout = () => {
                           <span className={loading ? 'None' : ''}>Place Order</span>
                         </button>
                       </div>
+
                     </div>
+
+
 
                   </aside>
                 </div>
