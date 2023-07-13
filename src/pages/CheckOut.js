@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Header from "../shared/Header";
 import tick from '../assets/qa.gif';
 import error from '../assets/er.png';
+import CheckoutForm from './CheckoutForm'
 import DiscountHeader from "../shared/DiscountHeader";
 import {
   PaymentElement,
@@ -44,8 +45,7 @@ const Checkout = () => {
   const [OrderNumber, setOrderNumber] = useState('');
   const [BackButton, setBackButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  // const [isLoading, setIsLoading] = useState(false);
-
+  const stripePromise = loadStripe('pk_test_51NHN8USBku9GQFtqtWrSK4cbXd9UKjVDpMUfANdCwrkr8TM7Tpsjgd6Fy11sHsWrmpzmrvLh6kK0WLTKP9NJbITe00FEj729SF')
   const [Country, setCountry] = useState('');
   const [ErrorMes, setErrorMes] = useState('');
   const [loading, setLoading] = React.useState(false);
@@ -61,10 +61,16 @@ const Checkout = () => {
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [clientSecret, setClientSecret] = useState('');
-
-  const [ stripePaymentElements , setStripePaymentElement ] = useState(null);
-  const [ paymentCustomerName , setPaymentCustomerName ] = useState(null);
-  const [ paymentClientSecret , setPaymentClientSecret] = useState(null);
+  const [AllValue, setAllValue] = React.useState();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleOpenPay = () => setPayStripe(true);
+  const handleOpen1 = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
+  const stripe = useStripe();
+  const [stripePaymentElements, setStripePaymentElement] = useState(null);
+  const [paymentCustomerName, setPaymentCustomerName] = useState(null);
+  const [paymentClientSecret, setPaymentClientSecret] = useState(null);
 
 
 
@@ -109,22 +115,8 @@ const Checkout = () => {
 
     return product.quantity * product.dropshipPrice;
   };
-  const initializeStripe = async (clientSecret) => {
-    console.log(clientSecret)
-    const stripe = await loadStripe('pk_test_qblFNYngBkEdjEZ16jxxoWSM');
-    const appearance = { /* appearance */ };
-    const options = {
-      layout: {
-        type: 'tabs',
-        defaultCollapsed: false,
-      }
-    };
-    const elements = stripe.elements({ clientSecret, appearance });
-    const paymentElement = elements.create('payment', options);
-    paymentElement.mount('#payment-element');
-  };
 
-  
+
   const GetAllShipping = () => {
     setIsLoading(true);
     fetch(`${url}/user/orders/shipping/costs`, {
@@ -181,10 +173,10 @@ const Checkout = () => {
         accept: "application/json",
       },
       body: JSON.stringify({
-        emailAddress: e.emailNew,
+        emailAddress: AllValue.emailNew,
         totalAmount: cartCountTotal,
         orderDetails: Docline,
-        shippingAddress: e.Address,
+        shippingAddress: AllValue.Address,
         shippingFee: ShippingTotal?.shippingFee,
         totalTax: ShippingTotal?.tax * cartCountTotal
       })
@@ -235,51 +227,42 @@ const Checkout = () => {
     navigate('/home')
   }
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleOpenPay = () => setPayStripe(true);
-  const handleOpen1 = () => setOpen1(true);
-  const handleClose1 = () => setOpen1(false);
-  const stripe = useStripe();
-  // let elements = useElements();
+
   let elements;
 
 
-  const makePayment = async(event)=>{
+  const makePayment = async (event) => {
 
-      let myClientSecret = paymentClientSecret;
-      let ele = stripePaymentElements;
-      console.log(paymentClientSecret , ele )
+    let myClientSecret = paymentClientSecret;
+    let ele = stripePaymentElements;
+    console.log(paymentClientSecret, ele)
 
-      event.preventDefault()
+    event.preventDefault()
 
-      const responce = await stripe.confirmCardPayment(myClientSecret, {
-        payment_method: {
+    const responce = await stripe.confirmCardPayment(myClientSecret, {
+      payment_method: {
         card: ele,
         billing_details: {
-            name: "test-customer" // Replace with the customer's name
+          name: "test-customer"
         }
-        }
-      });
-      
-    
+      }
+    });
+
+
     console.log(responce)
 
-      if (responce.error) {
-      // Display error message to the user
+    if (responce.error) {
       console.error(responce.error.message);
-      } else {
-      // Payment successful, redirect or show a success message
-      if(responce.paymentIntent.status == "succeeded"){
-      // call the api that was already being called
-      console.log('Payment succeeded:', responce.paymentIntent.status);
+    } else {
+      if (responce.paymentIntent.status == "succeeded") {
+        console.log('Payment succeeded:', responce.paymentIntent.status);
       }
 
-      }
+    }
 
-  
-  
-      alert( "okkkk" );        
+
+
+    alert("okkkk");
 
 
 
@@ -290,16 +273,12 @@ const Checkout = () => {
     console.log(Country)
 
     handleOpenPay()
-
-
-
-
     setErrorChec(true)
     if (CartData?.length < 1) {
       navigate('/home')
     }
-    
-    // setLoading(true)
+
+    setLoading(true)
 
     const response = await fetch("http://apis.rubypets.co.uk/payment/create/intent", {
       method: 'POST',
@@ -307,8 +286,7 @@ const Checkout = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // paymentMethodId: paymentMethod.id,
-        amount: Number(cartCountTotal) * 100,
+        amount: (Number(cartCountTotal) * 100).toFixed(0),
         currency: 'usd',
         name: event.fname + ' ' + event.lname,
         address: event.Address,
@@ -320,15 +298,17 @@ const Checkout = () => {
     const result = await response.json();
     if (result.statusCode === 400) {
       success(result.message)
-      // setLoading(false)
+
+      setLoading(false)
 
     }
     if (result.success) {
 
       const { clientSecret } = result.data;
-      console.log({clientSecret})
-
-      setPaymentClientSecret( clientSecret )
+      console.log({ clientSecret })
+      setClientSecret(clientSecret)
+      setPaymentClientSecret(clientSecret)
+      setLoading(false)
 
 
 
@@ -356,7 +336,10 @@ const Checkout = () => {
     }
 
   };
-
+  const handlePaystripe = () => {
+    setPayStripe(false)
+    addAllShipping()
+  }
   const validationSchema = Yup.object().shape({
     fname: Yup.string().required('First Name is required'),
     lname: Yup.string().required('Last Name is required'),
@@ -367,9 +350,9 @@ const Checkout = () => {
   });
 
   const handleSubmitnew = (values, { setSubmitting }) => {
-    console.log({values});
+    console.log({ values });
     handleSubmit(values)
-
+    setAllValue(values)
     setSubmitting(false);
   };
 
@@ -413,38 +396,18 @@ const Checkout = () => {
 
           <Modal
             open={payStripe}
+            onClose={handlePaystripe}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
+
             <Box id="payment-form" sx={style}>
+              {clientSecret && (
+                <Elements stripe={stripePromise} options={{ clientSecret, }}>
+                  <CheckoutForm handlePaystripe={handlePaystripe} />
+                </Elements>
+              )}
 
-              <form id="payment-form-2" onSubmit={makePayment} >
-                <div id="payment-element">
-                </div>
-                <button id="submit" >
-                  <div class="spinner hidden" id="spinner"></div>
-                  <span id="button-text">Pay now</span>
-                </button>
-                <div id="payment-message" class="hidden"></div>
-
-                {/* <LinkAuthenticationElement id="link-authentication-element"
-        // Access the email value like so:
-        // onChange={(event) => {
-        //  setEmail(event.value.email);
-        // }}
-        //
-        // Prefill the email field like so:
-        // options={{defaultValues: {email: 'foo@bar.com'}}}
-        /> */}
-                {/* <PaymentElement id="payment-element" /> */}
-                {/* <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-        </span>
-      </button> */}
-                {/* Show any error or success messages */}
-                {/* {message && <div id="payment-message">{message}</div>} */}
-              </form>
             </Box>
           </Modal>
 
@@ -643,61 +606,22 @@ const Checkout = () => {
                       </table>
                     </div>
 
-                    {/* <button onClick={handleOpenPay}></button> */}
+                    { }
 
                     <div className="payment-form-div">
 
-                      {/* <div className="payment-methods mb-50">
-                        { }
-                        <label htmlFor="card-number">Card Number:</label>
-                        <div id="card-number">
-                          <CardNumberElement options={{ style: { base: { fontSize: '16px' } } }} />
-                        </div>
+                      {
+                      }
 
-                        <label htmlFor="card-expiry">Expiration Date:</label>
-                        <div id="card-expiry">
-                          <CardExpiryElement options={{ style: { base: { fontSize: '16px' } } }} />
-                        </div>
-
-                        <label htmlFor="card-cvc">CVC:</label>
-                        <div id="card-cvc">
-                          <CardCvcElement options={{ style: { base: { fontSize: '16px' } } }} />
-                        </div>
-
-                        { }
-
-                        {errorMessage && <div className="error-message">{errorMessage}</div>}
-                        { }
-
-                      </div> */}
-
-                      {/* <form id="payment-form">
-                        <div id="link-authentication-element">
-                        </div>
-                        <div id="payment-element">
-                        </div>
-                        <button id="submit">
-                          <div class="spinner hidden" id="spinner"></div>
-                          <span id="button-text">Pay now</span>
-                        </button>
-                        <div id="payment-message" class="hidden"></div>
-                      </form>                       */}
+                      {
+                      }
 
                       <div className="place-order-btn">
                         <button type="submit" className="primary-btn1 lg-btn">
-                          {loading && (
-                            <CircularProgress
-                              size={24}
-                              sx={{
 
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                marginTop: '-12px',
-                                marginLeft: '-12px',
-                              }}
-                            />)}
-                          <span className={loading ? 'None' : ''}>Place Order</span>
+
+                          { }
+                          <span >Place Order</span>
                         </button>
                       </div>
 
