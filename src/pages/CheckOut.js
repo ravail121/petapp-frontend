@@ -4,25 +4,18 @@ import tick from '../assets/qa.gif';
 import error from '../assets/er.png';
 import CheckoutForm from './CheckoutForm'
 import DiscountHeader from "../shared/DiscountHeader";
-import {
-  PaymentElement,
-  LinkAuthenticationElement
-} from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js';
 import Modal from '@mui/material/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL, CATEGORY_ERROR } from '../Redux/Actions/action';
 import { url } from "../environment";
 import { message } from 'antd';
-import { Elements, useStripe, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js';
-
+import { Elements, useStripe } from '@stripe/react-stripe-js';
 import { useNavigate } from "react-router-dom";
-
 const style = {
   position: 'absolute',
   top: '50%',
@@ -31,28 +24,27 @@ const style = {
   width: 327,
   bgcolor: 'background.paper',
   borderRadius: '25px',
-
   boxShadow: 24,
   pt: 4,
   px: 4,
   pb: 5,
 };
-
 const Checkout = () => {
   const dispatch = useDispatch();
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
+  const checkhandle = useSelector((state) => state.categoryError.errorTrue);
+  console.log(checkhandle)
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
   const [OrderNumber, setOrderNumber] = useState('');
   const [BackButton, setBackButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const stripePromise = loadStripe('pk_test_51NHN8USBku9GQFtqtWrSK4cbXd9UKjVDpMUfANdCwrkr8TM7Tpsjgd6Fy11sHsWrmpzmrvLh6kK0WLTKP9NJbITe00FEj729SF')
+  const stripePromise = loadStripe('pk_test_51Mywy9J9slboT9qM4PkQxymo2HEnuKJ4SlNo47OnduBi31RwWE8t3ysgbvH1RaC0zxiSy99zR7VMnjit9tvWOsnW00FzMFE1rJ')
   const [Country, setCountry] = useState('');
   const [ErrorMes, setErrorMes] = useState('');
   const [loading, setLoading] = React.useState(false);
   const [ErrorChec, setErrorChec] = React.useState(false);
   const [CartData, setCartData] = useState([])
   const [messageApi, contextHolder] = message.useMessage();
-
   const [payStripe, setPayStripe] = useState(false);
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
@@ -64,6 +56,8 @@ const Checkout = () => {
   const [AllValue, setAllValue] = React.useState();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
+  const navigate = useNavigate()
+
   const handleOpenPay = () => setPayStripe(true);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
@@ -71,37 +65,33 @@ const Checkout = () => {
   const [stripePaymentElements, setStripePaymentElement] = useState(null);
   const [paymentCustomerName, setPaymentCustomerName] = useState(null);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
-
-
-
-
   useEffect(() => {
     window.scrollTo(0, 0);
     if (storedArray.length < 1) {
       navigate('/home')
     }
+    if (firstNameRef.current) {
+      firstNameRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     checkDefaultCounter()
     setCartData(storedArray);
     GetAllShipping()
-
-
+    const container = remainingFieldsRef.current;
+    if (container) {
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    }
   }, [])
-
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
-
     let Data = JSON.parse(localStorage.getItem("myArray"))
     Data?.map((ele) => {
       ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
     })
     for (var i = 0; i < Data?.length; i++) {
-
       totalQuantity += Data[i].quantity;
-
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
-
     dispatch({
       type: UPDATE_CART_TOTAL, payload: Data?.reduce(
         (sum, product) => sum + product.totalPrice,
@@ -109,13 +99,10 @@ const Checkout = () => {
       )
     })
   }
-
   const calculateTotalPrice = (product, index) => {
     CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
-
     return product.quantity * product.dropshipPrice;
   };
-
 
   const GetAllShipping = () => {
     setIsLoading(true);
@@ -148,11 +135,14 @@ const Checkout = () => {
     });
   };
 
-  const navigate = useNavigate()
+
 
   const addAllShipping = (e) => {
-
-
+    console.log(checkhandle)
+    if (checkhandle === false) {
+      return
+    }
+    dispatch({ type: CATEGORY_ERROR, payload: false });
     let Docline = []
     CartData &&
       CartData?.map((item, index) => {
@@ -165,7 +155,6 @@ const Checkout = () => {
       })
     setLoading(true)
     setBackButton(false)
-
     fetch(`${url}/user/orders/add`, {
       method: "POST",
       headers: {
@@ -177,6 +166,9 @@ const Checkout = () => {
         totalAmount: cartCountTotal,
         orderDetails: Docline,
         shippingAddress: AllValue.Address,
+        city: AllValue.city,
+        town: AllValue.town,
+        shippingAddress: AllValue.Address,
         shippingFee: ShippingTotal?.shippingFee,
         totalTax: ShippingTotal?.tax * cartCountTotal
       })
@@ -185,7 +177,6 @@ const Checkout = () => {
       .then((response) => {
         if (response.statusCode === 200) {
           localStorage.removeItem('myArray')
-
           dispatch({
             type: UPDATE_CART_TOTAL, payload: 0
           })
@@ -194,13 +185,11 @@ const Checkout = () => {
           checkDefaultCounter()
           setCartData([]);
           setLoading(false)
-
           setIsLoading(false);
         }
         else if (response.statusCode === 400) {
           success(response.message)
           setLoading(false)
-
         }
       })
       .catch((err) => {
@@ -221,65 +210,22 @@ const Checkout = () => {
     }
     checkDefaultCounter()
   };
-
+  const firstNameRef = useRef(null);
   const backToHome = (e) => {
     e.preventDefault()
     navigate('/home')
   }
 
-
   let elements;
-
-
-  const makePayment = async (event) => {
-
-    let myClientSecret = paymentClientSecret;
-    let ele = stripePaymentElements;
-    console.log(paymentClientSecret, ele)
-
-    event.preventDefault()
-
-    const responce = await stripe.confirmCardPayment(myClientSecret, {
-      payment_method: {
-        card: ele,
-        billing_details: {
-          name: "test-customer"
-        }
-      }
-    });
-
-
-    console.log(responce)
-
-    if (responce.error) {
-      console.error(responce.error.message);
-    } else {
-      if (responce.paymentIntent.status == "succeeded") {
-        console.log('Payment succeeded:', responce.paymentIntent.status);
-      }
-
-    }
-
-
-
-    alert("okkkk");
-
-
-
-
-  }
 
   const handleSubmit = async (event) => {
     console.log(Country)
-
     handleOpenPay()
     setErrorChec(true)
     if (CartData?.length < 1) {
       navigate('/home')
     }
-
     setLoading(true)
-
     const response = await fetch("http://apis.rubypets.co.uk/payment/create/intent", {
       method: 'POST',
       headers: {
@@ -294,69 +240,98 @@ const Checkout = () => {
         description: event.message,
       }),
     });
-
     const result = await response.json();
     if (result.statusCode === 400) {
       success(result.message)
-
       setLoading(false)
-
     }
     if (result.success) {
-
       const { clientSecret } = result.data;
       console.log({ clientSecret })
       setClientSecret(clientSecret)
       setPaymentClientSecret(clientSecret)
       setLoading(false)
-
-
-
-
-      const stripe = await loadStripe('pk_test_51NHN8USBku9GQFtqtWrSK4cbXd9UKjVDpMUfANdCwrkr8TM7Tpsjgd6Fy11sHsWrmpzmrvLh6kK0WLTKP9NJbITe00FEj729SF');
-
+      const stripe = await loadStripe('pk_test_51Mywy9J9slboT9qM4PkQxymo2HEnuKJ4SlNo47OnduBi31RwWE8t3ysgbvH1RaC0zxiSy99zR7VMnjit9tvWOsnW00FzMFE1rJ');
       const appearance = {
         theme: 'flat',
       };
       elements = stripe.elements({ appearance, clientSecret });
       console.log(elements)
-
-
       const paymentElementOptions = {
         layout: "tabs",
       };
-
       const paymentElement = elements.create("payment", paymentElementOptions);
-
-
-      paymentElement.mount("#payment-element");
-
       setStripePaymentElement(elements)
-
     }
-
   };
+
   const handlePaystripe = () => {
     setPayStripe(false)
     addAllShipping()
+    console.log(checkhandle)
   }
-  const validationSchema = Yup.object().shape({
-    fname: Yup.string().required('First Name is required'),
-    lname: Yup.string().required('Last Name is required'),
-    country: Yup.string().required('Country is required'),
-    Address: Yup.string().required('Street Address is required'),
-    emailNew: Yup.string().email('Invalid email address').required('Email Address is required'),
-    message: Yup.string().required('Description is required'),
-  });
+  // const validationSchema = Yup.object().shape({
+  //   fname: Yup.string().required('First Name is required'),
+  //   lname: Yup.string().required('Last Name is required'),
+  //   country: Yup.string().required('Country is required'),
+  //   city: Yup.string().required('City is required'),
+  //   town: Yup.string(),
+  //   Address: Yup.string().required('Street Address is required'),
+  //   emailNew: Yup.string().email('Invalid email address').required('Email Address is required'),
+  //   message: Yup.string().required('Description is required'),
+  // });
 
-  const handleSubmitnew = (values, { setSubmitting }) => {
-    console.log({ values });
-    handleSubmit(values)
-    setAllValue(values)
-    setSubmitting(false);
+  const remainingFieldsRef = useRef(null);
+  const handleSubmitnew = async (values, { setSubmitting, setFieldError }) => {
+    try {
+      const validationSchema = Yup.object().shape({
+        fname: Yup.string().required('First Name is required'),
+        lname: Yup.string().required('Last Name is required'),
+        country: Yup.string().required('Country is required'),
+        city: Yup.string().required('City is required'),
+        town: Yup.string(),
+        Address: Yup.string().required('Street Address is required'),
+        emailNew: Yup.string().email('Invalid email address').required('Email Address is required'),
+        message: Yup.string().required('Description is required'),
+        // Add validation rules for other form fields...
+      });
+
+      await validationSchema.validate(values, { abortEarly: false });
+
+      // Proceed with form submission
+      console.log('Form submitted:', values);
+
+      // Scroll to the remaining fields
+      remainingFieldsRef.current.scrollIntoView({ behavior: 'smooth' });
+    } catch (validationError) {
+      // Handle validation errors
+      window.scrollTo(0, 0);
+
+      console.log('Validation errors:', validationError.errors);
+      validationError.inner.forEach(error => {
+        setFieldError(error.path, error.message);
+      });
+
+      setSubmitting(false);
+    }
+    // if (values) {
+    //   // Scroll to the first invalid field
+    //   if (firstNameRef.current) {
+    //     firstNameRef.current.scrollIntoView({ behavior: 'smooth' });
+    //   }
+    // } else {
+    //   dispatch({ type: CATEGORY_ERROR, payload: false });
+    //   handleSubmit(values)
+    //   setAllValue(values)
+    //   setSubmitting(false);
+    // }
   };
-
-
+  const options = {
+    mode: 'payment',
+    amount: 1099,
+    currency: 'usd',
+    appearance: {},
+  };
   return (
     <>
       {contextHolder}
@@ -364,7 +339,6 @@ const Checkout = () => {
       <Header />
       <div className="checkout-section pt-120 pb-120">
         <div className="container">
-
           <Modal
             open={open}
             aria-labelledby="modal-modal-title"
@@ -380,38 +354,28 @@ const Checkout = () => {
                   Your Order Has been Confirmed.
                   Your Order Number is {' '}
                   <b>{OrderNumber}</b>.
-
                   Email has been sent to you.
-
                 </Typography>
-
                 <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
                   <button style={{ width: '100%', height: '50px' }} class="primary-btn1 mt-4" onClick={(e) => backToHome(e)}>  Back to Home</button>
-
                 </div>
-
               </div>
             </Box>
           </Modal>
-
           <Modal
             open={payStripe}
-            onClose={handlePaystripe}
+            onClose={() => { dispatch({ type: CATEGORY_ERROR, payload: false }); handlePaystripe(); }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-
             <Box id="payment-form" sx={style}>
               {clientSecret && (
                 <Elements stripe={stripePromise} options={{ clientSecret, }}>
                   <CheckoutForm handlePaystripe={handlePaystripe} />
                 </Elements>
               )}
-
             </Box>
           </Modal>
-
-
           <Modal
             open={open1}
             aria-labelledby="modal-modal-title"
@@ -424,29 +388,24 @@ const Checkout = () => {
                   <b>{ErrorMes}!</b>
                 </h3>
                 <Typography id="modal-modal-description" style={{ fontSize: '14px' }} sx={{ mt: 3 }}>
-
-
                 </Typography>
-
                 <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
                   <button className="btn btn-primary" onClick={() => setOpen1(false)}>Close</button>
-
                 </div>
-
               </div>
             </Box>
           </Modal>
-
           <Formik
             initialValues={{
               fname: '',
               lname: '',
               country: '',
+              city: '',
               Address: '',
               emailNew: '',
               message: '',
             }}
-            validationSchema={validationSchema}
+            // validationSchema={validationSchema}
             onSubmit={handleSubmitnew}
           >
             {({ isSubmitting }) => (
@@ -458,11 +417,9 @@ const Checkout = () => {
                       <div className="row">
                         <div className="col-lg-6">
                           <div className="form-inner">
-
                             <label>First Name</label>
-                            <Field type="text" name="fname" placeholder="Your first name" />
+                            <Field type="text" name="fname" placeholder="Your first name" innerRef={firstNameRef} />
                             <ErrorMessage name="fname" component="div" className="error-message" />
-
                           </div>
                         </div>
                         <div className="col-lg-6">
@@ -470,7 +427,6 @@ const Checkout = () => {
                             <label>Last Name</label>
                             <Field type="text" name="lname" placeholder="Your last name" />
                             <ErrorMessage name="lname" component="div" className="error-message" />
-
                           </div>
                         </div>
                         <div class="col-12">
@@ -485,8 +441,6 @@ const Checkout = () => {
                             <ErrorMessage name="country" component="div" className="error-message" />
                           </div>
                         </div>
-                        {
-                        }
                         <div className="col-12">
                           <div className="form-inner">
                             <label>Street Address</label>
@@ -504,30 +458,25 @@ const Checkout = () => {
                           <div className="form-inner">
                             <label>City</label>
                             <Field type="text" name="city" placeholder="City" />
+                            <ErrorMessage name="city" component="div" className="error-message" />
+
                           </div>
                         </div>
-                        <div className="col-12">
-                          <div className="form-inner">
-                            <label>State</label>
-                            <Field type="text" name="state" placeholder="State" />
-                          </div>
-                        </div>
+
                         <div className="col-12">
                           <div className="form-inner">
                             <Field type="email" id="email" name="emailNew" placeholder="Your Email Address" />
                             <ErrorMessage name="emailNew" component="div" className="error-message" />
                           </div>
                         </div>
-
                         <div className="col-12">
                           <div className="form-inner">
-                            <Field as="textarea" name="message" placeholder="Order Notes (Optional)" rows="6"></Field>
+                            <Field as="textarea" name="message" placeholder="Order Notes" rows="6"></Field>
                             <ErrorMessage name="message" component="div" className="error-message" />
                           </div>
                         </div>
                       </div>
                     </div>
-
                   </div>
                   <aside className="col-lg-5">
                     <div className="added-product-summary mb-30">
@@ -538,7 +487,6 @@ const Checkout = () => {
                             <li className="single-product d-flex justify-content-start">
                               <div className="product-img">
                                 { }
-
                                 <img width={0} height={100} src={item?.imageName} alt="" />
                               </div>
                               <div className="product-info" style={{ marginLeft: '8px' }}>
@@ -562,16 +510,11 @@ const Checkout = () => {
                                   </strong>
                                 </div>
                               </div>
-
                             </li>
                           )
-
                         })}
-
-
                       </ul>
                     </div>
-
                     <div className="summery-card cost-summery mb-30">
                       <table className="table cost-summery-table">
                         <thead>
@@ -581,7 +524,6 @@ const Checkout = () => {
                           </tr>
                         </thead>
                         <tbody>
-
                           <tr>
                             <td>Shipping Fee</td>
                             <td>{ShippingTotal?.currencySign}{ShippingTotal?.shippingFee}</td>
@@ -593,7 +535,6 @@ const Checkout = () => {
                         </tbody>
                       </table>
                     </div>
-
                     <div className="summery-card total-cost mb-30">
                       <table className="table cost-summery-table total-cost">
                         <thead>
@@ -605,41 +546,26 @@ const Checkout = () => {
                         </thead>
                       </table>
                     </div>
-
                     { }
-
                     <div className="payment-form-div">
-
                       {
                       }
-
                       {
                       }
-
                       <div className="place-order-btn">
                         <button type="submit" className="primary-btn1 lg-btn">
-
-
                           { }
                           <span >Place Order</span>
                         </button>
                       </div>
-
                     </div>
-
-
-
                   </aside>
                 </div>
               </Form>
             )}
           </Formik>
-
         </div>
-
       </div>
-
-
     </>
   );
 };

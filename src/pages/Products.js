@@ -88,7 +88,7 @@ const Product = () => {
   let SearchValue = useSelector((state) => state.searchValue.value);
   let SearchCat = useSelector((state) => state.searchCat.value);
   let RefreshProduct = useSelector((state) => state.productRefresh.productRefresh);
-  console.log(RefreshProduct)
+
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -139,7 +139,7 @@ const Product = () => {
     else {
       filteredItems = []
     }
-    console.log(SearchCat)
+
     setIsLoading(true);
     fetch(`${url}/user/products/list`, {
       method: "POST",
@@ -158,7 +158,7 @@ const Product = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("All Products ----->>>", response);
+
         value--
         if (response.statusCode === 200) {
           setProducts(response?.data?.products);
@@ -173,7 +173,7 @@ const Product = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -188,7 +188,7 @@ const Product = () => {
     dispatch({
       type: UPDATE_SEARCH_PRODUCT, payload: ''
     })
-    console.log('Reset ALl')
+
     setIsLoading(true)
     SearchCat = ''
     SearchValue = ''
@@ -221,7 +221,7 @@ const Product = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("All Products ----->>>", response);
+
         if (response.statusCode === 200) {
           setProducts(response?.data?.products);
           // fetchCategories()
@@ -233,7 +233,7 @@ const Product = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   }
 
@@ -244,7 +244,7 @@ const Product = () => {
     setIsLoading(true);
 
     let url = `http://apis.rubypets.co.uk/user/categories/list`;
-    console.log(url);
+
     fetch(url, {
       method: "GET",
     })
@@ -259,7 +259,7 @@ const Product = () => {
               id: item.id
             })
           })
-          console.log(Array)
+
           setCategories(Array);
           setLoading(false);
           GetAllProducts(Array);
@@ -267,7 +267,7 @@ const Product = () => {
         }
       })
       .catch((error) => {
-        console.error(error);
+
       });
   };
 
@@ -287,7 +287,7 @@ const Product = () => {
 
       totalQuantity += Data[i].quantity;
 
-      // // console.log(totalQuantity)
+      // // 
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -301,12 +301,12 @@ const Product = () => {
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     //  decodedObj const  = { id: 123 }; // Example decoded object
     const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
-    console.log(hasDuplicate)
+
     if (!hasDuplicate) {
       decodedObj["quantity"] = 1;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
-      console.log(storedArray)
+
       success()
       setRefresh(Refresh + 1)
       checkDefaultCounter()

@@ -1,20 +1,20 @@
 import { CATEGORY_ERROR } from '../Actions/action';
 
 const initialStateTotal = {
-    cartTotal: false,
+    errorTrue: false,
 };
 
 
 const reducerCategoryError = (state = initialStateTotal, action) => {
-    // console.log(action.type, state)
+    console.log(action.type, state)
 
     switch (action.type) {
 
         case CATEGORY_ERROR:
-            // console.log(UPDATE_CART_TOTAL)
+            // console.log(CATEGORY_ERROR)
             return {
                 ...state,
-                cartTotal: action.payload,
+                errorTrue: action.payload,
             };
         default:
             return state;

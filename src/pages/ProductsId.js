@@ -86,7 +86,7 @@ const Product = () => {
 
   const { id } = useParams()
   const ID = decode(id)
-  // console.log(ID)
+  // 
   // useEffect(() => {
   //   fetchCategories()
 
@@ -122,7 +122,7 @@ const Product = () => {
 
       totalQuantity += Data[i].quantity;
 
-      // console.log(totalQuantity)
+      // 
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -136,7 +136,7 @@ const Product = () => {
     })
     const filteredItems = Docline?.filter((item) => typeof item !== 'undefined');
 
-    console.log(filteredItems)
+
     setIsLoading(true);
     fetch(`${url}/user/products/filter`, {
       method: "POST",
@@ -155,7 +155,7 @@ const Product = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("Product ----->>>", response);
+
         if (response.message === "Products fetched Successfully") {
           setProducts(response?.data?.products);
           setAllpages(response?.data?.totalCount);
@@ -163,7 +163,7 @@ const Product = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -181,12 +181,12 @@ const Product = () => {
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     //  decodedObj const  = { id: 123 }; // Example decoded object
     const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
-    console.log(hasDuplicate)
+
     if (!hasDuplicate) {
       decodedObj["quantity"] = 1;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
-      console.log(storedArray)
+
       success()
       // setRefresh(Refresh + 1)
       checkDefaultCounter()
@@ -219,7 +219,7 @@ const Product = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        // console.log("All Products ----->>>", response);
+        // 
         if (response.message === "Product fetched Successfully") {
           setProducts(response?.data?.products);
           setAllpages(response?.data?.totalCount);
@@ -227,7 +227,7 @@ const Product = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -235,7 +235,7 @@ const Product = () => {
   const fetchCategories = () => {
     setLoading(true);
     let url = `http://apis.rubypets.co.uk/user/categories/list`;
-    console.log(url);
+
     fetch(url, {
       method: "GET",
     })
@@ -255,7 +255,7 @@ const Product = () => {
         }
       })
       .catch((error) => {
-        console.error(error);
+
       });
   };
 
@@ -278,7 +278,7 @@ const Product = () => {
   const getCategoiresValue = (value, index) => {
     let obj = categories;
     obj[index]['checked'] = value
-    console.log(obj)
+
   }
 
   return (
