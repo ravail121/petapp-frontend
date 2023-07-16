@@ -3,6 +3,8 @@ import Header from "../shared/Header";
 import tick from '../assets/qa.gif';
 import error from '../assets/er.png';
 import CheckoutForm from './CheckoutForm'
+import { PaymentElement } from '@stripe/react-stripe-js';
+
 import DiscountHeader from "../shared/DiscountHeader";
 import { loadStripe } from '@stripe/stripe-js';
 import Modal from '@mui/material/Modal';
@@ -14,7 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL, CATEGORY_ERROR } from '../Redux/Actions/action';
 import { url } from "../environment";
 import { message } from 'antd';
-import { Elements, useStripe } from '@stripe/react-stripe-js';
+import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from "react-router-dom";
 const style = {
   position: 'absolute',
@@ -30,6 +32,10 @@ const style = {
   pb: 5,
 };
 const Checkout = () => {
+  const [messagestripe, setMessagestripe] = useState(null);
+  const [messageApi, contextHolder] = message.useMessage();
+
+
   const dispatch = useDispatch();
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const checkhandle = useSelector((state) => state.categoryError.errorTrue);
@@ -44,12 +50,11 @@ const Checkout = () => {
   const [loading, setLoading] = React.useState(false);
   const [ErrorChec, setErrorChec] = React.useState(false);
   const [CartData, setCartData] = useState([])
-  const [messageApi, contextHolder] = message.useMessage();
   const [payStripe, setPayStripe] = useState(false);
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
   const [ShippingTotal, setShippingTotal] = useState(0);
-  const [ErroMsg, setErroMsg] = useState('');
+  const [Refresh, setRefresh] = useState(0);
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [clientSecret, setClientSecret] = useState('');
@@ -57,6 +62,7 @@ const Checkout = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const navigate = useNavigate()
+  const [isLoadingStripe, setIsLoadingStripe] = useState(false);
 
   const handleOpenPay = () => setPayStripe(true);
   const handleOpen1 = () => setOpen1(true);
@@ -65,6 +71,11 @@ const Checkout = () => {
   const [stripePaymentElements, setStripePaymentElement] = useState(null);
   const [paymentCustomerName, setPaymentCustomerName] = useState(null);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
+
+  let elementsStripe;
+
+  const elements = useElements();
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (storedArray.length < 1) {
@@ -81,6 +92,8 @@ const Checkout = () => {
       container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     }
   }, [])
+
+
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
     let Data = JSON.parse(localStorage.getItem("myArray"))
@@ -99,6 +112,46 @@ const Checkout = () => {
       )
     })
   }
+
+  const handleSubmitStripe = async (e) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+    console.log(elements)
+    setIsLoadingStripe(true);
+    try {
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: "https://google.com",
+        },
+        redirect: "if_required",
+      });
+
+      if (error) {
+        console.error(error);
+      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+        console.log("Payment succeeded");
+        dispatch({ type: CATEGORY_ERROR, payload: 0 + 1 });
+        setRefresh(Refresh + 1)
+        setTimeout(() => {
+          addAllShipping();
+
+        }, 1000)
+
+      } else {
+        console.log("Payment failed");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+
+    setIsLoadingStripe(false);
+  }
+
   const calculateTotalPrice = (product, index) => {
     CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
     return product.quantity * product.dropshipPrice;
@@ -135,14 +188,7 @@ const Checkout = () => {
     });
   };
 
-
-
   const addAllShipping = (e) => {
-    console.log(checkhandle)
-    if (checkhandle === false) {
-      return
-    }
-    dispatch({ type: CATEGORY_ERROR, payload: false });
     let Docline = []
     CartData &&
       CartData?.map((item, index) => {
@@ -210,21 +256,24 @@ const Checkout = () => {
     }
     checkDefaultCounter()
   };
+
   const firstNameRef = useRef(null);
+
   const backToHome = (e) => {
     e.preventDefault()
     navigate('/home')
   }
 
-  let elements;
 
   const handleSubmit = async (event) => {
     console.log(Country)
-    handleOpenPay()
     setErrorChec(true)
+    handleOpenPay()
+
     if (CartData?.length < 1) {
       navigate('/home')
     }
+
     setLoading(true)
     const response = await fetch("http://apis.rubypets.co.uk/payment/create/intent", {
       method: 'POST',
@@ -248,27 +297,39 @@ const Checkout = () => {
     if (result.success) {
       const { clientSecret } = result.data;
       console.log({ clientSecret })
+
       setClientSecret(clientSecret)
+
       setPaymentClientSecret(clientSecret)
+
       setLoading(false)
       const stripe = await loadStripe('pk_test_51Mywy9J9slboT9qM4PkQxymo2HEnuKJ4SlNo47OnduBi31RwWE8t3ysgbvH1RaC0zxiSy99zR7VMnjit9tvWOsnW00FzMFE1rJ');
+
       const appearance = {
         theme: 'flat',
       };
-      elements = stripe.elements({ appearance, clientSecret });
+
+      elementsStripe = stripe.elements({ appearance, clientSecret });
+
       console.log(elements)
+
       const paymentElementOptions = {
         layout: "tabs",
       };
-      const paymentElement = elements.create("payment", paymentElementOptions);
-      setStripePaymentElement(elements)
+
+      const paymentElement = elementsStripe.create("payment", paymentElementOptions);
+      setStripePaymentElement(paymentElement)
+
     }
   };
 
-  const handlePaystripe = () => {
+  const handlePaystripe = (e) => {
+    console.log('sdsd', e)
     setPayStripe(false)
-    addAllShipping()
-    console.log(checkhandle)
+    if (e === 'STripe') {
+      addAllShipping()
+    }
+
   }
   // const validationSchema = Yup.object().shape({
   //   fname: Yup.string().required('First Name is required'),
@@ -282,6 +343,7 @@ const Checkout = () => {
   // });
 
   const remainingFieldsRef = useRef(null);
+
   const handleSubmitnew = async (values, { setSubmitting, setFieldError }) => {
     try {
       const validationSchema = Yup.object().shape({
@@ -297,7 +359,10 @@ const Checkout = () => {
       });
 
       await validationSchema.validate(values, { abortEarly: false });
-
+      dispatch({ type: CATEGORY_ERROR, payload: 0 });
+      handleSubmit(values)
+      setAllValue(values)
+      setSubmitting(false);
       // Proceed with form submission
       console.log('Form submitted:', values);
 
@@ -364,14 +429,24 @@ const Checkout = () => {
           </Modal>
           <Modal
             open={payStripe}
-            onClose={() => { dispatch({ type: CATEGORY_ERROR, payload: false }); handlePaystripe(); }}
+            onClose={() => { dispatch({ type: CATEGORY_ERROR, payload: 0 }); handlePaystripe(); }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box id="payment-form" sx={style}>
+            <Box sx={style}>
               {clientSecret && (
                 <Elements stripe={stripePromise} options={{ clientSecret, }}>
-                  <CheckoutForm handlePaystripe={handlePaystripe} />
+                  {/* <form id="payment-form" onSubmit={handleSubmitStripe}>
+                    <PaymentElement id="payment-element" />
+                    <button className="payNow" disabled={isLoadingStripe || !stripe || !elements} id="submit">
+                      <span id="button-text">
+                        {isLoadingStripe ? <div className="spinner" id="spinner"></div> : "Pay now"}
+                      </span>
+                    </button>
+                    { }
+                    {messagestripe && <div id="payment-message">{messagestripe}</div>}
+                  </form> */}
+                  <CheckoutForm setRefresh={setRefresh} Refresh={Refresh} handlePaystripe={handlePaystripe} />
                 </Elements>
               )}
             </Box>
@@ -548,10 +623,7 @@ const Checkout = () => {
                     </div>
                     { }
                     <div className="payment-form-div">
-                      {
-                      }
-                      {
-                      }
+
                       <div className="place-order-btn">
                         <button type="submit" className="primary-btn1 lg-btn">
                           { }

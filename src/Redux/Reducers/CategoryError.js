@@ -1,7 +1,7 @@
 import { CATEGORY_ERROR } from '../Actions/action';
 
 const initialStateTotal = {
-    errorTrue: false,
+    errorTrue: 0,
 };
 
 

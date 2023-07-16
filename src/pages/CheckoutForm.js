@@ -5,14 +5,14 @@ import { CATEGORY_ERROR } from '../Redux/Actions/action';
 import { useDispatch } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
-export default function CheckoutForm({ handlePaystripe }) {
+export default function CheckoutForm({ handlePaystripe, Refresh, setRefresh }) {
   const stripe = useStripe();
   const dispatch = useDispatch();
 
   const elements = useElements();
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,6 +21,7 @@ export default function CheckoutForm({ handlePaystripe }) {
     }
 
     setIsLoading(true);
+
     try {
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
@@ -32,11 +33,13 @@ export default function CheckoutForm({ handlePaystripe }) {
 
       if (error) {
         console.error(error);
-      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+      }
+      else if (paymentIntent && paymentIntent.status === "succeeded") {
         console.log("Payment succeeded");
-        dispatch({ type: CATEGORY_ERROR, payload: true });
+        dispatch({ type: CATEGORY_ERROR, payload: 0 + 1 });
+        setRefresh(Refresh + 1)
         setTimeout(() => {
-          handlePaystripe();
+          handlePaystripe('STripe');
         }, 1000)
 
       } else {
@@ -52,15 +55,12 @@ export default function CheckoutForm({ handlePaystripe }) {
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      {
-      }
       <PaymentElement id="payment-element" />
       <button className="payNow" disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
       </button>
-      { }
       {message && <div id="payment-message">{message}</div>}
     </form>
   )

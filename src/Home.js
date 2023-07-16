@@ -182,9 +182,13 @@ function Home() {
     })
       .then((response) => response.json())
       .then((response) => {
+        if (response.statusCode == 200) {
+          success1()
+          setFromEmail('');
+          setMessage('')
+          setErrorMessage('');
+        }
 
-        setFromEmail('');
-        setErrorMessage('');
 
       })
       .catch((err) => {
@@ -199,6 +203,13 @@ function Home() {
       content: 'Add to cart Successfully Added',
     });
   };
+  const success1 = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Query  has been sent Succesfully',
+    });
+  };
+
 
   const addToCart = (decodedObj) => {
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
@@ -298,54 +309,57 @@ function Home() {
               </div>
             </div>
           </div>
-          <div class="row g-4 justify-content-center">
-            <Slider className="places-carousel " dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={false} slidesToShow={4} centerMode={false} centerPadding="50px" autoplay={true} responsive={responsive}>
-              {products?.map((item, index) => {
-                return (
-                  <div class="collection-card " style={{ marginRight: '20px' }}>
-                    <div class="offer-card">
-                      { }
-                    </div>
-                    <div class="collection-img">
-                      <img class="img-gluid" width={200}
-                        height={150} src={item?.imageName} alt="" />
-                      <div class="view-dt-btn">
-                        <div class="plus-icon">
-                          <i class="bi bi-plus"></i>
+          <div class="row g-4 justify-content-center" style={{ textAlign: 'center' }}>
+            {products.length > 0 ? (
+              <Slider className="places-carousel " dots={true} draggable={true} speed={2000} infinite={true} slidesToScroll={1} arrows={false} slidesToShow={4} centerMode={false} centerPadding="50px" autoplay={true} responsive={responsive}>
+                {products?.map((item, index) => {
+                  return (
+                    <div class="collection-card " style={{ marginRight: '20px' }}>
+                      <div class="offer-card">
+                        { }
+                      </div>
+                      <div class="collection-img">
+                        <img class="img-gluid" width={200}
+                          height={150} src={item?.imageName} alt="" />
+                        <div class="view-dt-btn">
+                          <div class="plus-icon">
+                            <i class="bi bi-plus"></i>
+                          </div>
+                          <a onClick={() =>
+                            navigate(
+                              `/productsDetails/${encodeURIComponent(
+                                JSON.stringify(item)
+                              )}`
+                            )
+                          }>View Details</a>
                         </div>
-                        <a onClick={() =>
+                        <ul class="cart-icon-list">
+                          <li onClick={() => addToCart(item)}><a href="#"><img src={iconCat3} alt="" /></a></li>
+                          { }
+                        </ul>
+                      </div>
+                      <div class="collection-content text-center">
+                        <h4><a onClick={() =>
                           navigate(
                             `/productsDetails/${encodeURIComponent(
                               JSON.stringify(item)
                             )}`
                           )
-                        }>View Details</a>
+                        }>{item.name}</a></h4>
+                        <div class="price">
+                          <h6>{localStorage.getItem('currency')}{item.dropshipPrice}</h6>
+                          { }
+                        </div>
+                        {
+                        }
                       </div>
-                      <ul class="cart-icon-list">
-                        <li onClick={() => addToCart(item)}><a href="#"><img src={iconCat3} alt="" /></a></li>
-                        { }
-                      </ul>
                     </div>
-                    <div class="collection-content text-center">
-                      <h4><a onClick={() =>
-                        navigate(
-                          `/productsDetails/${encodeURIComponent(
-                            JSON.stringify(item)
-                          )}`
-                        )
-                      }>{item.name}</a></h4>
-                      <div class="price">
-                        <h6>{localStorage.getItem('currency')}{item.dropshipPrice}</h6>
-                        { }
-                      </div>
-                      {
-                      }
-                    </div>
-                  </div>
-                )
-              })}
-            </Slider>
-
+                  )
+                })}
+              </Slider>
+            ) : (
+              <h2>No Products found</h2>
+            )}
 
 
           </div>
@@ -373,12 +387,12 @@ function Home() {
                 </div>
                 <form>
                   <div class="form-inner">
-                    <input type="text" placeholder="Type Your Email" onChange={(e) => setFromEmail(e.target.value)} />
+                    <input type="text" placeholder="Type Your Email" value={FromEmail} onChange={(e) => setFromEmail(e.target.value)} />
                   </div>
                   {errorMessage && <p style={{ color: 'red', }}>{errorMessage}</p>}
 
                   <div class="form-inner mt-2">
-                    <input type="text" placeholder="Type Your Comment" onChange={(e) => setMessage(e.target.value)} />
+                    <input type="text" placeholder="Type Your Comment" value={Message} onChange={(e) => setMessage(e.target.value)} />
 
                   </div>
                   <div class="form-inner mt-2" style={{ background: 'none !important' }}>
