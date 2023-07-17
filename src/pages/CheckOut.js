@@ -18,6 +18,7 @@ import { url } from "../environment";
 import { message } from 'antd';
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 const style = {
   position: 'absolute',
   top: '50%',
@@ -69,7 +70,6 @@ const Checkout = () => {
   const handleClose1 = () => setOpen1(false);
   const stripe = useStripe();
   const [stripePaymentElements, setStripePaymentElement] = useState(null);
-  const [paymentCustomerName, setPaymentCustomerName] = useState(null);
   const [paymentClientSecret, setPaymentClientSecret] = useState(null);
 
   let elementsStripe;
@@ -200,6 +200,8 @@ const Checkout = () => {
         })
       })
     setLoading(true)
+    handleOpen()
+
     setBackButton(false)
     fetch(`${url}/user/orders/add`, {
       method: "POST",
@@ -285,7 +287,7 @@ const Checkout = () => {
         currency: 'usd',
         name: event.fname + ' ' + event.lname,
         address: event.Address,
-        country: event.country,
+        country: 'UK',
         description: event.message,
       }),
     });
@@ -324,23 +326,12 @@ const Checkout = () => {
   };
 
   const handlePaystripe = (e) => {
-    console.log('sdsd', e)
     setPayStripe(false)
     if (e === 'STripe') {
       addAllShipping()
     }
 
   }
-  // const validationSchema = Yup.object().shape({
-  //   fname: Yup.string().required('First Name is required'),
-  //   lname: Yup.string().required('Last Name is required'),
-  //   country: Yup.string().required('Country is required'),
-  //   city: Yup.string().required('City is required'),
-  //   town: Yup.string(),
-  //   Address: Yup.string().required('Street Address is required'),
-  //   emailNew: Yup.string().email('Invalid email address').required('Email Address is required'),
-  //   message: Yup.string().required('Description is required'),
-  // });
 
   const remainingFieldsRef = useRef(null);
 
@@ -349,13 +340,11 @@ const Checkout = () => {
       const validationSchema = Yup.object().shape({
         fname: Yup.string().required('First Name is required'),
         lname: Yup.string().required('Last Name is required'),
-        country: Yup.string().required('Country is required'),
         city: Yup.string().required('City is required'),
         town: Yup.string(),
         Address: Yup.string().required('Street Address is required'),
         emailNew: Yup.string().email('Invalid email address').required('Email Address is required'),
         message: Yup.string().required('Description is required'),
-        // Add validation rules for other form fields...
       });
 
       await validationSchema.validate(values, { abortEarly: false });
@@ -363,13 +352,10 @@ const Checkout = () => {
       handleSubmit(values)
       setAllValue(values)
       setSubmitting(false);
-      // Proceed with form submission
       console.log('Form submitted:', values);
 
-      // Scroll to the remaining fields
       remainingFieldsRef.current.scrollIntoView({ behavior: 'smooth' });
     } catch (validationError) {
-      // Handle validation errors
       window.scrollTo(0, 0);
 
       console.log('Validation errors:', validationError.errors);
@@ -379,17 +365,6 @@ const Checkout = () => {
 
       setSubmitting(false);
     }
-    // if (values) {
-    //   // Scroll to the first invalid field
-    //   if (firstNameRef.current) {
-    //     firstNameRef.current.scrollIntoView({ behavior: 'smooth' });
-    //   }
-    // } else {
-    //   dispatch({ type: CATEGORY_ERROR, payload: false });
-    //   handleSubmit(values)
-    //   setAllValue(values)
-    //   setSubmitting(false);
-    // }
   };
   const options = {
     mode: 'payment',
@@ -410,21 +385,24 @@ const Checkout = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <div className="" style={{ textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
-                <img src={tick} width={170} height={170} />
-                <h3 style={{ color: 'black' }} >
-                  <b>Your Order has been Placed Succesfully!</b>
-                </h3>
-                <Typography id="modal-modal-description" style={{ fontSize: '14px' }} sx={{ mt: 3 }}>
-                  Your Order Has been Confirmed.
-                  Your Order Number is {' '}
-                  <b>{OrderNumber}</b>.
-                  Email has been sent to you.
-                </Typography>
-                <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
-                  <button style={{ width: '100%', height: '50px' }} class="primary-btn1 mt-4" onClick={(e) => backToHome(e)}>  Back to Home</button>
-                </div>
-              </div>
+              {loading ? <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CircularProgress />
+              </Box> :
+                <div className="" style={{ textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                  <img src={tick} width={170} height={170} />
+                  <h3 style={{ color: 'black' }} >
+                    <b>Your Order has been Placed Succesfully!</b>
+                  </h3>
+                  <Typography id="modal-modal-description" style={{ fontSize: '14px' }} sx={{ mt: 3 }}>
+                    Your Order Has been Confirmed.
+                    Your Order Number is {' '}
+                    <b>{OrderNumber}</b>.
+                    Email has been sent to you.
+                  </Typography>
+                  <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
+                    <button style={{ width: '100%', height: '50px' }} class="primary-btn1 mt-4" onClick={(e) => backToHome(e)}>  Back to Home</button>
+                  </div>
+                </div>}
             </Box>
           </Modal>
           <Modal
@@ -433,22 +411,18 @@ const Checkout = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
+
+
             <Box sx={style}>
-              {clientSecret && (
-                <Elements stripe={stripePromise} options={{ clientSecret, }}>
-                  {/* <form id="payment-form" onSubmit={handleSubmitStripe}>
-                    <PaymentElement id="payment-element" />
-                    <button className="payNow" disabled={isLoadingStripe || !stripe || !elements} id="submit">
-                      <span id="button-text">
-                        {isLoadingStripe ? <div className="spinner" id="spinner"></div> : "Pay now"}
-                      </span>
-                    </button>
-                    { }
-                    {messagestripe && <div id="payment-message">{messagestripe}</div>}
-                  </form> */}
-                  <CheckoutForm setRefresh={setRefresh} Refresh={Refresh} handlePaystripe={handlePaystripe} />
-                </Elements>
-              )}
+              {loading ? <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CircularProgress />
+              </Box>
+                : clientSecret ? (
+                  <Elements stripe={stripePromise} options={{ clientSecret, }}>
+                    <CheckoutForm setRefresh={setRefresh} Refresh={Refresh} handlePaystripe={handlePaystripe} />
+                  </Elements>
+                ) : null}
+
             </Box>
           </Modal>
           <Modal
@@ -474,13 +448,12 @@ const Checkout = () => {
             initialValues={{
               fname: '',
               lname: '',
-              country: '',
+
               city: '',
               Address: '',
               emailNew: '',
               message: '',
             }}
-            // validationSchema={validationSchema}
             onSubmit={handleSubmitnew}
           >
             {({ isSubmitting }) => (
@@ -488,37 +461,26 @@ const Checkout = () => {
                 <div className="row g-4">
                   <div className="col-lg-7">
                     <div className="form-wrap box--shadow mb-30">
-                      <h4 className="title-25 mb-20">Shipping Details</h4>
+                      <h4 className="title-25 mb-20">Shipping Details </h4>
                       <div className="row">
                         <div className="col-lg-6">
                           <div className="form-inner">
-                            <label>First Name</label>
+                            <label>First Name *</label>
                             <Field type="text" name="fname" placeholder="Your first name" innerRef={firstNameRef} />
                             <ErrorMessage name="fname" component="div" className="error-message" />
                           </div>
                         </div>
                         <div className="col-lg-6">
                           <div className="form-inner">
-                            <label>Last Name</label>
+                            <label>Last Name *</label>
                             <Field type="text" name="lname" placeholder="Your last name" />
                             <ErrorMessage name="lname" component="div" className="error-message" />
                           </div>
                         </div>
-                        <div class="col-12">
-                          <div className="form-inner">
-                            <Field as="select" name="country" >
-                              <option value="">Country / Region</option>
-                              <option value="US">United States</option>
-                              <option value="NZ">New Zealand</option>
-                              <option value="AE">United Arab Emirates</option>
-                              <option value="IN">India</option>
-                            </Field>
-                            <ErrorMessage name="country" component="div" className="error-message" />
-                          </div>
-                        </div>
+
                         <div className="col-12">
                           <div className="form-inner">
-                            <label>Street Address</label>
+                            <label>Street Address *</label>
                             <Field type="text" name="Address" placeholder="House and street name" />
                             <ErrorMessage name="Address" component="div" className="error-message" />
                           </div>
@@ -540,12 +502,15 @@ const Checkout = () => {
 
                         <div className="col-12">
                           <div className="form-inner">
+                            <label>Email *</label>
                             <Field type="email" id="email" name="emailNew" placeholder="Your Email Address" />
                             <ErrorMessage name="emailNew" component="div" className="error-message" />
                           </div>
                         </div>
                         <div className="col-12">
                           <div className="form-inner">
+                            <label>Order Notes *</label>
+
                             <Field as="textarea" name="message" placeholder="Order Notes" rows="6"></Field>
                             <ErrorMessage name="message" component="div" className="error-message" />
                           </div>

@@ -40,17 +40,23 @@ export default function CheckoutForm({ handlePaystripe, Refresh, setRefresh }) {
         setRefresh(Refresh + 1)
         setTimeout(() => {
           handlePaystripe('STripe');
+          setIsLoading(false);
+
         }, 1000)
+
 
       } else {
         console.log("Payment failed");
+        setIsLoading(false);
+
       }
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
+
     }
 
 
-    setIsLoading(false);
   }
 
   return (

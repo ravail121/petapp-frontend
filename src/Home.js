@@ -29,6 +29,7 @@ const Products = [
 ];
 
 const responsive = [
+
   {
     breakpoint: 1024,
     settings: {
@@ -121,20 +122,17 @@ function Home() {
 
   const GetAllProducts = (e, pageNumber) => {
     setIsLoading(true);
-    fetch(`${url}/user/products/list`, {
-      method: "POST",
+    fetch(`${url}/user/products/list/shuffled`, {
+      method: "GET",
       headers: {
         "content-type": "application/json",
         accept: "application/json",
       },
-      body: JSON.stringify({
-        "page": 1,
-        "limit": 10,
-      })
+
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.message === "Products fetched Successfully") {
+        if (response.message === "Products has been fetched Succesfully") {
           setProducts(response?.data?.products);
           setIsLoading(false);
         }
@@ -334,7 +332,7 @@ function Home() {
                           }>View Details</a>
                         </div>
                         <ul class="cart-icon-list">
-                          <li onClick={() => addToCart(item)}><a href="#"><img src={iconCat3} alt="" /></a></li>
+                          <li style={{ cursor: 'pointer' }} onClick={() => addToCart(item)}><a><img src={iconCat3} alt="" /></a></li>
                           { }
                         </ul>
                       </div>

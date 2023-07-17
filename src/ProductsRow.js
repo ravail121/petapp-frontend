@@ -47,7 +47,7 @@ const responsive = [
   {
     breakpoint: 2600,
     settings: {
-      slidesToShow: 6,
+      slidesToShow: 5,
       speed: 2000,
       slidesToScroll: 1,
       autoplay: true,
@@ -61,7 +61,7 @@ const responsive = [
   {
     breakpoint: 2400,
     settings: {
-      slidesToShow: 6,
+      slidesToShow: 5,
       speed: 2000,
       slidesToScroll: 1,
       autoplay: true,
@@ -75,7 +75,7 @@ const responsive = [
   {
     breakpoint: 2200,
     settings: {
-      slidesToShow: 6,
+      slidesToShow: 5,
       speed: 2000,
       slidesToScroll: 1,
       autoplay: true,
@@ -89,7 +89,7 @@ const responsive = [
   {
     breakpoint: 2000,
     settings: {
-      slidesToShow: 6,
+      slidesToShow: 5,
       speed: 2000,
       slidesToScroll: 1,
       autoplay: true,
@@ -103,7 +103,7 @@ const responsive = [
   {
     breakpoint: 1800,
     settings: {
-      slidesToShow: 6,
+      slidesToShow: 5,
       speed: 2000,
       slidesToScroll: 1,
       autoplay: true,
@@ -117,7 +117,7 @@ const responsive = [
   {
     breakpoint: 1600,
     settings: {
-      slidesToShow: 6,
+      slidesToShow: 5,
       speed: 2000,
       slidesToScroll: 1,
       autoplay: true,

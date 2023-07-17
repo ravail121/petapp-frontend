@@ -184,21 +184,18 @@ const ProductDetails = () => {
 
   const GetAllProducts = (e, pageNumber) => {
     setIsLoading(true);
-    fetch(`${url}/user/products/list`, {
-      method: "POST",
+    fetch(`${url}/user/products/list/shuffled`, {
+      method: "GET",
       headers: {
         "content-type": "application/json",
         accept: "application/json",
       },
-      body: JSON.stringify({
-        "page": 1,
-        "limit": 10,
-      })
+
     })
       .then((response) => response.json())
       .then((response) => {
         // console.log("All Products ----->>>", response);
-        if (response.message === "Products fetched Successfully") {
+        if (response.message === "Products has been fetched Succesfully") {
           setProducts(response?.data?.products);
           // setAllpages(response?.data?.totalCount);
           setIsLoading(false);
