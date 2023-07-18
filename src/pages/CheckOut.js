@@ -195,6 +195,7 @@ const Checkout = () => {
         Docline.push({
           quantity: item.quantity,
           productName: item.name,
+          productStock: item.stockName,
           productId: item.id,
           amount: calculateTotalPrice(item, index),
         })

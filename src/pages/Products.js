@@ -596,7 +596,7 @@ const Product = () => {
                               </div>
                               <ul className="cart-icon-list">
                                 <li>
-                                  <a href="#" onClick={() => addToCart(item)}>
+                                  <a onClick={() => addToCart(item)}>
                                     <img src={img1} alt="" />
                                   </a>
                                 </li>

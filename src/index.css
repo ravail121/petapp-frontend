@@ -11,12 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.tric{
+
+.tric {
   padding: 6px 10px;
-    background: black;
-    color: white;
-    border-radius: 10px;
+  background: black;
+  color: white;
+  border-radius: 10px;
 }
+
 .slider {
   width: 100vw;
   /* height: 50px; */
@@ -44,19 +46,66 @@ code {
   0% {
     transform: translateX(0);
   }
+
   20% {
     transform: translateX(-25%);
   }
+
   40% {
     transform: translateX(-50%);
   }
+
   60% {
     transform: translateX(-75%);
   }
+
   80% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(0);
   }
+}
+
+
+.primary-btn1 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-dosis);
+  border-radius: 40px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  background: var(--title-color1);
+  z-index: 1;
+}
+
+.primary-btn1::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--gradient-color);
+  z-index: -1;
+  transition: 0.6s;
+  transform-origin: left;
+}
+
+.primary-btn1:hover {
+  color: #FFF;
+}
+
+.primary-btn1:hover::before {
+  width: 0;
+}
+
+.place-order-btn1 button {
+  padding: 13px 102px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-cabin);
 }

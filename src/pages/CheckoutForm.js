@@ -17,6 +17,8 @@ export default function CheckoutForm({ handlePaystripe, Refresh, setRefresh }) {
     e.preventDefault();
 
     if (!stripe || !elements) {
+      setIsLoading(false);
+
       return;
     }
 
@@ -33,6 +35,8 @@ export default function CheckoutForm({ handlePaystripe, Refresh, setRefresh }) {
 
       if (error) {
         console.error(error);
+        setIsLoading(false);
+
       }
       else if (paymentIntent && paymentIntent.status === "succeeded") {
         console.log("Payment succeeded");
@@ -62,11 +66,19 @@ export default function CheckoutForm({ handlePaystripe, Refresh, setRefresh }) {
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" />
-      <button className="payNow" disabled={isLoading || !stripe || !elements} id="submit">
+      <div className="place-order-btn1">
+        <button className="primary-btn1 lg-btn" disabled={isLoading || !stripe || !elements} id="submit">
+
+          <span id="button-text">
+            {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+          </span>
+        </button>
+      </div>
+      {/* <button className="payNow" disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
-      </button>
+      </button> */}
       {message && <div id="payment-message">{message}</div>}
     </form>
   )
