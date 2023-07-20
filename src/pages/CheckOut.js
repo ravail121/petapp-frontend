@@ -494,7 +494,7 @@ const Checkout = () => {
                         </div>
                         <div className="col-12">
                           <div className="form-inner">
-                            <label>City</label>
+                            <label>City *</label>
                             <Field type="text" name="city" placeholder="City" />
                             <ErrorMessage name="city" component="div" className="error-message" />
 
@@ -510,7 +510,7 @@ const Checkout = () => {
                         </div>
                         <div className="col-12">
                           <div className="form-inner">
-                            <label>Order Notes *</label>
+                            <label>Order Notes Optional *</label>
 
                             <Field as="textarea" name="message" placeholder="Order Notes" rows="6"></Field>
                             <ErrorMessage name="message" component="div" className="error-message" />

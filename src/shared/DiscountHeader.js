@@ -15,8 +15,6 @@ function DiscountHeader(props) {
             <div className="social-area">
               <ul>
                 <li><a href="#"><i className="bx bxl-facebook"></i></a></li>
-                <li><a href="#"><i className='bx bxl-twitter'></i></a></li>
-                <li><a href="#"><i className='bx bxl-pinterest-alt' ></i></a></li>
                 <li><a href="#"><i className='bx bxl-instagram' ></i></a></li>
               </ul>
             </div>
