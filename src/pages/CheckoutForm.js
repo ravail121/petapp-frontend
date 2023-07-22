@@ -15,7 +15,6 @@ export default function CheckoutForm({ handlePaystripe, Refresh, setRefresh }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!stripe || !elements) {
       setIsLoading(false);
 
@@ -28,10 +27,11 @@ export default function CheckoutForm({ handlePaystripe, Refresh, setRefresh }) {
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: "https://google.com",
+          return_url: "http://rubypets.co.uk/checkOut",
         },
         redirect: "if_required",
       });
+
 
       if (error) {
         console.error(error);

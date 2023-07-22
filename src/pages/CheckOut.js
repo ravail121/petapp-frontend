@@ -3,9 +3,10 @@ import Header from "../shared/Header";
 import tick from '../assets/qa.gif';
 import error from '../assets/er.png';
 import CheckoutForm from './CheckoutForm'
-import { PaymentElement } from '@stripe/react-stripe-js';
 
 import DiscountHeader from "../shared/DiscountHeader";
+import { useParams } from 'react-router-dom';
+
 import { loadStripe } from '@stripe/stripe-js';
 import Modal from '@mui/material/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
@@ -75,9 +76,32 @@ const Checkout = () => {
   let elementsStripe;
 
   const elements = useElements();
+  const { redirect_status } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const url = window.location.search; // Output: "?name=John&age=30"
+
+    // Remove the leading question mark from the URL
+    const queryString = url.substring(1);
+
+    // Split the query string into an array of key-value pairs
+    const queryParamsArray = queryString.split('&'); // Output: ["name=John", "age=30"]
+
+    // Convert the array of key-value pairs into an object
+    const queryParamsObject = {};
+    queryParamsArray.forEach((param) => {
+      const [key, value] = param.split('=');
+      queryParamsObject[key] = value;
+    });
+
+
+    const redirect_status = queryParamsObject['redirect_status']; // Output: "John"
+    // const age = queryParamsObject['age']; // Output: "30"
+    if (redirect_status === 'succeeded') {
+      addAllShipping('Paypal')
+    }
+
     if (storedArray.length < 1) {
       navigate('/home')
     }
@@ -113,44 +137,6 @@ const Checkout = () => {
     })
   }
 
-  const handleSubmitStripe = async (e) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-    console.log(elements)
-    setIsLoadingStripe(true);
-    try {
-      const { error, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: "https://google.com",
-        },
-        redirect: "if_required",
-      });
-
-      if (error) {
-        console.error(error);
-      } else if (paymentIntent && paymentIntent.status === "succeeded") {
-        console.log("Payment succeeded");
-        dispatch({ type: CATEGORY_ERROR, payload: 0 + 1 });
-        setRefresh(Refresh + 1)
-        setTimeout(() => {
-          addAllShipping();
-
-        }, 1000)
-
-      } else {
-        console.log("Payment failed");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-
-    setIsLoadingStripe(false);
-  }
 
   const calculateTotalPrice = (product, index) => {
     CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
@@ -190,6 +176,9 @@ const Checkout = () => {
 
   const addAllShipping = (e) => {
     let Docline = []
+    let Data = JSON.parse(localStorage.getItem('PlaceOrder'))
+    let Data1 = JSON.parse(localStorage.getItem('shippingDetail'))
+    let Data2 = localStorage.getItem('cartTotal')
     CartData &&
       CartData?.map((item, index) => {
         Docline.push({
@@ -211,15 +200,15 @@ const Checkout = () => {
         accept: "application/json",
       },
       body: JSON.stringify({
-        emailAddress: AllValue.emailNew,
-        totalAmount: cartCountTotal,
+        emailAddress: e === 'Paypal' ? Data.emailNew : AllValue.emailNew,
+        totalAmount: e === 'Paypal' ? Data2 : cartCountTotal,
         orderDetails: Docline,
-        shippingAddress: AllValue.Address,
-        city: AllValue.city,
-        town: AllValue.town,
-        shippingAddress: AllValue.Address,
-        shippingFee: ShippingTotal?.shippingFee,
-        totalTax: ShippingTotal?.tax * cartCountTotal
+        shippingAddress: e === 'Paypal' ? Data.emailNew : AllValue.Address,
+        city: e === 'Paypal' ? Data.emailNew : AllValue.city,
+        town: e === 'Paypal' ? Data.emailNew : AllValue.town,
+        shippingAddress: e === 'Paypal' ? Data.emailNew : AllValue.Address,
+        shippingFee: e === 'Paypal' ? Data1?.shippingFee : ShippingTotal?.shippingFee,
+        totalTax: e === 'Paypal' ? Data1?.tax : ShippingTotal?.tax * e === 'Paypal' ? Data2 : cartCountTotal
       })
     })
       .then((response) => response.json())
@@ -267,9 +256,10 @@ const Checkout = () => {
     navigate('/home')
   }
 
-
   const handleSubmit = async (event) => {
-    console.log(Country)
+    localStorage.setItem('PlaceOrder', JSON.stringify(event))
+    localStorage.setItem('shippingDetail', JSON.stringify(ShippingTotal))
+    localStorage.setItem('cartTotal', cartCountTotal)
     setErrorChec(true)
     handleOpenPay()
 
@@ -345,7 +335,7 @@ const Checkout = () => {
         town: Yup.string(),
         Address: Yup.string().required('Street Address is required'),
         emailNew: Yup.string().email('Invalid email address').required('Email Address is required'),
-        message: Yup.string().required('Description is required'),
+        message: Yup.string().required('Order notes is required'),
       });
 
       await validationSchema.validate(values, { abortEarly: false });
@@ -510,7 +500,7 @@ const Checkout = () => {
                         </div>
                         <div className="col-12">
                           <div className="form-inner">
-                            <label>Order Notes Optional *</label>
+                            <label>Order Notes *</label>
 
                             <Field as="textarea" name="message" placeholder="Order Notes" rows="6"></Field>
                             <ErrorMessage name="message" component="div" className="error-message" />
