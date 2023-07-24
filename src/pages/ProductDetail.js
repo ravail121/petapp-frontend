@@ -225,7 +225,7 @@ const ProductDetails = () => {
                 <h1>Shop Details</h1>
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="http://rubypets.co.uk/home">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Shop Details</li>
                   </ol>
                 </nav>
@@ -384,9 +384,9 @@ const ProductDetails = () => {
                     <li>
                       <img src="../assets/images/icon/paypal.svg" alt="" />
                     </li>
-                    <li>
+                    {/* <li>
                       <img src="../assets/images/icon/pay.svg" alt="" />
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </div>
