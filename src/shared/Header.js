@@ -131,14 +131,14 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
     <header className="header-area style-3">
       <div className="container d-flex justify-content-between align-items-center">
         <div className="header-logo">
-          <a href="index.html">
+          <a href="http://rubypets.co.uk/home">
             <img alt="image" className="img-fluid" src={logo} width={150} />
           </a>
         </div>
         <div className={`main-menu ${isMobileMenuOpen ? "show-menu" : ""}`}>
           <div className="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
             <div className="mobile-logo-wrap">
-              <a href="index.html">
+              <a href="http://rubypets.co.uk/home">
                 <img alt="image" src={logo} width={150} />
               </a>
             </div>

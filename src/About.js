@@ -54,16 +54,13 @@ function About() {
             <div className="col-lg-6">
               <div className="section-title1">
                 <span>Our Story</span>
-                <h2>come to know what what we achieved.</h2>
+                {/* <h2>come to know what what we achieved.</h2> */}
               </div>
               <div className="story-content">
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip
+                  Welcome to Ruby Pets! We are devoted to pets and their owners. Our goal is to provide the finest products and services for your beloved companions. With a focus on responsible pet ownership and animal welfare, we offer premium pet products, expert advice, and a caring community. Join us in creating a world where every pet is cherished and lives a happy, healthy life. Thank you for choosing Ruby Pets for all your pet needs!
                 </p>
-                <div className="story-title-reviews">
+                {/* <div className="story-title-reviews">
                   <h3>
                     We Think Working Process may <span>increase</span> mindset.
                   </h3>
@@ -73,19 +70,19 @@ function About() {
                     </p>
                     <img src={star} alt="" />
                   </div>
-                </div>
-                <p>
+                </div> */}
+                {/* <p>
                   Hodor. Hodor! Hodor hodor, hodor; hodor hodor hodor. Hodor.
                   Hodor hodor; hodor hodor - hodor, hodor, hodor hodor. Hodor,
                   hodor. Hodor. Hodor, hodor hodor hodor; hodor hodor; hodor
                   hodor hodor! Hodor hodor HODOR! Hodor hodor... Hodor hodor
                   hodor...
-                </p>
+                </p> */}
               </div>
             </div>
             <div className="col-lg-6 d-flex justify-content-lg-end justify-content-center">
               <div className="story-img">
-                <img className="img-fluid" src={about_img} alt="" />
+                <img className="img-fluid" src={'https://demo.egenslab.com/html/scooby/preview/assets/images/bg/story-img1.png'} alt="" />
               </div>
             </div>
           </div>

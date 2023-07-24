@@ -73,16 +73,6 @@ const Footer = () => {
                     </a>
                   </li>
                   <li>
-                    <a href="https://twitter.com/">
-                      <i className="bx bxl-twitter"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.pinterest.com/">
-                      <i className="bx bxl-pinterest-alt"></i>
-                    </a>
-                  </li>
-                  <li>
                     <a href="https://www.instagram.com/">
                       <i className="bx bxl-instagram"></i>
                     </a>
