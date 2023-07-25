@@ -58,6 +58,8 @@ const Checkout = () => {
   const [ShippingTotal, setShippingTotal] = useState(0);
   const [Refresh, setRefresh] = useState(0);
   const [isValidEmail, setIsValidEmail] = useState(false);
+  const [payFailed, setpayFailed] = React.useState(false);
+
   const [open1, setOpen1] = React.useState(false);
   const [clientSecret, setClientSecret] = useState('');
   const [AllValue, setAllValue] = React.useState();
@@ -116,6 +118,12 @@ const Checkout = () => {
       container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     }
   }, [])
+
+
+  const handlepayFailed = () => {
+    setpayFailed(true)
+    handlePaystripe('')
+  };
 
 
   const checkDefaultCounter = () => {
@@ -410,10 +418,29 @@ const Checkout = () => {
               </Box>
                 : clientSecret ? (
                   <Elements stripe={stripePromise} options={{ clientSecret, }}>
-                    <CheckoutForm setRefresh={setRefresh} Refresh={Refresh} handlePaystripe={handlePaystripe} />
+                    <CheckoutForm setRefresh={setRefresh} handlepayFailed={handlepayFailed} Refresh={Refresh} handlePaystripe={handlePaystripe} />
                   </Elements>
                 ) : null}
 
+            </Box>
+          </Modal>
+          <Modal
+            open={payFailed}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <div className="" style={{ textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                <img src={error} width={100} height={100} />
+                <h3 style={{ color: 'black' }} >
+                  <b>Payment failed!</b>
+                </h3>
+                <Typography id="modal-modal-description" style={{ fontSize: '14px' }} sx={{ mt: 3 }}>
+                </Typography>
+                <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
+                  <button className="btn btn-primary" onClick={() => setpayFailed(false)}>Close</button>
+                </div>
+              </div>
             </Box>
           </Modal>
           <Modal
