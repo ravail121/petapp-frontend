@@ -573,7 +573,8 @@ const Product = () => {
                               <img
                                 // width={300}
                                 // height={300}
-                                className="img-fluid"
+                                className={item.stockName === 'DSG-003' ? 'width123' : 'img-fluid'}
+
                                 src={item?.imageName}
                                 alt=""
                               />

@@ -9,14 +9,14 @@ import { useParams } from 'react-router-dom';
 
 import { loadStripe } from '@stripe/stripe-js';
 import Modal from '@mui/material/Modal';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL, CATEGORY_ERROR } from '../Redux/Actions/action';
 import { url } from "../environment";
-import { message } from 'antd';
+import { Card, message } from 'antd';
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
@@ -51,7 +51,7 @@ const Checkout = () => {
   const [ErrorMes, setErrorMes] = useState('');
   const [loading, setLoading] = React.useState(false);
   const [ErrorChec, setErrorChec] = React.useState(false);
-  const [CartData, setCartData] = useState([])
+  const [CartData, setCartData] = useState(JSON.parse(localStorage.getItem("myArray")))
   const [payStripe, setPayStripe] = useState(false);
   const [IsLoading, setIsLoading] = useState(false);
   const [ShippingSettings, setShippingSettings] = useState([]);
@@ -80,8 +80,13 @@ const Checkout = () => {
   const elements = useElements();
   const { redirect_status } = useParams();
 
+  const formik = useFormikContext();
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    let storedArray = JSON.parse(localStorage.getItem("myArray"));
+    setCartData(storedArray);
+
     const url = window.location.search; // Output: "?name=John&age=30"
 
     // Remove the leading question mark from the URL
@@ -96,22 +101,26 @@ const Checkout = () => {
       const [key, value] = param.split('=');
       queryParamsObject[key] = value;
     });
-
-
+    let Data = JSON.parse(localStorage.getItem('PlaceOrder'))
+    console.log(Data.fname)
+    setCountry(Data.fname)
     const redirect_status = queryParamsObject['redirect_status']; // Output: "John"
     // const age = queryParamsObject['age']; // Output: "30"
     if (redirect_status === 'succeeded') {
       addAllShipping('Paypal')
     }
+    else if (redirect_status === 'failed') {
+      handlepayFailed()
+    }
 
-    if (storedArray.length < 1) {
+    if (storedArray?.length < 1) {
       navigate('/home')
     }
     if (firstNameRef.current) {
       firstNameRef.current.scrollIntoView({ behavior: 'smooth' });
     }
     checkDefaultCounter()
-    setCartData(storedArray);
+    console.log(storedArray)
     GetAllShipping()
     const container = remainingFieldsRef.current;
     if (container) {
@@ -184,9 +193,11 @@ const Checkout = () => {
 
   const addAllShipping = (e) => {
     let Docline = []
+    let myArray = JSON.parse(localStorage.getItem('myArray'))
     let Data = JSON.parse(localStorage.getItem('PlaceOrder'))
     let Data1 = JSON.parse(localStorage.getItem('shippingDetail'))
     let Data2 = localStorage.getItem('cartTotal')
+    console.log(myArray)
     CartData &&
       CartData?.map((item, index) => {
         Docline.push({
@@ -199,6 +210,14 @@ const Checkout = () => {
       })
     setLoading(true)
     handleOpen()
+    console.log(Docline)
+    let TaxNew;
+    if (e === 'Paypal') {
+      TaxNew = Data2 ? (Data1?.tax * Data2)?.toFixed(2) : 0
+    }
+    else {
+      TaxNew = cartCountTotal ? (ShippingTotal?.tax * cartCountTotal)?.toFixed(2) : 0
+    }
 
     setBackButton(false)
     fetch(`${url}/user/orders/add`, {
@@ -216,7 +235,7 @@ const Checkout = () => {
         town: e === 'Paypal' ? Data.emailNew : AllValue.town,
         shippingAddress: e === 'Paypal' ? Data.emailNew : AllValue.Address,
         shippingFee: e === 'Paypal' ? Data1?.shippingFee : ShippingTotal?.shippingFee,
-        totalTax: e === 'Paypal' ? Data1?.tax : ShippingTotal?.tax * e === 'Paypal' ? Data2 : cartCountTotal
+        totalTax: TaxNew
       })
     })
       .then((response) => response.json())
@@ -365,6 +384,7 @@ const Checkout = () => {
       setSubmitting(false);
     }
   };
+
   const options = {
     mode: 'payment',
     amount: 1099,
@@ -464,7 +484,7 @@ const Checkout = () => {
           </Modal>
           <Formik
             initialValues={{
-              fname: '',
+              fname: Country,
               lname: '',
 
               city: '',
@@ -544,8 +564,7 @@ const Checkout = () => {
                           return (
                             <li className="single-product d-flex justify-content-start">
                               <div className="product-img">
-                                { }
-                                <img width={0} height={100} src={item?.imageName} alt="" />
+                                <img className="img-fluid" src={item?.imageName} alt="" />
                               </div>
                               <div className="product-info" style={{ marginLeft: '8px' }}>
                                 <h5 className="product-title">

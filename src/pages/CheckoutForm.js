@@ -48,7 +48,7 @@ export default function CheckoutForm({ handlepayFailed, handlePaystripe, Refresh
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: "http://rubypets.co.uk/checkOut",
+          return_url: "http://localhost:3000/checkOut",
         },
         redirect: "if_required",
       });
