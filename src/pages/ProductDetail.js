@@ -10,9 +10,7 @@ import { message } from 'antd';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Pagination, Navigation } from "swiper"
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT } from '../Redux/Actions/action';
 import mxsvg from '../assets/images/icon/amex.svg'
 const responsive = [
@@ -22,8 +20,8 @@ const responsive = [
       slidesToShow: 3,
       speed: 2000,
       slidesToScroll: 1,
-      autoplay: true, // Enable autoplay
-      autoplaySpeed: 1000, // Set autoplay speed in milliseconds
+      autoplay: true,
+      autoplaySpeed: 1000,
     }
   },
   {
@@ -69,8 +67,6 @@ const ProductDetails = () => {
   };
   const navigate = useNavigate()
   const decodedObj = JSON.parse(decodeURIComponent(id));
-  // console.log(decodedObj);
-  // setProductDetail(decodedObj);
   useEffect(() => {
     window.scrollTo(0, 0);
 
@@ -79,7 +75,6 @@ const ProductDetails = () => {
     setProductDetail(decodedObj);
     checkDefaultCounter()
 
-    // addToCart();
   }, []);
 
   const GetAllProductsdet = (e, pageNumber) => {
@@ -93,15 +88,13 @@ const ProductDetails = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        // console.log("Product detail ----->>>", response);
         if (response.message === "Product has been fetched Succesfully") {
           setProductDetail(response?.data?.product);
-          // setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -112,7 +105,7 @@ const ProductDetails = () => {
     let obj = AllValues
     obj[name] = e.target.value;
     setAllValues(obj)
-    console.log(obj)
+
   }
 
   const checkDefaultCounter = () => {
@@ -123,7 +116,6 @@ const ProductDetails = () => {
 
       totalQuantity += Data[i].quantity;
 
-      // console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -131,41 +123,35 @@ const ProductDetails = () => {
   }
 
   const addToCart = () => {
-    // success()
 
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
-    //  decodedObj const  = { id: 123 }; // Example decoded object
     const hasDuplicate = storedArray.find((obj) => obj.id === decodedObj.id);
-    console.log(hasDuplicate)
+
     if (!hasDuplicate) {
       decodedObj["quantity"] = count;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
       checkDefaultCounter()
       success()
-      // navigate("/cart")
 
     } else {
-      // console.log('else')
       success()
 
-      // storedArray["quantity"] = count;
       hasDuplicate["quantity"] = count + hasDuplicate["quantity"];
       localStorage.setItem("myArray", JSON.stringify(storedArray));
       checkDefaultCounter()
-      // navigate(`/cart`)
     }
   };
 
   const addToCartNew = (decodedObj) => {
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
-    console.log(hasDuplicate)
+
     if (!hasDuplicate) {
       decodedObj["quantity"] = 1;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
-      console.log(storedArray)
+
       success()
 
       checkDefaultCounter()
@@ -194,15 +180,13 @@ const ProductDetails = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        // console.log("All Products ----->>>", response);
         if (response.message === "Products has been fetched Succesfully") {
           setProducts(response?.data?.products);
-          // setAllpages(response?.data?.totalCount);
           setIsLoading(false);
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -326,7 +310,7 @@ const ProductDetails = () => {
                 <div className="price-tag">
                   <h4>
                     {localStorage.getItem('currency')}{Number(ProductDetail?.dropshipPrice).toFixed(2)}{" "}
-                    {/* <del>${ProductDetail?.rrp}</del> */}
+                    { }
                   </h4>
                 </div>
 
@@ -364,7 +348,7 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="pyment-method">
-                  {/* <h6 >Guaranted Safe Checkout</h6> */}
+                  { }
                   <ul>
                     <li>
                       <img src="../assets/images/icon/visa2.svg" alt="" />
@@ -384,9 +368,8 @@ const ProductDetails = () => {
                     <li>
                       <img src="../assets/images/icon/paypal.svg" alt="" />
                     </li>
-                    {/* <li>
-                      <img src="../assets/images/icon/pay.svg" alt="" />
-                    </li> */}
+                    {
+                    }
                   </ul>
                 </div>
               </div>

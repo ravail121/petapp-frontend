@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../shared/Header";
 import DiscountHeader from "../shared/DiscountHeader";
 import { message } from 'antd';
@@ -18,7 +18,6 @@ const Cart = () => {
   const [TotalPrice, setTotalPrice] = useState(0);
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
   const cartCountNew = useSelector((state) => state.add.cartCount);
-  // console.log(cartCountTotal)
 
   const [CartData, setCartData] = useState([]);
   useEffect(() => {
@@ -37,19 +36,9 @@ const Cart = () => {
     CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
 
     return product.quantity * product.dropshipPrice;
-    // checBalance();
   };
-  // const calculateShippingPrice = (product, index) => {
-  //   ShippingSettings[index]["totalPrice"] = product.quantity * product.dropshipPrice;
 
-  //   return product.quantity * product.dropshipPrice;
-  //   // checBalance();
-  // };
 
-  // const updatedProducts = CartData.map((product) => ({
-  //   ...product,
-  //   totalPrice: calculateTotalPrice(product),
-  // }));
   dispatch({
     type: UPDATE_CART_TOTAL, payload: CartData.reduce(
       (sum, product) => sum + Number(product.totalPrice),
@@ -58,21 +47,17 @@ const Cart = () => {
   })
 
   const addToCart = (decodedObj, check) => {
-    console.log(decodedObj)
-    // success()
-    // debugger;
+
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
-    //  decodedObj const  = { id: 123 }; // Example decoded object
     const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
-    console.log(hasDuplicate)
+
     if (!hasDuplicate) {
       decodedObj["quantity"] = 1;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
-      console.log(storedArray)
+
 
       checkDefaultCounter()
-      // navigate("/cart")
 
     } else {
       hasDuplicate["quantity"] = check === '+' ? 1 + hasDuplicate["quantity"] : hasDuplicate["quantity"] - 1;
@@ -81,7 +66,6 @@ const Cart = () => {
       checkDefaultCounter()
 
 
-      // navigate(`/cart`)
     }
   };
 
@@ -89,15 +73,14 @@ const Cart = () => {
 
   const checkDefaultCounter = () => {
     var totalQuantity = 0;
-    console.log(JSON.parse(localStorage.getItem("myArray")))
+
 
     let Data = JSON.parse(localStorage.getItem("myArray"))
     for (var i = 0; i < Data?.length; i++) {
-      console.log(JSON.parse(localStorage.getItem("myArray")))
+
 
       totalQuantity += Data[i].quantity;
 
-      // console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -110,7 +93,6 @@ const Cart = () => {
       0
     );
 
-    // console.log(totalPrice * count);
     setTotalPrice(totalPrice);
   };
 
@@ -125,28 +107,22 @@ const Cart = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("All Shipping ----->>>", response);
+
         if (response.message === "Shipping Fee has been fetched Succesfully") {
           setShippingSettings(response?.data?.shippingFee);
-          // setAllpages(response?.data?.totalCount);
           let obj = response?.data?.shippingFee[0]
-          // const sum = Object.keys(obj)
-          //   .filter(key => key !== "id")
-          //   .reduce((acc, key) => acc + obj[key], 0);
           setShippingTotal(obj)
-          // console.log(obj.shippingFee)
           setIsLoading(false);
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
 
   const rmoveToCart = (id) => {
     storedArray = storedArray.filter((obj) => obj.id !== id);
-    // console.log(storedArray);
     setCartData(storedArray);
 
     localStorage.setItem("myArray", JSON.stringify(storedArray));
@@ -154,11 +130,10 @@ const Cart = () => {
     checkDefaultCounter()
   };
   const getOnChangeCounter = (value, index) => {
-    // addToCart()
-    console.log(value)
+
     let obj = CartData;
     obj[index]["quantity"] = value;
-    console.log(obj);
+
     checkDefaultCounter()
     dispatch({
       type: UPDATE_CART_TOTAL, payload: obj.reduce(
@@ -166,19 +141,13 @@ const Cart = () => {
         0
       )
     })
-    // dispatch({
-    //   type: UPDATE_CART_TOTAL, payload: obj.reduce(
-    //     (sum, product) => sum + product.totalPrice,
-    //     0
-    //   )
-    // })
   };
 
 
 
   return (
     <>
-      {/* {contextHolder} */}
+      { }
 
       <DiscountHeader minimum_limit={80} />
       <Header />
@@ -204,7 +173,7 @@ const Cart = () => {
                 <div class="banner-img-bg">
                   <img class="img-fluid" src="https://demo.egenslab.com/html/scooby/preview/assets/images/bg/inner-banner-img.png" alt="" />
                 </div>
-                {/* <img class="img-fluid" src="assets/images/bg/inner-banner-img.png" alt=""/> */}
+                { }
               </div>
             </div>
           </div>
@@ -280,7 +249,6 @@ const Cart = () => {
                                         item.quantity + 1,
                                         index
                                       );
-                                      // checBalance();
                                     }}
                                   >
                                     +
@@ -303,17 +271,8 @@ const Cart = () => {
             </div>
           </div>
           <div className="row g-4">
-            {/* <div className="col-lg-4">
-              <div className="coupon-area">
-                <div className="cart-coupon-input">
-                  <h5 className="coupon-title">Coupon Code</h5>
-                  <form className="coupon-input d-flex align-items-center">
-                    <input type="text" placeholder="Coupon Code" />
-                    <button type="submit">Apply Code</button>
-                  </form>
-                </div>
-              </div>
-            </div> */}
+            {
+            }
 
             <div className="col-lg-8">
               <table className="table total-table">
@@ -331,10 +290,8 @@ const Cart = () => {
                       <ul className="cost-list text-start">
                         <li>Shipping Fee</li>
                         <li>Taxes ({ShippingTotal.tax * 100}%)</li>
-                        {/* <li>
-                          Shipping Enter your address to view shipping options.{" "}
-                          <br /> <a href="#">Calculate shipping</a>
-                        </li> */}
+                        {
+                        }
                       </ul>
                     </td>
                     <td>
@@ -347,7 +304,7 @@ const Cart = () => {
                           )
 
                         })}
-                        {/* <li>$5</li> */}
+                        { }
                       </ul>
                     </td>
                   </tr>

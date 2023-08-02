@@ -101,22 +101,15 @@ function Home() {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("All Shipping ----->>>", response);
+
         if (response.message === "Shipping Fee has been fetched Succesfully") {
-          // setShippingSettings(response?.data?.shippingFee);
           localStorage.setItem('currency', response?.data?.shippingFee[0].currencySign)
-          // setAllpages(response?.data?.totalCount);
           let obj = response?.data?.shippingFee[0]
-          // const sum = Object.keys(obj)
-          //   .filter(key => key !== "id")
-          //   .reduce((acc, key) => acc + obj[key], 0);
-          // setShippingTotal(obj)
-          // console.log(obj.shippingFee)
           setIsLoading(false);
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -138,7 +131,7 @@ function Home() {
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -150,16 +143,13 @@ function Home() {
     } else if (!isValidEmail(FromEmail)) {
       setErrorMessage('Invalid email format');
     } else {
-      // Perform the desired action when the email is valid
-      console.log('Email:', FromEmail);
-      // Clear the input and error message
+
       addQuery()
 
     }
   };
 
   const isValidEmail = (value) => {
-    // Regular expression pattern for email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(value);
   };
@@ -190,7 +180,7 @@ function Home() {
 
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -212,12 +202,12 @@ function Home() {
   const addToCart = (decodedObj) => {
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
-    console.log(hasDuplicate)
+
     if (!hasDuplicate) {
       decodedObj["quantity"] = 1;
       storedArray.push(decodedObj);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
-      console.log(storedArray)
+
       success()
 
       checkDefaultCounter()
@@ -242,7 +232,6 @@ function Home() {
 
       totalQuantity += Data[i].quantity;
 
-      // console.log(totalQuantity)
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });

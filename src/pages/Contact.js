@@ -42,16 +42,13 @@ const Contact = () => {
         } else if (!isValidEmail(FromEmail)) {
             setErrorMessage('Invalid email format');
         } else {
-            // Perform the desired action when the email is valid
-            console.log('Email:', FromEmail);
-            // Clear the input and error message
+
             addQuery()
 
         }
     };
 
     const isValidEmail = (value) => {
-        // Regular expression pattern for email validation
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailPattern.test(value);
     };
@@ -85,7 +82,7 @@ const Contact = () => {
                 }
             })
             .catch((err) => {
-                console.log(err);
+
             });
     };
 

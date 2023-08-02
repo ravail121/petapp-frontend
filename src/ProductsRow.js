@@ -8,12 +8,11 @@ import React, { useRef } from "react";
 import { Pagination, Navigation, Autoplay } from "swiper"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT, UPDATE_PRODUCT_REFRESH } from './Redux/Actions/action'
-
+import { url } from "./environment";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import 'swiper/swiper.min.css';
-// import 'swiper/css';
 
 const responsive = [
   {
@@ -27,7 +26,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -41,7 +39,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -55,7 +52,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -69,7 +65,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -83,7 +78,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -97,7 +91,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -111,7 +104,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -125,7 +117,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -139,7 +130,6 @@ const responsive = [
 
       dots: true,
 
-      // autoplaySpeed: 1000,
     }
   },
   {
@@ -247,7 +237,7 @@ function ProductsRow(props) {
 
 
   const handlePrevSlide = () => {
-    console.log(swiperRef)
+
 
     if (swiperRef && swiperRef.swiper) {
       swiperRef.swiper.slidePrev();
@@ -261,9 +251,8 @@ function ProductsRow(props) {
   };
   const fetchCategories = () => {
     setLoading(true);
-    let url = `http://apis.rubypets.co.uk/user/categories/list`;
-    console.log(url);
-    fetch(url, {
+    let urlnew = `${url}/user/categories/list`;
+    fetch(urlnew, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -274,12 +263,12 @@ function ProductsRow(props) {
         }
       })
       .catch((error) => {
-        console.error(error);
+
       });
   };
 
   const catValue = (id) => {
-    console.log(id)
+
     dispatch({
       type: UPDATE_SEARCH_CATEGORIES, payload: id
     })
@@ -324,18 +313,11 @@ function ProductsRow(props) {
             disableOnInteraction: false
           }}
           speed={2000}
-          // navigation={true}
-          // pagination={{
-          //   clickable: true,
-          // }}
           modules={[Pagination, Autoplay]}
-          onSlideChange={() => console.log('slide change')}
-          onSwiper={(swiper) => console.log(swiper)}
+
         >
           {categories?.length > 0 ? (
-            // <div className="col">
 
-            // {
 
             categories && categories?.map((product) => (
               <SwiperSlide style={{ background: 'none' }}>
@@ -358,8 +340,6 @@ function ProductsRow(props) {
               </SwiperSlide>
 
             ))
-            // }
-            // </div>
 
           ) : (<div className="row" style={{ display: "block", textAlign: "center" }}>
             {!loading && <h2>No Categories found</h2>}
@@ -442,23 +422,8 @@ function ProductsRow(props) {
         </Slider>
       }
 
-      {/* {loading ? (
-        <div
-          className="row text-align-center"
-          style={{ display: "block", textAlign: "center" }}
-        >
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : categories?.length > 0 ? (
-        // categories
-        <div className="maincategory">{listProducts}</div>
-      ) : (
-        <div className="row" style={{ display: "block", textAlign: "center" }}>
-          <h2>No Categories found</h2>
-        </div>
-      )} */}
+      {
+      }
     </>
   );
 }

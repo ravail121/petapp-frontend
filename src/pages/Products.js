@@ -10,14 +10,12 @@ import Slider, { SliderThumb } from "@mui/material/Slider";
 import img1 from "../assets/images/icon/Icon-cart3.svg";
 import { Pagination } from "@mui/material";
 import { url } from "../environment";
-import { useParams } from "react-router-dom";
 import { createTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from '@material-ui/core';
 
 
 import { message } from 'antd';
 
-import { decode, encode } from "base-64";
 function valuetext(value) {
   return `${value}°C`;
 }
@@ -108,7 +106,6 @@ const Product = () => {
 
 
   const GetAllProducts = (event, pageNumber, perpage) => {
-    // debugger
     value++
     setIsLoading(true);
 
@@ -151,7 +148,6 @@ const Product = () => {
         page: pageNumber ? pageNumber : 1,
         limit: perpage ? Number(perpage) : PageData,
         search: SearchValue,
-        // categoryId: SearchCat,
         categories: filteredItems?.length > 0 ? filteredItems : SearchCat ? [SearchCat] : [],
         price: sliderValues,
       })
@@ -162,7 +158,6 @@ const Product = () => {
         value--
         if (response.statusCode === 200) {
           setProducts(response?.data?.products);
-          // fetchCategories()
           dispatch({
             type: UPDATE_PRODUCT_REFRESH, payload: 0
           })
@@ -184,7 +179,6 @@ const Product = () => {
   }
 
   const resetAll = () => {
-    // filteredItems = []
     dispatch({
       type: UPDATE_SEARCH_PRODUCT, payload: ''
     })
@@ -195,7 +189,6 @@ const Product = () => {
     setSliderValues([0, 500])
     setLimits(10)
     setActivepage(1)
-    // setValue1([0, 500])
     let Array = []
     categories?.map((item) => {
       Array.push({
@@ -224,7 +217,6 @@ const Product = () => {
 
         if (response.statusCode === 200) {
           setProducts(response?.data?.products);
-          // fetchCategories()
           dispatch({
             type: UPDATE_PRODUCT_REFRESH, payload: 0
           })
@@ -243,9 +235,9 @@ const Product = () => {
     setLoading(true);
     setIsLoading(true);
 
-    let url = `http://apis.rubypets.co.uk/user/categories/list`;
+    let urlnew = `${url}/user/categories/list`;
 
-    fetch(url, {
+    fetch(urlnew, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -287,7 +279,6 @@ const Product = () => {
 
       totalQuantity += Data[i].quantity;
 
-      // // 
     }
     localStorage.setItem("myArray", JSON.stringify(Data));
     dispatch({ type: UPDATE_CART_COUNT, payload: totalQuantity });
@@ -296,10 +287,7 @@ const Product = () => {
 
 
   const addToCart = (decodedObj) => {
-    // success()
-    // debugger;
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
-    //  decodedObj const  = { id: 123 }; // Example decoded object
     const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
 
     if (!hasDuplicate) {
@@ -310,7 +298,6 @@ const Product = () => {
       success()
       setRefresh(Refresh + 1)
       checkDefaultCounter()
-      // navigate("/cart")
 
     } else {
 
@@ -321,7 +308,6 @@ const Product = () => {
       checkDefaultCounter()
 
 
-      // navigate(`/cart`)
     }
   };
 
@@ -429,7 +415,6 @@ const Product = () => {
                 </div>
                 <img
                   className="img-fluid"
-                  // src="assets/images/bg/inner-banner-img.png"
                   alt=""
                 />
               </div>
@@ -566,13 +551,10 @@ const Product = () => {
                       <>
                         <div className="col-lg-4 col-md-4 col-sm-6" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'end', alignItems: 'center' }}>
                           <div className="collection-card" >
-                            {/* <div className="offer-card">
-                            <span>Offer</span>
-                          </div> */}
+                            {
+                            }
                             <div className="collection-img">
                               <img
-                                // width={300}
-                                // height={300}
                                 className={item.stockName === 'DSG-003' ? 'width123' : 'img-fluid'}
 
                                 src={item?.imageName}
@@ -601,11 +583,8 @@ const Product = () => {
                                     <img src={img1} alt="" />
                                   </a>
                                 </li>
-                                {/* <li>
-                                <a href="#">
-                                  <img src={fav3} alt="" />
-                                </a>
-                              </li> */}
+                                {
+                                }
                               </ul>
                             </div>
 
@@ -628,7 +607,7 @@ const Product = () => {
                               </h4>
                               <div className="price">
                                 <h6> {localStorage.getItem('currency')}{Number(item?.dropshipPrice).toFixed(2)}</h6>
-                                {/* <del>${item.rrp}</del> */}
+                                { }
                               </div>
 
                             </div>

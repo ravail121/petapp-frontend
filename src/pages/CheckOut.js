@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_CART_COUNT, UPDATE_CART_TOTAL, CATEGORY_ERROR } from '../Redux/Actions/action';
 import { url } from "../environment";
-import { Card, message } from 'antd';
+import { message } from 'antd';
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
@@ -41,7 +41,7 @@ const Checkout = () => {
   const dispatch = useDispatch();
   let storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
   const checkhandle = useSelector((state) => state.categoryError.errorTrue);
-  console.log(checkhandle)
+
   const cartCountTotal = useSelector((state) => state.cartTotal.cartTotal);
   const [OrderNumber, setOrderNumber] = useState('');
   const [BackButton, setBackButton] = useState(false);
@@ -87,25 +87,19 @@ const Checkout = () => {
     let storedArray = JSON.parse(localStorage.getItem("myArray"));
     setCartData(storedArray);
 
-    const url = window.location.search; // Output: "?name=John&age=30"
+    const url = window.location.search;
 
-    // Remove the leading question mark from the URL
     const queryString = url.substring(1);
 
-    // Split the query string into an array of key-value pairs
-    const queryParamsArray = queryString.split('&'); // Output: ["name=John", "age=30"]
+    const queryParamsArray = queryString.split('&');
 
-    // Convert the array of key-value pairs into an object
     const queryParamsObject = {};
     queryParamsArray.forEach((param) => {
       const [key, value] = param.split('=');
       queryParamsObject[key] = value;
     });
-    let Data = JSON.parse(localStorage.getItem('PlaceOrder'))
-    console.log(Data.fname)
-    setCountry(Data.fname)
-    const redirect_status = queryParamsObject['redirect_status']; // Output: "John"
-    // const age = queryParamsObject['age']; // Output: "30"
+
+    const redirect_status = queryParamsObject['redirect_status'];
     if (redirect_status === 'succeeded') {
       addAllShipping('Paypal')
     }
@@ -120,7 +114,7 @@ const Checkout = () => {
       firstNameRef.current.scrollIntoView({ behavior: 'smooth' });
     }
     checkDefaultCounter()
-    console.log(storedArray)
+
     GetAllShipping()
     const container = remainingFieldsRef.current;
     if (container) {
@@ -171,7 +165,7 @@ const Checkout = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("All Shipping ----->>>", response);
+
         if (response.message === "Shipping Fee has been fetched Succesfully") {
           setShippingSettings(response?.data?.shippingFee);
           let obj = response?.data?.shippingFee[0]
@@ -180,7 +174,7 @@ const Checkout = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -197,7 +191,7 @@ const Checkout = () => {
     let Data = JSON.parse(localStorage.getItem('PlaceOrder'))
     let Data1 = JSON.parse(localStorage.getItem('shippingDetail'))
     let Data2 = localStorage.getItem('cartTotal')
-    console.log(myArray)
+
     CartData &&
       CartData?.map((item, index) => {
         Docline.push({
@@ -210,7 +204,7 @@ const Checkout = () => {
       })
     setLoading(true)
     handleOpen()
-    console.log(Docline)
+
     let TaxNew;
     if (e === 'Paypal') {
       TaxNew = Data2 ? (Data1?.tax * Data2)?.toFixed(2) : 0
@@ -258,7 +252,7 @@ const Checkout = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+
       });
   };
 
@@ -268,7 +262,7 @@ const Checkout = () => {
       ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
     })
     setCartData(storedArray);
-    console.log(storedArray)
+
     localStorage.setItem("myArray", JSON.stringify(storedArray));
     if (storedArray?.length < 1) {
       navigate('/home')
@@ -295,7 +289,7 @@ const Checkout = () => {
     }
 
     setLoading(true)
-    const response = await fetch("http://apis.rubypets.co.uk/payment/create/intent", {
+    const response = await fetch(`${url}/payment/create/intent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -316,14 +310,14 @@ const Checkout = () => {
     }
     if (result.success) {
       const { clientSecret } = result.data;
-      console.log({ clientSecret })
+
 
       setClientSecret(clientSecret)
 
       setPaymentClientSecret(clientSecret)
 
       setLoading(false)
-      const stripe = await loadStripe('pk_test_51Mywy9J9slboT9qM4PkQxymo2HEnuKJ4SlNo47OnduBi31RwWE8t3ysgbvH1RaC0zxiSy99zR7VMnjit9tvWOsnW00FzMFE1rJ');
+      const stripe = await loadStripe(process.env.STRIPE_API_KEY);
 
       const appearance = {
         theme: 'flat',
@@ -331,7 +325,7 @@ const Checkout = () => {
 
       elementsStripe = stripe.elements({ appearance, clientSecret });
 
-      console.log(elements)
+
 
       const paymentElementOptions = {
         layout: "tabs",
@@ -370,13 +364,13 @@ const Checkout = () => {
       handleSubmit(values)
       setAllValue(values)
       setSubmitting(false);
-      console.log('Form submitted:', values);
+
 
       remainingFieldsRef.current.scrollIntoView({ behavior: 'smooth' });
     } catch (validationError) {
       window.scrollTo(0, 0);
 
-      console.log('Validation errors:', validationError.errors);
+
       validationError.inner.forEach(error => {
         setFieldError(error.path, error.message);
       });
@@ -484,7 +478,7 @@ const Checkout = () => {
           </Modal>
           <Formik
             initialValues={{
-              fname: Country,
+              fname: '',
               lname: '',
 
               city: '',

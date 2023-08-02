@@ -1,9 +1,6 @@
 import banner_bg from "./assets/images/bg/inner-banner-vec.png";
-import banner from "./assets/images/bg/inner-banner-img.png";
 import { useNavigate } from "react-router-dom";
 import Header from "./shared/Header";
-import about_img from "./assets/images/bg/story-img1.png";
-import star from "./assets/images/icon/trastpilot.svg";
 
 function About() {
   const navigate = useNavigate();
@@ -54,30 +51,16 @@ function About() {
             <div className="col-lg-6">
               <div className="section-title1">
                 <span>Our Story</span>
-                {/* <h2>come to know what what we achieved.</h2> */}
+                { }
               </div>
               <div className="story-content">
                 <p>
                   Welcome to Ruby Pets! We are devoted to pets and their owners. Our goal is to provide the finest products and services for your beloved companions. With a focus on responsible pet ownership and animal welfare, we offer premium pet products, expert advice, and a caring community. Join us in creating a world where every pet is cherished and lives a happy, healthy life. Thank you for choosing Ruby Pets for all your pet needs!
                 </p>
-                {/* <div className="story-title-reviews">
-                  <h3>
-                    We Think Working Process may <span>increase</span> mindset.
-                  </h3>
-                  <div className="review">
-                    <p>
-                      Based on <a href="#">2,000 reviews</a>
-                    </p>
-                    <img src={star} alt="" />
-                  </div>
-                </div> */}
-                {/* <p>
-                  Hodor. Hodor! Hodor hodor, hodor; hodor hodor hodor. Hodor.
-                  Hodor hodor; hodor hodor - hodor, hodor, hodor hodor. Hodor,
-                  hodor. Hodor. Hodor, hodor hodor hodor; hodor hodor; hodor
-                  hodor hodor! Hodor hodor HODOR! Hodor hodor... Hodor hodor
-                  hodor...
-                </p> */}
+                {
+                }
+                {
+                }
               </div>
             </div>
             <div className="col-lg-6 d-flex justify-content-lg-end justify-content-center">

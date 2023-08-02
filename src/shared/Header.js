@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/images/fav-icon.png"
 import { useNavigate } from "react-router-dom";
-import { encode, decode } from 'base-64';
 import { useSelector, useDispatch } from 'react-redux';
 import { useMediaQuery } from "@mui/material";
+import { url } from '../environment';
 
 import { Link } from "react-router-dom";
 import { UPDATE_PRODUCT_REFRESH, UPDATE_SEARCH_CATEGORIES, UPDATE_SEARCH_PRODUCT } from "../Redux/Actions/action";
@@ -72,7 +72,6 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
 
       totalQuantity += Data[i].quantity;
 
-      // console.log(totalQuantity)
     }
     setTotalQuantity(totalQuantity)
     localStorage.setItem("myArray", JSON.stringify(Data));
@@ -81,9 +80,8 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
 
   const fetchCategories = () => {
     setLoading(true);
-    let url = `http://apis.rubypets.co.uk/user/categories/list`;
-    console.log(url);
-    fetch(url, {
+    let urlnew = `${url}/user/categories/list`;
+    fetch(urlnew, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -94,7 +92,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
         }
       })
       .catch((error) => {
-        console.error(error);
+
       });
   };
 
@@ -104,7 +102,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
   }
 
   const catValue = (id) => {
-    console.log(id)
+
     dispatch({
       type: UPDATE_SEARCH_CATEGORIES, payload: id
     })
@@ -149,16 +147,15 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
           <ul className="menu-list">
             <li>
               <Link to="/home">Home</Link>
-              {/* <a href="" onClick={() => navigate("/home")}> */}
+              { }
             </li>
             <li>
               <Link to="/about" onClick={() => dispatch({
                 type: UPDATE_SEARCH_PRODUCT, payload: ''
               })}>About</Link>
 
-              {/* <a href="" onClick={() => navigate("/about")}>
-                About
-              </a> */}
+              {
+              }
             </li>
             <li>
               <Link to="/products" onClick={() => {
@@ -167,9 +164,8 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
                 })
               }}>Products</Link>
 
-              {/* <a href="" onClick={() => navigate("/products")}>
-                Products
-              </a> */}
+              {
+              }
             </li>
 
 
@@ -195,9 +191,9 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
             })}
             <li>
 
-              {/* <Link to="/cart" style={{ display: 'flex', gap: '10px' }}>Cart {JSON.parse(localStorage.getItem("myArray")).length > 0 && <span className="badge">{JSON.parse(localStorage.getItem("myArray")).length > 0 ? JSON.parse(localStorage.getItem("myArray")).length : 0}</span>}</Link> */}
+              { }
 
-              {/* <a href="#">Shop</a> */}
+              { }
             </li>
             <li>
               <Link to={'/contact'} >

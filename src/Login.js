@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const naviagte = useNavigate();
-  return (    
+  return (
     <div className="login-section pt-120 pb-120">
       <div className="container">
         <div className="row d-flex justify-content-center g-4">
@@ -23,7 +23,7 @@ function Login() {
                   <div className="col-12">
                     <div className="form-inner">
                       <label>Password *</label>
-                      <input type="password" name="password" id="password" placeholder="Password"/>
+                      <input type="password" name="password" id="password" placeholder="Password" />
                       <i className="bi bi-eye-slash" id="togglePassword"></i>
                     </div>
                   </div>

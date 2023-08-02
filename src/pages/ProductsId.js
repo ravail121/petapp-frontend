@@ -234,9 +234,9 @@ const Product = () => {
 
   const fetchCategories = () => {
     setLoading(true);
-    let url = `http://apis.rubypets.co.uk/user/categories/list`;
+    let urlnew = `${url}/user/categories/list`;
 
-    fetch(url, {
+    fetch(urlnew, {
       method: "GET",
     })
       .then((response) => response.json())

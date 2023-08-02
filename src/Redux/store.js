@@ -12,7 +12,6 @@ const rootReducer = combineReducers({
     searchCat: searchCategories,
     productRefresh: searchProduct,
     categoryError: reducerCategoryError,
-    // add other reducers here if you have more
 });
 
 const store = createStore(rootReducer);
