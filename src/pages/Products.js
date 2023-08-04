@@ -567,8 +567,8 @@ const Product = () => {
                                 <a
                                   onClick={() =>
                                     navigate(
-                                      `/productsDetails/${encodeURIComponent(
-                                        JSON.stringify(item)
+                                      `/productsDetails/?id=${encodeURIComponent(
+                                        item.id
                                       )}`
                                     )
                                   }
@@ -596,8 +596,8 @@ const Product = () => {
                                 <a
                                   onClick={() =>
                                     navigate(
-                                      `/productsDetails/${encodeURIComponent(
-                                        JSON.stringify(item)
+                                      `/productsDetails/?id=${encodeURIComponent(
+                                        item.id
                                       )}`
                                     )
                                   }

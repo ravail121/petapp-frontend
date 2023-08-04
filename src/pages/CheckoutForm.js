@@ -52,7 +52,7 @@ export default function CheckoutForm({ handlepayFailed, handlePaystripe, Refresh
 
       }
       else if (paymentIntent && paymentIntent.status === "succeeded") {
-
+        console.log(paymentIntent)
         dispatch({ type: CATEGORY_ERROR, payload: 0 + 1 });
         setRefresh(Refresh + 1)
         setTimeout(() => {

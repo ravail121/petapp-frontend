@@ -50,6 +50,7 @@ const responsive = [
   }
 ]
 const ProductDetails = () => {
+  const [Refresh, setRefresh] = React.useState(0);
   const [IsLoading, setIsLoading] = React.useState(false);
   const [AllValues, setAllValues] = React.useState({ id: '' });
   const [products, setProducts] = React.useState([]);
@@ -59,27 +60,40 @@ const ProductDetails = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams();
   const [count, setCount] = React.useState(1);
+
+  const navigate = useNavigate()
+  const decodedObj = decodeURIComponent(id)
+  console.log(decodedObj)
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    const url = window.location.search;
+
+    const queryString = url.substring(1);
+
+    const queryParamsArray = queryString.split('&');
+
+    const queryParamsObject = {};
+    queryParamsArray.forEach((param) => {
+      const [key, value] = param.split('=');
+      queryParamsObject[key] = value;
+    });
+    console.log(queryParamsObject)
+    checkDefaultCounter()
+    GetAllProductsdet(queryParamsObject.id);
+    GetAllProducts();
+  }, [Refresh]);
   const success = () => {
     messageApi.open({
       type: 'success',
       content: 'Add to cart Successfully Added',
     });
   };
-  const navigate = useNavigate()
-  const decodedObj = JSON.parse(decodeURIComponent(id));
-  useEffect(() => {
-    window.scrollTo(0, 0);
-
-    GetAllProductsdet();
-    GetAllProducts();
-    setProductDetail(decodedObj);
-    checkDefaultCounter()
-
-  }, []);
 
   const GetAllProductsdet = (e, pageNumber) => {
     setIsLoading(true);
-    fetch(`${url}/user/products/get/${id}`, {
+    fetch(`${url}/user/products/get/${e}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -125,11 +139,11 @@ const ProductDetails = () => {
   const addToCart = () => {
 
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
-    const hasDuplicate = storedArray.find((obj) => obj.id === decodedObj.id);
+    const hasDuplicate = storedArray.find((obj) => obj.id === ProductDetail.id);
 
     if (!hasDuplicate) {
-      decodedObj["quantity"] = count;
-      storedArray.push(decodedObj);
+      ProductDetail["quantity"] = count;
+      storedArray.push(ProductDetail);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
       checkDefaultCounter()
       success()
@@ -145,11 +159,11 @@ const ProductDetails = () => {
 
   const addToCartNew = (decodedObj) => {
     const storedArray = JSON.parse(localStorage.getItem("myArray")) || [];
-    const hasDuplicate = storedArray?.find((obj) => obj.id === decodedObj?.id);
+    const hasDuplicate = storedArray?.find((obj) => obj.id === ProductDetail?.id);
 
     if (!hasDuplicate) {
-      decodedObj["quantity"] = 1;
-      storedArray.push(decodedObj);
+      ProductDetail["quantity"] = 1;
+      storedArray.push(ProductDetail);
       localStorage.setItem("myArray", JSON.stringify(storedArray));
 
       success()
@@ -190,6 +204,14 @@ const ProductDetails = () => {
       });
   };
 
+  const handleRefresh = (item) => {
+    navigate(
+      `/productsDetails/?id=${encodeURIComponent(
+        item.id
+      )}`
+    )
+    setRefresh(Refresh + 1)
+  }
 
   return (
     <>
@@ -582,61 +604,6 @@ const ProductDetails = () => {
                           </ul>
                         </div>
                       </div>
-                      {/* <div className="col-lg-4">
-                                    <div className="review-form">
-                                        <div className="number-of-review">
-                                            <h3>Leave A Reply</h3>
-                                        </div>
-                                        <form>
-                                            <div className="row">
-                                                <div className="col-lg-12">
-                                                    <div className="form-inner mb-20">
-                                                        <input type="text" placeholder="Name*" required="">
-                                                    </div>
-                                                </div>
-                                                <div className="col-lg-12">
-                                                    <div className="form-inner mb-20">
-                                                        <input type="email" placeholder="Email*" required="">
-                                                    </div>
-                                                </div>
-                                                <div className="col-lg-12">
-                                                    <div className="form-inner mb-10">
-                                                        <textarea placeholder="Message..."></textarea>
-                                                    </div>
-                                                </div>
-                                                <div className="col-lg-12">
-                                                    <div className="form-inner2 mb-30">
-                                                        <div className="review-rate-area">
-                                                            <p>Your Rating</p>
-                                                            <div className="rate">
-                                                                <input type="radio" id="star5" name="rate" value="5">
-                                                                <label for="star5" title="text">5 stars</label>
-                                                                <input type="radio" id="star4" name="rate" value="4">
-                                                                <label for="star4" title="text">4 stars</label>
-                                                                <input type="radio" id="star3" name="rate" value="3">
-                                                                <label for="star3" title="text">3 stars</label>
-                                                                <input type="radio" id="star2" name="rate" value="2">
-                                                                <label for="star2" title="text">2 stars</label>
-                                                                <input type="radio" id="star1" name="rate" value="1">
-                                                                <label for="star1" title="text">1 star</label>
-                                                            </div>
-                                                        </div>
-                                                    </div> 
-                                                </div>
-                                                <div className="col-lg-12">
-                                                    <div className="form-inner two">
-                                                        <button className="primary-btn3 btn-lg" type="submit">Post Comment</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-    
-                         
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -665,13 +632,9 @@ const ProductDetails = () => {
                               <div class="plus-icon">
                                 <i class="bi bi-plus"></i>
                               </div>
-                              <a onClick={() =>
-                                navigate(
-                                  `/productsDetails/${encodeURIComponent(
-                                    JSON.stringify(item)
-                                  )}`
-                                )
-                              }>View Details</a>
+                              <a onClick={() => handleRefresh(item)}
+
+                              >View Details</a>
                             </div>
                             <ul class="cart-icon-list">
                               <li onClick={() => addToCartNew(item)}><a ><img src={iconCat3} alt="" /></a></li>
@@ -679,13 +642,7 @@ const ProductDetails = () => {
                             </ul>
                           </div>
                           <div class="collection-content text-center">
-                            <h4><a onClick={() =>
-                              navigate(
-                                `/productsDetails/${encodeURIComponent(
-                                  JSON.stringify(item)
-                                )}`
-                              )
-                            }>{item.name}</a></h4>
+                            <h4><a onClick={() => handleRefresh(item)}>{item.name}</a></h4>
                             <div class="price">
                               <h6>{localStorage.getItem('currency')}{item.dropshipPrice}</h6>
                               {/* <del>$30.00</del> */}
@@ -711,8 +668,8 @@ const ProductDetails = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 };

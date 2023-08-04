@@ -75,7 +75,6 @@ function Home() {
   const [IsLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
-  const [autoplay, setAutoplay] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
 
@@ -314,8 +313,8 @@ function Home() {
                           </div>
                           <a onClick={() =>
                             navigate(
-                              `/productsDetails/${encodeURIComponent(
-                                JSON.stringify(item)
+                              `/productsDetails/?id=${encodeURIComponent(
+                                item.id
                               )}`
                             )
                           }>View Details</a>
@@ -328,8 +327,8 @@ function Home() {
                       <div class="collection-content text-center">
                         <h4><a onClick={() =>
                           navigate(
-                            `/productsDetails/${encodeURIComponent(
-                              JSON.stringify(item)
+                            `/productsDetails/?id=${encodeURIComponent(
+                              item.id
                             )}`
                           )
                         }>{item.name}</a></h4>

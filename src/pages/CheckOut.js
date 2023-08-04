@@ -228,6 +228,7 @@ const Checkout = () => {
         city: e === 'Paypal' ? Data.emailNew : AllValue.city,
         town: e === 'Paypal' ? Data.emailNew : AllValue.town,
         shippingAddress: e === 'Paypal' ? Data.emailNew : AllValue.Address,
+        paymentId: clientSecret,
         shippingFee: e === 'Paypal' ? Data1?.shippingFee : ShippingTotal?.shippingFee,
         totalTax: TaxNew
       })
@@ -309,6 +310,7 @@ const Checkout = () => {
       setLoading(false)
     }
     if (result.success) {
+      console.log(result)
       const { clientSecret } = result.data;
 
 
