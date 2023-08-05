@@ -84,6 +84,8 @@ const Checkout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    checkOrderProducts()
+
     let storedArray = JSON.parse(localStorage.getItem("myArray"));
     setCartData(storedArray);
 
@@ -98,7 +100,6 @@ const Checkout = () => {
       const [key, value] = param.split('=');
       queryParamsObject[key] = value;
     });
-
     const redirect_status = queryParamsObject['redirect_status'];
     if (redirect_status === 'succeeded') {
       addAllShipping('Paypal')
@@ -170,6 +171,40 @@ const Checkout = () => {
           setShippingSettings(response?.data?.shippingFee);
           let obj = response?.data?.shippingFee[0]
           setShippingTotal(obj)
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+
+      });
+  };
+
+  const checkOrderProducts = () => {
+    // setIsLoading(true);
+    // CartData &&
+    let Docline = CartData && CartData?.map((item, index) => {
+      return item.id
+    })
+    fetch(`${url}/user/orders/check/products`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        productIds: Docline
+      })
+    })
+      .then((response) => response.json())
+      .then((response) => {
+
+        if (response.statusCode === 200) {
+          console.log(response)
+          const commonObjects = CartData.filter(item => response.data.existingIds.includes(item.id));
+          console.log(commonObjects)
+          localStorage.setItem("myArray", JSON.stringify(commonObjects))
+          setCartData(commonObjects)
+          checkDefaultCounter()
           setIsLoading(false);
         }
       })
