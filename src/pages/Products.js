@@ -97,10 +97,6 @@ const Product = () => {
 
     fetchCategories()
 
-
-
-
-
     checkDefaultCounter()
   }, [SearchValue, SearchCat]);
 
@@ -234,7 +230,7 @@ const Product = () => {
   const fetchCategories = () => {
     setLoading(true);
     setIsLoading(true);
-
+    console.log('HEllllloooooo');
     let urlnew = `${url}/user/categories/list`;
 
     fetch(urlnew, {
