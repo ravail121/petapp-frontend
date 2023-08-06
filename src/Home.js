@@ -369,7 +369,7 @@ function Home() {
               <div class="newsletter-wrap">
                 <div class="section-title3 mb-40">
                   <span>Get In Touch</span>
-                  <h2>Let’s Connect Our Newsletter</h2>
+                  <h2>Have any Question ?</h2>
                 </div>
                 <form>
                   <div class="form-inner">

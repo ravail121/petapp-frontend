@@ -77,10 +77,7 @@ const Checkout = () => {
 
   let elementsStripe;
 
-  const elements = useElements();
-  const { redirect_status } = useParams();
 
-  const formik = useFormikContext();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -102,7 +99,7 @@ const Checkout = () => {
     });
     const redirect_status = queryParamsObject['redirect_status'];
     if (redirect_status === 'succeeded') {
-      addAllShipping('Paypal')
+      addAllShipping('Paypal', queryParamsObject['payment_intent_client_secret'])
     }
     else if (redirect_status === 'failed') {
       handlepayFailed()
@@ -220,7 +217,7 @@ const Checkout = () => {
     });
   };
 
-  const addAllShipping = (e) => {
+  const addAllShipping = (e, ID) => {
     let Docline = []
     let myArray = JSON.parse(localStorage.getItem('myArray'))
     let Data = JSON.parse(localStorage.getItem('PlaceOrder'))
@@ -263,7 +260,7 @@ const Checkout = () => {
         city: e === 'Paypal' ? Data.emailNew : AllValue.city,
         town: e === 'Paypal' ? Data.emailNew : AllValue.town,
         shippingAddress: e === 'Paypal' ? Data.emailNew : AllValue.Address,
-        paymentId: clientSecret,
+        paymentId: e === 'Paypal' ? ID : clientSecret,
         shippingFee: e === 'Paypal' ? Data1?.shippingFee : ShippingTotal?.shippingFee,
         totalTax: TaxNew
       })
@@ -336,7 +333,7 @@ const Checkout = () => {
         name: event.fname + ' ' + event.lname,
         address: event.Address,
         country: 'UK',
-        description: event.message,
+        description: 'Testin',
       }),
     });
     const result = await response.json();
@@ -350,7 +347,7 @@ const Checkout = () => {
 
 
       setClientSecret(clientSecret)
-
+      // localStorage.setItem()
       setPaymentClientSecret(clientSecret)
 
       setLoading(false)
@@ -393,7 +390,7 @@ const Checkout = () => {
         town: Yup.string(),
         Address: Yup.string().required('Street Address is required'),
         emailNew: Yup.string().email('Invalid email address').required('Email Address is required'),
-        message: Yup.string().required('Order notes is required'),
+        message: Yup.string(),
       });
 
       await validationSchema.validate(values, { abortEarly: false });
@@ -489,7 +486,7 @@ const Checkout = () => {
                 <Typography id="modal-modal-description" style={{ fontSize: '14px' }} sx={{ mt: 3 }}>
                 </Typography>
                 <div class="form-inner mt-5 mb-2" style={{ background: 'none !important' }}>
-                  <button className="btn btn-primary" onClick={() => setpayFailed(false)}>Close</button>
+                  <button className="btn btn-primary" onClick={(e) => { backToHome(e); setpayFailed(false) }}>Close</button>
                 </div>
               </div>
             </Box>
@@ -578,10 +575,10 @@ const Checkout = () => {
                         </div>
                         <div className="col-12">
                           <div className="form-inner">
-                            <label>Order Notes *</label>
+                            <label>Order Notes</label>
 
-                            <Field as="textarea" name="message" placeholder="Order Notes" rows="6"></Field>
-                            <ErrorMessage name="message" component="div" className="error-message" />
+                            <Field as="textarea" name="message" placeholder="Order Notes (Optional)" rows="6"></Field>
+                            {/* <ErrorMessage name="message" component="div" className="error-message" /> */}
                           </div>
                         </div>
                       </div>
