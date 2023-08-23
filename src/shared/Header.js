@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import logo from "../assets/images/fav-icon.png"
+import logo from "../assets/images/Logo1.png"
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { useMediaQuery } from "@mui/material";

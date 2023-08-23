@@ -206,11 +206,11 @@ const ProductDetails = () => {
           <div class="row justify-content-center align-items-center text-center">
             <div class="col-lg-6 align-items-center">
               <div class="banner-content">
-                <h1>Shop Details</h1>
+                <h1>Product Details</h1>
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="http://rubypets.co.uk/home">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Shop Details</li>
+                    <li class="breadcrumb-item active" aria-current="page">Product Details</li>
                   </ol>
                 </nav>
               </div>

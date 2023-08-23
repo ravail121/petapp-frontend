@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 
 
-import logo from "../assets/images/fav-icon.png";
+import logo from "../assets/images/Logo1.png";
 
 const Footer = () => {
   const navigate = useNavigate()
@@ -18,9 +18,9 @@ const Footer = () => {
                 </div>
                 <div className="widget-title">
                   <h2>
-                    want <span>to Take</span>
-                    <br />
-                    your pet Food, <span>our Shop</span>?
+                    Luxury living  <br /> <span> for your pet</span>
+                   
+                    {/* your pet Food, <span>our Shop</span>? */}
                   </h2>
                 </div>
                 <div className="footer-btn">
