@@ -133,7 +133,7 @@ const Checkout = () => {
     var totalQuantity = 0;
     let Data = JSON.parse(localStorage.getItem("myArray"))
     Data?.map((ele) => {
-      ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
+      ele["totalPrice"] = ele.quantity * ele.rrp;
     })
     for (var i = 0; i < Data?.length; i++) {
       totalQuantity += Data[i].quantity;
@@ -150,8 +150,8 @@ const Checkout = () => {
 
 
   const calculateTotalPrice = (product, index) => {
-    CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
-    return product.quantity * product.dropshipPrice;
+    CartData[index]["totalPrice"] = product.quantity * product.rrp;
+    return product.quantity * product.rrp;
   };
 
   const GetAllShipping = () => {
@@ -259,7 +259,7 @@ const Checkout = () => {
   const rmoveToCart = (item, index) => {
     storedArray = storedArray.filter((obj) => obj.id !== item.id);
     storedArray.map((ele) => {
-      ele["totalPrice"] = ele.quantity * ele.dropshipPrice;
+      ele["totalPrice"] = ele.quantity * ele.rrp;
     })
     setCartData(storedArray);
 

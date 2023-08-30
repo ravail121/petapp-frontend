@@ -33,9 +33,9 @@ const Cart = () => {
 
   }, []);
   const calculateTotalPrice = (product, index) => {
-    CartData[index]["totalPrice"] = product.quantity * product.dropshipPrice;
+    CartData[index]["totalPrice"] = product.quantity * product.rrp;
 
-    return product.quantity * product.dropshipPrice;
+    return product.quantity * product.rrp;
   };
 
 
@@ -89,7 +89,7 @@ const Cart = () => {
 
   const checBalance = () => {
     const totalPrice = storedArray?.reduce(
-      (accumulator, product) => accumulator + Number(product.dropshipPrice),
+      (accumulator, product) => accumulator + Number(product.rrp),
       0
     );
 
@@ -216,7 +216,7 @@ const Cart = () => {
                             </td>
 
                             <td data-label="Discount Price">
-                              {localStorage.getItem('currency')}{Number(item.dropshipPrice).toFixed(2)}
+                              {localStorage.getItem('currency')}{Number(item.rrp).toFixed(2)}
                             </td>
                             <td data-label="Quantity">
                               <div className="quantity d-flex align-items-center">

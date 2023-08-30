@@ -504,7 +504,7 @@ const Product = () => {
                               </a>
                             </h4>
                             <div className="price">
-                              <h6>${item.dropshipPrice}</h6>
+                              <h6>${item.rrp}</h6>
                               {/* <del>${item.rrp}</del> */}
                             </div>
 

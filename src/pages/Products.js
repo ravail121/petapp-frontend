@@ -606,7 +606,7 @@ const Product = () => {
                                 </a>
                               </h4>
                               <div className="price">
-                                <h6> {localStorage.getItem('currency')}{Number(item?.dropshipPrice).toFixed(2)}</h6>
+                                <h6> {localStorage.getItem('currency')}{Number(item?.rrp).toFixed(2)}</h6>
                                 { }
                               </div>
 

@@ -309,7 +309,7 @@ const ProductDetails = () => {
 
                 <div className="price-tag">
                   <h4>
-                    {localStorage.getItem('currency')}{Number(ProductDetail?.dropshipPrice).toFixed(2)}{" "}
+                    {localStorage.getItem('currency')}{Number(ProductDetail?.rrp).toFixed(2)}{" "}
                     { }
                   </h4>
                 </div>
@@ -687,7 +687,7 @@ const ProductDetails = () => {
                               )
                             }>{item.name}</a></h4>
                             <div class="price">
-                              <h6>{localStorage.getItem('currency')}{item.dropshipPrice}</h6>
+                              <h6>{localStorage.getItem('currency')}{item.rrp}</h6>
                               {/* <del>$30.00</del> */}
                             </div>
                             {/* <div class="review">

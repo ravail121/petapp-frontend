@@ -334,7 +334,7 @@ function Home() {
                           )
                         }>{item.name}</a></h4>
                         <div class="price">
-                          <h6>{localStorage.getItem('currency')}{item.dropshipPrice}</h6>
+                          <h6>{localStorage.getItem('currency')}{item.rrp}</h6>
                           { }
                         </div>
                         {
