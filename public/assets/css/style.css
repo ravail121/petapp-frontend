@@ -2764,6 +2764,7 @@ header.style-3 .nav-right ul li {
 .mobile-menu-btn li a {
   height: 33px;
   width: 33px;
+  margin-right: 5px ;
   line-height: 1;
   border-radius: 50%;
   border: 1px solid;
