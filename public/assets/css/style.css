@@ -2705,13 +2705,13 @@ header.style-3 .header-logo {
 
 @media (max-width: 991px) {
   header.style-3 .header-logo {
-    width: 100px;
+    width: 200px;
     padding: 20px 0;
   }
 }
 
 header.style-3 .header-logo img {
-  min-width: 45px;
+  min-width: 52px;
   max-width: 13%;
 }
 
