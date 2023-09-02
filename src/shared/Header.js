@@ -131,7 +131,7 @@ function Header({ resetAll, setSelecedCat, Refresh, Name, setName, Counts }) {
         <div className="header-logo">
           <a style={{display:'flex',alignItems:'center',gap:'10px'}} href="http://rubypets.co.uk/home">
             <img alt="image" className="img-fluid" src={logo} width={150} />
-            <p style={{fontSize:'18px',color:'black',marginTop:'10px'}}><b style={{fontSize:'30px',fontFamily:'Lucida Sans'}}>Ruby Pets</b></p>
+            <p style={{fontSize:'30px',fontFamily:'Lucida Sans',color:'black',marginTop:'10px'}}>Ruby Pets</p>
           </a>
           
         </div>
