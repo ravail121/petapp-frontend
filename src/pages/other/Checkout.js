@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import tick from "../../assets/qa.gif";
@@ -16,6 +16,7 @@ import { message } from "antd";
 
 // import Box from "@mui/material/Box";
 // import Typography from "@mui/material/Typography";
+import { deleteAllFromCart } from "../../store/slices/cart-slice";
 
 import LayoutOne from "../../layouts/LayoutOne";
 import { Formik, Field, Form, ErrorMessage, useFormikContext } from "formik";
@@ -69,7 +70,7 @@ const Checkout = () => {
   const [Refresh, setRefresh] = useState(0);
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [payFailed, setpayFailed] = React.useState(false);
-
+  const dispatch = useDispatch();
   const [open1, setOpen1] = React.useState(false);
   const [clientSecret, setClientSecret] = useState("");
   const [AllValue, setAllValue] = React.useState();
@@ -223,6 +224,7 @@ const Checkout = () => {
           setOrderNumber(response.data.orderNo);
           handleOpen();
           // checkDefaultCounter();
+          dispatch(deleteAllFromCart());
           setCartData([]);
           setLoading(false);
           setIsLoading(false);
