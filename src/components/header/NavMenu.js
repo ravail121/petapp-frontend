@@ -2,23 +2,57 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
-
+import { url } from "../../environment";
+import { useState, useEffect } from "react";
 const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
   const { t } = useTranslation();
-  
+  const [Categories, setCategories] = useState([]);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = () => {
+    // setLoading(true);
+    // setIsLoading(true);
+
+    let urlnew = `${url}/user/categories/list`;
+
+    fetch(urlnew, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Categories has been fetched Succesfully") {
+          let Array = [];
+          // data?.data?.categories?.map((item) => {
+          //   Array.push({
+          //     name: item.name,
+          //     checked: item.id === Number(SearchCat) ? true : false,
+          //     id: item.id
+          //   })
+          // })
+
+          setCategories(data?.data?.categories);
+          // setLoading(false);
+          // GetAllProducts(Array);
+        }
+      })
+      .catch((error) => {});
+  };
   return (
     <div
-      className={clsx(sidebarMenu
+      className={clsx(
+        sidebarMenu
           ? "sidebar-menu"
-          : `main-menu ${menuWhiteClass ? menuWhiteClass : ""}`)}
+          : `main-menu ${menuWhiteClass ? menuWhiteClass : ""}`
+      )}
     >
       <nav>
         <ul>
-        <li>
-            <Link to={process.env.PUBLIC_URL + "/home-pet-food"}>
-              {t("Home")}
-            </Link>
-          </li>  <li>
+          <li>
+            <Link to={process.env.PUBLIC_URL + "/"}>{t("Home")}</Link>
+          </li>{" "}
+          <li>
             <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
               {t("About")}
             </Link>
@@ -40,54 +74,18 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
               )}
             </Link>
             <ul className="submenu">
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/cart"}>
-                  {t("cart")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/checkout"}>
-                  {t("checkout")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/wishlist"}>
-                  {t("wishlist")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/compare"}>
-                  {t("compare")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/my-account"}>
-                  {t("my_account")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/login-register"}>
-                  {t("login_register")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/about"}>
-                  {t("about_us")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/contact"}>
-                  {t("contact_us")}
-                </Link>
-              </li>
-              <li>
-                <Link to={process.env.PUBLIC_URL + "/not-found"}>
-                  {t("404_page")}
-                </Link>
-              </li>
+              {Categories &&
+                Categories.map((item) => {
+                  return (
+                    <li>
+                      <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+                        {t(item.name)}
+                      </Link>
+                    </li>
+                  );
+                })}
             </ul>
           </li>
-         
           <li>
             <Link to={process.env.PUBLIC_URL + "/contact"}>
               {t("contact_us")}

@@ -2,12 +2,13 @@ import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getDiscountPrice } from "../../../helpers/product";
-import { deleteFromCart } from "../../../store/slices/cart-slice"
+import { deleteFromCart } from "../../../store/slices/cart-slice";
 
 const MenuCart = () => {
   const dispatch = useDispatch();
   const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
+
   let cartTotalPrice = 0;
 
   return (
@@ -28,8 +29,8 @@ const MenuCart = () => {
               ).toFixed(2);
 
               discountedPrice != null
-                ? (cartTotalPrice += finalDiscountedPrice * item.quantity)
-                : (cartTotalPrice += finalProductPrice * item.quantity);
+                ? (cartTotalPrice += item.rrp * item.quantity)
+                : (cartTotalPrice += item.rrp * item.quantity);
 
               return (
                 <li className="single-shopping-cart" key={item.cartItemId}>
@@ -44,9 +45,7 @@ const MenuCart = () => {
                   </div>
                   <div className="shopping-cart-title">
                     <h4>
-                      <Link
-                        to={process.env.PUBLIC_URL + "/product/" + item.id}
-                      >
+                      <Link to={process.env.PUBLIC_URL + "/product/" + item.id}>
                         {" "}
                         {item.name}{" "}
                       </Link>
@@ -54,13 +53,14 @@ const MenuCart = () => {
                     <h6>Qty: {item.quantity}</h6>
                     <span>
                       {discountedPrice !== null
-                        ? currency.currencySymbol + finalDiscountedPrice
-                        : currency.currencySymbol + finalProductPrice}
+                        ? currency.currencySymbol + item.rrp
+                        : currency.currencySymbol + item.rrp}
                     </span>
-                   
                   </div>
                   <div className="shopping-cart-delete">
-                    <button onClick={() => dispatch(deleteFromCart(item.cartItemId))}>
+                    <button
+                      onClick={() => dispatch(deleteFromCart(item.cartItemId))}
+                    >
                       <i className="fa fa-times-circle" />
                     </button>
                   </div>

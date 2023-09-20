@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
 
-
 const ProductImageFixed = ({ product }) => {
   return (
     <div className="product-large-image-wrapper">
-      {product.discount || product.new ? (
+      {/* {product.discount || product.new ? (
         <div className="product-img-badges">
           {product.discount ? (
             <span className="pink">-{product.discount}%</span>
@@ -15,12 +14,12 @@ const ProductImageFixed = ({ product }) => {
         </div>
       ) : (
         ""
-      )}
+      )} */}
 
       <div className="product-fixed-image">
-        {product.image ? (
+        {product.imageName ? (
           <img
-            src={process.env.PUBLIC_URL + product.image[0]}
+            src={process.env.PUBLIC_URL + product.imageName}
             alt=""
             className="img-fluid"
           />
@@ -33,7 +32,7 @@ const ProductImageFixed = ({ product }) => {
 };
 
 ProductImageFixed.propTypes = {
-  product: PropTypes.shape({})
+  product: PropTypes.shape({}),
 };
 
 export default ProductImageFixed;

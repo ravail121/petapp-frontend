@@ -7,16 +7,21 @@ import ProductDescriptionInfo from "../../components/product/ProductDescriptionI
 import ProductImageGallerySideThumb from "../../components/product/ProductImageGallerySideThumb";
 import ProductImageFixed from "../../components/product/ProductImageFixed";
 
-const ProductImageDescription = ({ spaceTopClass, spaceBottomClass, galleryType, product }) => {
+const ProductImageDescription = ({
+  spaceTopClass,
+  spaceBottomClass,
+  galleryType,
+  product,
+}) => {
   const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
-  const wishlistItem = wishlistItems.find(item => item.id === product.id);
-  const compareItem = compareItems.find(item => item.id === product.id);
+  const wishlistItem = wishlistItems.find((item) => item.id === product.id);
+  const compareItem = compareItems.find((item) => item.id === product.id);
 
-  const discountedPrice = getDiscountPrice(product.price, product.discount);
-  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
+  const discountedPrice = getDiscountPrice(product?.rrp, product?.rrp);
+  const finalProductPrice = +(product?.rrp * currency.currencyRate).toFixed(2);
   const finalDiscountedPrice = +(
     discountedPrice * currency.currencyRate
   ).toFixed(2);
@@ -27,19 +32,18 @@ const ProductImageDescription = ({ spaceTopClass, spaceBottomClass, galleryType,
         <div className="row">
           <div className="col-lg-6 col-md-6">
             {/* product image gallery */}
-            {galleryType === "leftThumb" ? (
-              <ProductImageGallerySideThumb
-                product={product}
-                thumbPosition="left"
-              />
-            ) : galleryType === "rightThumb" ? (
+            {/* {galleryType === "leftThumb" ? ( */}
+            <ProductImageGallerySideThumb
+              product={product}
+              thumbPosition="left"
+            />
+            {/* ) : galleryType === "rightThumb" ? (
               <ProductImageGallerySideThumb product={product} />
             ) : galleryType === "fixedImage" ? (
               <ProductImageFixed product={product} />
-            ) : (
-              // null
-              <ProductImageGallery product={product} />
-            )}
+            ) : null
+            // <ProductImageGallery product={product} />
+            } */}
           </div>
           <div className="col-lg-6 col-md-6">
             {/* product description info */}

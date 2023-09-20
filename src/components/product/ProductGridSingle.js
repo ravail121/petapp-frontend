@@ -15,11 +15,11 @@ const ProductGridSingle = ({
   cartItem,
   wishlistItem,
   compareItem,
-  spaceBottomClass
+  spaceBottomClass,
 }) => {
   const [modalShow, setModalShow] = useState(false);
   const discountedPrice = getDiscountPrice(product.price, product.discount);
-  const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
+  const finalProductPrice = +(product.rrp * currency.currencyRate).toFixed(2);
   const finalDiscountedPrice = +(
     discountedPrice * currency.currencyRate
   ).toFixed(2);
@@ -32,22 +32,12 @@ const ProductGridSingle = ({
           <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
             <img
               className="default-img"
-              src={process.env.PUBLIC_URL + product.image[0]}
+              src={process.env.PUBLIC_URL + product.imageName}
               alt=""
             />
-            {product.image.length > 1 ? (
-              <img
-                className="hover-img"
-                src={process.env.PUBLIC_URL + product.image[1]}
-                alt=""
-              />
-            ) : (
-              ""
-            )}
           </Link>
-       
+
           <div className="product-action">
-            
             <div className="pro-same-action pro-quickview">
               <button title="Quick View" onClick={() => setModalShow(true)}>
                 <i className="pe-7s-look" />
@@ -61,16 +51,15 @@ const ProductGridSingle = ({
               {product.name}
             </Link>
           </h3>
-         
+
           <div className="product-price">
-            {discountedPrice !== null ? (
+            {/* {discountedPrice !== null ? (
               <Fragment>
                 <span>{currency.currencySymbol + finalDiscountedPrice}</span>{" "}
-              
               </Fragment>
-            ) : (
-              <span>{currency.currencySymbol + finalProductPrice} </span>
-            )}
+            ) : ( */}
+            <span>{currency.currencySymbol + product.rrp} </span>
+            {/* )} */}
           </div>
         </div>
       </div>

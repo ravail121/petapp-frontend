@@ -5,7 +5,8 @@ import Swiper, { SwiperSlide } from "../../components/swiper";
 import SectionTitle from "../../components/section-title/SectionTitle";
 import ProductGridSingle from "../../components/product/ProductGridSingle";
 import { getProducts } from "../../helpers/product";
-
+import { useEffect, useState } from "react";
+import { url } from "../../environment";
 const settings = {
   loop: false,
   slidesPerView: 4,
@@ -13,20 +14,19 @@ const settings = {
   spaceBetween: 30,
   breakpoints: {
     320: {
-      slidesPerView: 1
+      slidesPerView: 1,
     },
     576: {
-      slidesPerView: 2
+      slidesPerView: 2,
     },
     768: {
-      slidesPerView: 3
+      slidesPerView: 3,
     },
     1024: {
-      slidesPerView: 4
-    }
-  }
+      slidesPerView: 4,
+    },
+  },
 };
-
 
 const RelatedProductSlider = ({ spaceBottomClass, category }) => {
   const { products } = useSelector((state) => state.product);
@@ -35,7 +35,32 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { compareItems } = useSelector((state) => state.compare);
   const prods = getProducts(products, category, null, 6);
-  
+  const [IsLoading, setIsLoading] = useState(false);
+  const [Products, setProducts] = useState([]);
+
+  useEffect(() => {
+    GetAllProducts();
+  }, []);
+
+  const GetAllProducts = (e, pageNumber) => {
+    setIsLoading(true);
+    fetch(`${url}/user/products/list/shuffled`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.message === "Products has been fetched Succesfully") {
+          setProducts(response?.data?.products);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {});
+  };
+
   return (
     <div className={clsx("related-product-area", spaceBottomClass)}>
       <div className="container">
@@ -44,29 +69,25 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
           positionClass="text-center"
           spaceClass="mb-50"
         />
-        {prods?.length ? (
+        {Products?.length ? (
           <Swiper options={settings}>
-              {prods.map(product => (
-                <SwiperSlide key={product.id}>
-                  <ProductGridSingle
-                    product={product}
-                    currency={currency}
-                    cartItem={
-                      cartItems.find((cartItem) => cartItem.id === product.id)
-                    }
-                    wishlistItem={
-                      wishlistItems.find(
-                        (wishlistItem) => wishlistItem.id === product.id
-                      )
-                    }
-                    compareItem={
-                      compareItems.find(
-                        (compareItem) => compareItem.id === product.id
-                      )
-                    }
-                  />
-                </SwiperSlide>
-              ))}
+            {Products.map((product) => (
+              <SwiperSlide key={product.id}>
+                <ProductGridSingle
+                  product={product}
+                  currency={currency}
+                  cartItem={cartItems.find(
+                    (cartItem) => cartItem.id === product.id
+                  )}
+                  wishlistItem={wishlistItems.find(
+                    (wishlistItem) => wishlistItem.id === product.id
+                  )}
+                  compareItem={compareItems.find(
+                    (compareItem) => compareItem.id === product.id
+                  )}
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         ) : null}
       </div>
@@ -76,7 +97,7 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
 
 RelatedProductSlider.propTypes = {
   category: PropTypes.string,
-  spaceBottomClass: PropTypes.string
+  spaceBottomClass: PropTypes.string,
 };
 
 export default RelatedProductSlider;
