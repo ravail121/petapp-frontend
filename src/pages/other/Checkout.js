@@ -210,6 +210,7 @@ const Checkout = () => {
         shippingAddress: e === "Paypal" ? Data.emailNew : AllValue.Address,
         city: e === "Paypal" ? Data.emailNew : AllValue.city,
         town: e === "Paypal" ? Data.emailNew : AllValue.town,
+        paymentId: clientSecret,
         shippingAddress: e === "Paypal" ? Data.emailNew : AllValue.Address,
         shippingFee:
           e === "Paypal" ? Data1?.shippingFee : ShippingTotal?.shippingFee,
