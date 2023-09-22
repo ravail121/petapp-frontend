@@ -63,15 +63,16 @@ const ShopGridStandard = () => {
   }, [offset, products, sortType, sortValue, filterSortType, filterSortValue]);
 
   useEffect(() => {
-    if (search && currentPage) {
-      GetAllProducts();
-    }
+    // if (search && currentPage) {
+    GetAllProducts();
+    // }
   }, [currentPage, search]);
   useEffect(() => {
     GetAllProducts();
   }, []);
 
   const GetAllProducts = () => {
+    console.log("dsdd");
     // value++
     // setIsLoading(true); window.s
 
