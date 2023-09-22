@@ -4,7 +4,7 @@ import {
   getIndividualCategories,
   getIndividualTags,
   getIndividualColors,
-  getProductsIndividualSizes
+  getProductsIndividualSizes,
 } from "../../helpers/product";
 import ShopSearch from "../../components/product/ShopSearch";
 import ShopCategories from "../../components/product/ShopCategories";
@@ -20,10 +20,10 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
   const uniqueSizes = getProductsIndividualSizes(products);
   const uniqueTags = getIndividualTags(products);
 
-  const[Categories , setCategories]=useState([])
-useEffect(()=>{
-  fetchCategories()
-},[])
+  const [Categories, setCategories] = useState([]);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const fetchCategories = () => {
     // setLoading(true);
@@ -37,7 +37,7 @@ useEffect(()=>{
       .then((response) => response.json())
       .then((data) => {
         if (data.message === "Categories has been fetched Succesfully") {
-          let Array = []
+          let Array = [];
           // data?.data?.categories?.map((item) => {
           //   Array.push({
           //     name: item.name,
@@ -49,14 +49,10 @@ useEffect(()=>{
           setCategories(data?.data?.categories);
           // setLoading(false);
           // GetAllProducts(Array);
-
         }
       })
-      .catch((error) => {
-
-      });
+      .catch((error) => {});
   };
-
 
   return (
     <div className={clsx("sidebar-style", sideSpaceClass)}>
@@ -65,6 +61,7 @@ useEffect(()=>{
 
       {/* filter by categories */}
       <ShopCategories
+        setCategories={setCategories}
         categories={Categories}
         getSortParams={getSortParams}
       />
@@ -84,7 +81,7 @@ useEffect(()=>{
 ShopSidebar.propTypes = {
   getSortParams: PropTypes.func,
   products: PropTypes.array,
-  sideSpaceClass: PropTypes.string
+  sideSpaceClass: PropTypes.string,
 };
 
 export default ShopSidebar;

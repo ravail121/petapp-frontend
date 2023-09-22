@@ -30,6 +30,7 @@ const ShopGridStandard = () => {
   const [Products, setProducts] = useState([]);
   const [currentData, setCurrentData] = useState([]);
   const [sortedProducts, setSortedProducts] = useState([]);
+  const [selectedCat, setSelectedCat] = useState([]);
   const { products } = useSelector((state) => state.product);
   const { search } = useSelector((state) => state.search);
 
@@ -39,10 +40,16 @@ const ShopGridStandard = () => {
   const getLayout = (layout) => {
     setLayout(layout);
   };
+  // Function to filter selected categories and retrieve their IDs
 
   const getSortParams = (sortType, sortValue) => {
-    setSortType(sortType);
-    setSortValue(sortValue);
+    console.log(sortType);
+    let IDs = sortType
+      .filter((category) => category.selected)
+      .map((category) => category.id);
+    console.log(IDs);
+    setSelectedCat(IDs);
+    GetAllProducts(IDs);
   };
 
   const getFilterSortParams = (sortType, sortValue) => {
@@ -63,15 +70,15 @@ const ShopGridStandard = () => {
   }, [offset, products, sortType, sortValue, filterSortType, filterSortValue]);
 
   useEffect(() => {
-    // if (search && currentPage) {
-    GetAllProducts();
-    // }
+    if ((search && search.length > 0) || currentPage) {
+      GetAllProducts();
+    }
   }, [currentPage, search]);
   useEffect(() => {
     GetAllProducts();
   }, []);
 
-  const GetAllProducts = () => {
+  const GetAllProducts = (cat) => {
     console.log("dsdd");
     // value++
     // setIsLoading(true); window.s
@@ -115,7 +122,7 @@ const ShopGridStandard = () => {
         page: currentPage ? currentPage : 1,
         limit: 15,
         search: search ? search : "",
-        categories: [],
+        categories: cat ? cat : [],
         price: [0, 500],
       }),
     })
@@ -128,7 +135,7 @@ const ShopGridStandard = () => {
           //     type: UPDATE_PRODUCT_REFRESH, payload: 0
           //   })
           setAllpages(response?.data?.totalCount);
-          dispatch(setSearchCat(""));
+          // dispatch(setSearchCat(""));
           setIsLoading(false);
         }
       })
