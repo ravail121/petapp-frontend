@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
 import { url } from "../../environment";
 import { setSearchCat } from "../../store/slices/search_Cat";
-
+import { setSelectCat } from "../../store/slices/selected-cat";
 import { useState, useEffect } from "react";
 const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
   const { t } = useTranslation();
@@ -74,7 +74,10 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
           </li>
           <li>
             <Link
-              onClick={() => dispatch(setSearchCat(""))}
+              onClick={() => {
+                dispatch(setSearchCat(""));
+                dispatch(setSelectCat("All"));
+              }}
               to={process.env.PUBLIC_URL + "/shop-grid-standard"}
             >
               {t("Products")}
@@ -82,7 +85,10 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
           </li>
           <li>
             <Link
-              onClick={() => dispatch(setSearchCat(""))}
+              onClick={() => {
+                dispatch(setSearchCat(""));
+                dispatch(setSelectCat(""));
+              }}
               to={process.env.PUBLIC_URL + "/"}
             >
               {t("Categories")}
@@ -100,7 +106,10 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
                   return (
                     <li>
                       <Link
-                        onClick={() => dispatch(setSearchCat(""))}
+                        onClick={() => {
+                          dispatch(setSearchCat(""));
+                          dispatch(setSelectCat(item.id));
+                        }}
                         to={process.env.PUBLIC_URL + "/shop-grid-standard"}
                       >
                         {t(item.name)}

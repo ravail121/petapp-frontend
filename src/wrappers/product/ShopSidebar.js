@@ -8,6 +8,7 @@ import {
 } from "../../helpers/product";
 import ShopSearch from "../../components/product/ShopSearch";
 import ShopCategories from "../../components/product/ShopCategories";
+import { useSelector } from "react-redux";
 import ShopColor from "../../components/product/ShopColor";
 import ShopSize from "../../components/product/ShopSize";
 import ShopTag from "../../components/product/ShopTag";
@@ -19,6 +20,7 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
   const uniqueColors = getIndividualColors(products);
   const uniqueSizes = getProductsIndividualSizes(products);
   const uniqueTags = getIndividualTags(products);
+  const { selectCat } = useSelector((state) => state.selectCat);
 
   const [Categories, setCategories] = useState([]);
   useEffect(() => {
@@ -54,6 +56,24 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
       .catch((error) => {});
   };
 
+  useEffect(() => {
+    if (selectCat === "All") {
+      const updatedCategories = Categories.map((category) => ({
+        ...category,
+        selected: true,
+      }));
+      setCategories(updatedCategories);
+    } else {
+      const updatedItems = Categories.map((item) => {
+        if (item.id === selectCat) {
+          return { ...item, selected: true };
+        } else {
+          return { ...item, selected: false };
+        }
+      });
+      setCategories(updatedItems);
+    }
+  }, [selectCat]);
   return (
     <div className={clsx("sidebar-style", sideSpaceClass)}>
       {/* shop search */}

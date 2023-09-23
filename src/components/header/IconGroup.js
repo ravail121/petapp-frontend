@@ -3,12 +3,18 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
 import MenuCart from "./sub-components/MenuCart";
+import { setSelectCat } from "../../store/slices/selected-cat";
 import { setSearchCat } from "../../store/slices/search_Cat";
 import { useState } from "react";
 
 const IconGroup = ({ iconWhiteClass }) => {
+  const [SearchActive, setSearchActive] = useState(false);
+
   const handleClick = (e) => {
-    e.currentTarget.nextSibling.classList.toggle("active");
+    setSearchActive(!SearchActive);
+    setTimeout(() => {
+      setSearchValue("");
+    }, 2000);
   };
   const handleClickClose = (e) => {
     e.currentTarget.nextSibling.classList.toggle("");
@@ -32,18 +38,25 @@ const IconGroup = ({ iconWhiteClass }) => {
         <button className="search-active" onClick={(e) => handleClick(e)}>
           <i className="pe-7s-search" />
         </button>
-        <div className="search-content">
+        <div
+          className={SearchActive ? "search-content active" : "search-content"}
+        >
           <form action="#">
             <input
               type="text"
               placeholder="Search"
+              value={SearchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
             <Link to="/shop-grid-standard">
               <button
                 className="button-search"
                 onClick={(e) => {
-                  dispatch(setSearchCat(SearchValue));
+                  {
+                    dispatch(setSearchCat(SearchValue));
+                    dispatch(setSelectCat(""));
+                    handleClick(e);
+                  }
                 }}
               >
                 <i className="pe-7s-search" />

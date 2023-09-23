@@ -33,6 +33,7 @@ const ShopGridStandard = () => {
   const [selectedCat, setSelectedCat] = useState([]);
   const { products } = useSelector((state) => state.product);
   const { search } = useSelector((state) => state.search);
+  const { selectCat } = useSelector((state) => state.selectCat);
 
   const pageLimit = 15;
   let { pathname } = useLocation();
@@ -69,10 +70,10 @@ const ShopGridStandard = () => {
   }, [offset, products, sortType, sortValue, filterSortType, filterSortValue]);
 
   useEffect(() => {
-    if ((search && search.length > 0) || currentPage) {
+    if ((search && search.length > 0) || currentPage || selectCat) {
       GetAllProducts();
     }
-  }, [currentPage, search]);
+  }, [currentPage, search, selectCat]);
   useEffect(() => {
     GetAllProducts();
   }, []);
@@ -121,7 +122,7 @@ const ShopGridStandard = () => {
         page: currentPage ? currentPage : 1,
         limit: 15,
         search: search ? search : "",
-        categories: cat ? cat : [],
+        categories: selectCat !== "All" ? [selectCat] : cat ? cat : [],
         price: [0, 500],
       }),
     })
