@@ -43,11 +43,10 @@ const ShopGridStandard = () => {
   // Function to filter selected categories and retrieve their IDs
 
   const getSortParams = (sortType, sortValue) => {
-    console.log(sortType);
+    dispatch(setSearchCat(""));
     let IDs = sortType
       .filter((category) => category.selected)
       .map((category) => category.id);
-    console.log(IDs);
     setSelectedCat(IDs);
     GetAllProducts(IDs);
   };

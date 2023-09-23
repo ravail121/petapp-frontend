@@ -1,8 +1,12 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+
 import clsx from "clsx";
 import { url } from "../../environment";
+import { setSearchCat } from "../../store/slices/search_Cat";
+
 import { useState, useEffect } from "react";
 const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
   const { t } = useTranslation();
@@ -39,6 +43,9 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
       })
       .catch((error) => {});
   };
+
+  const dispatch = useDispatch();
+
   return (
     <div
       className={clsx(
@@ -50,18 +57,34 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
       <nav>
         <ul>
           <li>
-            <Link to={process.env.PUBLIC_URL + "/"}>{t("Home")}</Link>
+            <Link
+              onClick={() => dispatch(setSearchCat(""))}
+              to={process.env.PUBLIC_URL + "/"}
+            >
+              {t("Home")}
+            </Link>
           </li>{" "}
           <li>
-            <Link to={process.env.PUBLIC_URL + "/about"}>{t("About")}</Link>
+            <Link
+              onClick={() => dispatch(setSearchCat(""))}
+              to={process.env.PUBLIC_URL + "/about"}
+            >
+              {t("About")}
+            </Link>
           </li>
           <li>
-            <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+            <Link
+              onClick={() => dispatch(setSearchCat(""))}
+              to={process.env.PUBLIC_URL + "/shop-grid-standard"}
+            >
               {t("Products")}
             </Link>
           </li>
           <li>
-            <Link to={process.env.PUBLIC_URL + "/"}>
+            <Link
+              onClick={() => dispatch(setSearchCat(""))}
+              to={process.env.PUBLIC_URL + "/"}
+            >
               {t("Categories")}
               {sidebarMenu ? (
                 <span>
@@ -76,7 +99,10 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
                 Categories.map((item) => {
                   return (
                     <li>
-                      <Link to={process.env.PUBLIC_URL + "/shop-grid-standard"}>
+                      <Link
+                        onClick={() => dispatch(setSearchCat(""))}
+                        to={process.env.PUBLIC_URL + "/shop-grid-standard"}
+                      >
                         {t(item.name)}
                       </Link>
                     </li>
@@ -85,7 +111,10 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
             </ul>
           </li>
           <li>
-            <Link to={process.env.PUBLIC_URL + "/contact"}>
+            <Link
+              onClick={() => dispatch(setSearchCat(""))}
+              to={process.env.PUBLIC_URL + "/contact"}
+            >
               {t("contact_us")}
             </Link>
           </li>
