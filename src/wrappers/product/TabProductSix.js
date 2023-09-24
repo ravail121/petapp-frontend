@@ -37,7 +37,7 @@ const TabProductSix = ({
           />
         </div>
 
-        <div className="view-more text-center mt-20 toggle-btn6 col-12">
+        <div className="view-more text-center mt-20 toggle-btn6 col-12 mb-4">
           <Link
             className="loadMore6"
             onClick={() => dispatch(setSelectCat("All"))}
