@@ -30,7 +30,14 @@ const ProductGridSingleFour = ({
 
   return (
     <Fragment>
-      <div className={clsx("product-wrap-5", spaceBottomClass)}>
+      <div
+        className={clsx("product-wrap-5", spaceBottomClass)}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "end",
+        }}
+      >
         <div className="product-img">
           <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
             <img

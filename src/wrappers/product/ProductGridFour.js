@@ -54,7 +54,14 @@ const ProductGridFour = ({ spaceBottomClass, category, type, limit }) => {
         </div>
       ) : (
         products?.map((product) => (
-          <div className="col-xl-3 col-md-6 col-lg-4 col-sm-6" key={product.id}>
+          <div
+            className="col-xl-3 col-md-6 col-lg-4 col-sm-6"
+            key={product.id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <ProductGridSingleFour
               spaceBottomClass={spaceBottomClass}
               product={product}
