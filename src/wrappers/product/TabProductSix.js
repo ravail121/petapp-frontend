@@ -1,78 +1,46 @@
 import PropTypes from "prop-types";
-import clsx from "clsx"
+import clsx from "clsx";
 import { Link } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
+import { useDispatch } from "react-redux";
+
 import Nav from "react-bootstrap/Nav";
 import ProductGridFour from "./ProductGridFour";
+import { setSelectCat } from "../../store/slices/selected-cat";
+
+import SectionTitle from "../../components/section-title/SectionTitle";
 
 const TabProductSix = ({
   spaceTopClass,
   spaceBottomClass,
   category,
-  productTabClass
+  productTabClass,
 }) => {
+  const dispatch = useDispatch();
+
   return (
     <div className={clsx("product-area", spaceTopClass, spaceBottomClass)}>
       <div className="container">
-        <Tab.Container defaultActiveKey="bestSeller">
-          <Nav
-            variant="pills"
-            className={`product-tab-list-2 mb-60 ${
-              productTabClass ? productTabClass : ""
-            }`}
-          >
-            <Nav.Item>
-              <Nav.Link eventKey="newArrival">
-                <h4>New Arrivals</h4>
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="bestSeller">
-                <h4>Best Sellers</h4>
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="saleItems">
-                <h4>Sale Items</h4>
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
-          <Tab.Content>
-            <Tab.Pane eventKey="newArrival">
-              <div className="row">
-                <ProductGridFour
-                  category={category}
-                  type="new"
-                  limit={8}
-                  spaceBottomClass="mb-25"
-                />
-              </div>
-            </Tab.Pane>
-            <Tab.Pane eventKey="bestSeller">
-              <div className="row">
-                <ProductGridFour
-                  category={category}
-                  type="bestSeller"
-                  limit={8}
-                  spaceBottomClass="mb-25"
-                />
-              </div>
-            </Tab.Pane>
-            <Tab.Pane eventKey="saleItems">
-              <div className="row">
-                <ProductGridFour
-                  category={category}
-                  type="saleItems"
-                  limit={8}
-                  spaceBottomClass="mb-25"
-                />
-              </div>
-            </Tab.Pane>
-          </Tab.Content>
-        </Tab.Container>
+        <SectionTitle
+          titleText="Related Products"
+          positionClass="text-center"
+          spaceClass="mb-55"
+          borderClass="no-border"
+        />
+
+        <div className="row">
+          <ProductGridFour
+            category={category}
+            type="new"
+            limit={8}
+            spaceBottomClass="mb-25"
+          />
+        </div>
+
         <div className="view-more text-center mt-20 toggle-btn6 col-12">
           <Link
             className="loadMore6"
+            onClick={() => dispatch(setSelectCat("All"))}
             to={process.env.PUBLIC_URL + "/shop-grid-standard"}
           >
             VIEW MORE PRODUCTS
@@ -87,7 +55,7 @@ TabProductSix.propTypes = {
   category: PropTypes.string,
   productTabClass: PropTypes.string,
   spaceBottomClass: PropTypes.string,
-  spaceTopClass: PropTypes.string
+  spaceTopClass: PropTypes.string,
 };
 
 export default TabProductSix;

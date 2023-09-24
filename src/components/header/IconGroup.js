@@ -16,6 +16,9 @@ const IconGroup = ({ iconWhiteClass }) => {
       setSearchValue("");
     }, 2000);
   };
+  const handleClickCart = (e) => {
+    e.currentTarget.nextSibling.classList.toggle("active");
+  };
   const handleClickClose = (e) => {
     e.currentTarget.nextSibling.classList.toggle("");
   };
@@ -67,7 +70,7 @@ const IconGroup = ({ iconWhiteClass }) => {
       </div>
 
       <div className="same-style cart-wrap d-none d-lg-block">
-        <button className="icon-cart" onClick={(e) => handleClick(e)}>
+        <button className="icon-cart" onClick={(e) => handleClickCart(e)}>
           <i className="pe-7s-shopbag" />
           <span className="count-style">
             {cartItems && cartItems.length ? cartItems.length : 0}

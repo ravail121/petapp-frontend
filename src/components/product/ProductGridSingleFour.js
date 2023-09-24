@@ -3,6 +3,8 @@ import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import clsx from "clsx";
+import { setSelectCat } from "../../store/slices/selected-cat";
+
 import { getDiscountPrice } from "../../helpers/product";
 import ProductModal from "./ProductModal";
 import { addToCart } from "../../store/slices/cart-slice";
@@ -15,7 +17,7 @@ const ProductGridSingleFour = ({
   cartItem,
   wishlistItem,
   compareItem,
-  spaceBottomClass
+  spaceBottomClass,
 }) => {
   const [modalShow, setModalShow] = useState(false);
 
@@ -32,92 +34,26 @@ const ProductGridSingleFour = ({
         <div className="product-img">
           <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
             <img
-              className="default-img"
-              src={process.env.PUBLIC_URL + product.image[0]}
+              className={product.id === 5175 ? "default-img-sh" : "default-img"}
+              src={process.env.PUBLIC_URL + product.imageName}
               alt=""
             />
           </Link>
-          {product.discount || product.new ? (
-            <div className="product-img-badges">
-              {product.discount ? (
-                <span className="pink">-{product.discount}%</span>
-              ) : (
-                ""
-              )}
-              {product.new ? <span className="purple">New</span> : ""}
-            </div>
-          ) : (
-            ""
-          )}
 
           <div className="product-action-4">
-            <div className="pro-same-action pro-wishlist">
-              <button
-                className={wishlistItem !== undefined ? "active" : ""}
-                disabled={wishlistItem !== undefined}
-                title={
-                  wishlistItem !== undefined
-                    ? "Added to wishlist"
-                    : "Add to wishlist"
-                }
-                onClick={() => dispatch(addToWishlist(product))}
-              >
-                <i className="fa fa-heart-o" />
-              </button>
-            </div>
             <div className="pro-same-action pro-cart">
-              {product.affiliateLink ? (
-                <a
-                  href={product.affiliateLink}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title="Buy now"
-                >
-                  {" "}
-                  <i className="fa fa-shopping-cart"></i>{" "}
-                </a>
-              ) : product.variation && product.variation.length >= 1 ? (
-                <Link
-                  to={`${process.env.PUBLIC_URL}/product/${product.id}`}
-                  title="Select options"
-                >
-                  <i class="fa fa-cog"></i>
-                </Link>
-              ) : product.stock && product.stock > 0 ? (
-                <button
-                  onClick={() => dispatch(addToCart(product))}
-                  className={
-                    cartItem !== undefined && cartItem.quantity > 0
-                      ? "active"
-                      : ""
-                  }
-                  disabled={cartItem !== undefined && cartItem.quantity > 0}
-                  title={
-                    cartItem !== undefined ? "Added to cart" : "Add to cart"
-                  }
-                >
-                  {" "}
-                  <i className="fa fa-shopping-cart"></i>{" "}
-                </button>
-              ) : (
-                <button disabled className="active" title="Out of stock">
-                  <i className="fa fa-shopping-cart"></i>
-                </button>
-              )}
-            </div>
-
-            <div className="pro-same-action pro-compare">
               <button
-                className={compareItem !== undefined ? "active" : ""}
-                disabled={compareItem !== undefined}
-                title={
-                  compareItem !== undefined
-                    ? "Added to compare"
-                    : "Add to compare"
+                onClick={() => dispatch(addToCart(product))}
+                className={
+                  cartItem !== undefined && cartItem.quantity > 0
+                    ? "active"
+                    : ""
                 }
-                onClick={() => dispatch(addToCompare(product))}
+                disabled={cartItem !== undefined && cartItem.quantity > 0}
+                title={cartItem !== undefined ? "Added to cart" : "Add to cart"}
               >
-                <i className="fa fa-retweet"></i>
+                {" "}
+                <i className="fa fa-shopping-cart"></i>{" "}
               </button>
             </div>
 
@@ -139,11 +75,11 @@ const ProductGridSingleFour = ({
               <Fragment>
                 <span>{currency.currencySymbol + finalDiscountedPrice}</span>{" "}
                 <span className="old">
-                  {currency.currencySymbol + finalProductPrice}
+                  {currency.currencySymbol + product.rrp}
                 </span>
               </Fragment>
             ) : (
-              <span>{currency.currencySymbol + finalProductPrice} </span>
+              <span>{currency.currencySymbol + product.rrp} </span>
             )}
           </div>
         </div>
@@ -155,10 +91,9 @@ const ProductGridSingleFour = ({
         product={product}
         currency={currency}
         discountedPrice={discountedPrice}
-        finalProductPrice={finalProductPrice}
+        finalProductPrice={product.rrp}
         finalDiscountedPrice={finalDiscountedPrice}
         wishlistItem={wishlistItem}
-        compareItem={compareItem}
       />
     </Fragment>
   );
@@ -170,7 +105,7 @@ ProductGridSingleFour.propTypes = {
   currency: PropTypes.shape({}),
   product: PropTypes.shape({}),
   spaceBottomClass: PropTypes.string,
-  wishlistItem: PropTypes.shape({})
+  wishlistItem: PropTypes.shape({}),
 };
 
 export default ProductGridSingleFour;

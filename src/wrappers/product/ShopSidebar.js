@@ -21,6 +21,7 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
   const uniqueSizes = getProductsIndividualSizes(products);
   const uniqueTags = getIndividualTags(products);
   const { selectCat } = useSelector((state) => state.selectCat);
+  const { search } = useSelector((state) => state.search);
 
   const [Categories, setCategories] = useState([]);
   useEffect(() => {
@@ -49,6 +50,24 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
           // })
 
           setCategories(data?.data?.categories);
+          let CategoriesData = data?.data?.categories;
+          if (selectCat === "All") {
+            const updatedCategories = CategoriesData.map((category) => ({
+              ...category,
+              selected: true,
+            }));
+            console.log(updatedCategories);
+            setCategories(updatedCategories);
+          } else {
+            const updatedItems = CategoriesData.map((item) => {
+              if (item.id === selectCat) {
+                return { ...item, selected: true };
+              } else {
+                return { ...item, selected: false };
+              }
+            });
+            setCategories(updatedItems);
+          }
           // setLoading(false);
           // GetAllProducts(Array);
         }
@@ -57,11 +76,13 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
   };
 
   useEffect(() => {
+    console.log(selectCat);
     if (selectCat === "All") {
       const updatedCategories = Categories.map((category) => ({
         ...category,
         selected: true,
       }));
+      console.log(updatedCategories);
       setCategories(updatedCategories);
     } else {
       const updatedItems = Categories.map((item) => {
@@ -73,7 +94,7 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
       });
       setCategories(updatedItems);
     }
-  }, [selectCat]);
+  }, [selectCat, search]);
   return (
     <div className={clsx("sidebar-style", sideSpaceClass)}>
       {/* shop search */}

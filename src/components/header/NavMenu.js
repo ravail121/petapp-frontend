@@ -66,7 +66,10 @@ const NavMenu = ({ menuWhiteClass, sidebarMenu }) => {
           </li>{" "}
           <li>
             <Link
-              onClick={() => dispatch(setSearchCat(""))}
+              onClick={() => {
+                dispatch(setSearchCat(""));
+                dispatch(setSelectCat(""));
+              }}
               to={process.env.PUBLIC_URL + "/about"}
             >
               {t("About")}

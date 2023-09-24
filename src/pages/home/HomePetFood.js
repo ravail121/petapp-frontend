@@ -24,21 +24,21 @@ const HomePetFood = () => {
         {/* tab product */}
         <TabProductSix category="pet food" />
         {/* banner */}
-        <BannerTwentyTwo spaceTopClass="pt-95" />
+        {/* <BannerTwentyTwo spaceTopClass="pt-95" /> */}
         {/* countdown */}
-        <CountDownThree
+        {/* <CountDownThree
           spaceTopClass="pt-95"
           dateTime="November 13, 2023 12:12:00"
           countDownImage="/assets/img/banner/deal-8.jpg"
-        />
+        /> */}
         {/* feature icon */}
-        <FeatureIconFour
+        {/* <FeatureIconFour
           spaceTopClass="pt-95"
           containerClass="container"
           responsiveClass="res-mrg-md-mt"
-        />
+        /> */}
         {/* blog featured */}
-        <BlogFeaturedThree spaceTopClass="pt-90" spaceBottomClass="pb-70" />
+        {/* <BlogFeaturedThree spaceTopClass="pt-90" spaceBottomClass="pb-70" /> */}
       </LayoutOne>
     </Fragment>
   );

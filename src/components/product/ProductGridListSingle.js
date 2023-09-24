@@ -16,7 +16,7 @@ const ProductGridListSingle = ({
   cartItem,
   wishlistItem,
   compareItem,
-  spaceBottomClass
+  spaceBottomClass,
 }) => {
   const [modalShow, setModalShow] = useState(false);
   const discountedPrice = getDiscountPrice(product.price, product.discount);
@@ -25,18 +25,26 @@ const ProductGridListSingle = ({
     discountedPrice * currency.currencyRate
   ).toFixed(2);
   const dispatch = useDispatch();
+  const checkId = (itemToCheck) => {
+    const myArray = [5175, 5171, 5172, 4848, 4844];
+    if (myArray.includes(itemToCheck)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <Fragment>
-        <div className={clsx("product-wrap", spaceBottomClass)}>
-          <div className="product-img">
-            <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-              <img
-                className="default-img"
-                src={process.env.PUBLIC_URL + product.imageName}
-                alt=""
-              />
-              {/* {product.image.length > 1 ? (
+      <div className={clsx("product-wrap", spaceBottomClass)}>
+        <div className="product-img">
+          <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+            <img
+              className={checkId(product.id) ? "default-img-sh" : "default-img"}
+              src={process.env.PUBLIC_URL + product.imageName}
+              alt=""
+            />
+            {/* {product.image.length > 1 ? (
                 <img
                   className="hover-img"
                   src={process.env.PUBLIC_URL + product.imageName}
@@ -45,11 +53,10 @@ const ProductGridListSingle = ({
               ) : (
                 ""
               )} */}
-            </Link>
-            
+          </Link>
 
-            <div className="product-action">
-              {/* <div className="pro-same-action pro-wishlist">
+          <div className="product-action">
+            {/* <div className="pro-same-action pro-wishlist">
                 <button
                   className={wishlistItem !== undefined ? "active" : ""}
                   disabled={wishlistItem !== undefined}
@@ -63,8 +70,8 @@ const ProductGridListSingle = ({
                   <i className="pe-7s-like" />
                 </button>
               </div> */}
-              {/* <div className="pro-same-action pro-cart"> */}
-                {/* {product.affiliateLink ? (
+            {/* <div className="pro-same-action pro-cart"> */}
+            {/* {product.affiliateLink ? (
                   <a
                     href={product.affiliateLink}
                     rel="noopener noreferrer"
@@ -101,53 +108,53 @@ const ProductGridListSingle = ({
                     Out of Stock
                   </button>
                 )} */}
-              {/* </div> */}
-              <div className="pro-same-action pro-quickview">
-                <button onClick={() => setModalShow(true)} title="Quick View">
-                  <i className="pe-7s-look" />
-                </button>
-              </div>
+            {/* </div> */}
+            <div className="pro-same-action pro-quickview">
+              <button onClick={() => setModalShow(true)} title="Quick View">
+                <i className="pe-7s-look" />
+              </button>
             </div>
           </div>
-          <div className="product-content text-center">
-            <h3>
-              <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                {product.name}
-              </Link>
-            </h3>
-            {/* {product.rating && product.rating > 0 ? (
+        </div>
+        <div className="product-content text-center">
+          <h3>
+            <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+              {product.name}
+            </Link>
+          </h3>
+          {/* {product.rating && product.rating > 0 ? (
               <div className="product-rating">
                 <Rating ratingValue={product.rating} />
               </div>
             ) : (
               ""
             )} */}
-            <div className="product-price">
-              {discountedPrice !== null ? (
-                <Fragment>
-                  <span>{currency.currencySymbol + product.rrp}</span>{" "}
-                  {/* <span className="old"> */}
-                    {/* {currency.currencySymbol + finalProductPrice} */}
-                  {/* </span> */}
-                </Fragment>
-              ) : (
-                <span>{currency.currencySymbol + product.rrp} </span>
-              )}
-            </div>
+          <div className="product-price">
+            {discountedPrice !== null ? (
+              <Fragment>
+                <span>{currency.currencySymbol + product.rrp}</span>{" "}
+                {/* <span className="old"> */}
+                {/* {currency.currencySymbol + finalProductPrice} */}
+                {/* </span> */}
+              </Fragment>
+            ) : (
+              <span>{currency.currencySymbol + product.rrp} </span>
+            )}
           </div>
         </div>
-        <div className="shop-list-wrap mb-30">
-          <div className="row">
-            <div className="col-xl-4 col-md-5 col-sm-6">
-              <div className="product-list-image-wrap">
-                <div className="product-img">
-                  <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                    <img
-                      className="default-img img-fluid"
-                      src={process.env.PUBLIC_URL + product.imageName}
-                      alt=""
-                    />
-                    {/* {product.image.length > 1 ? (
+      </div>
+      <div className="shop-list-wrap mb-30">
+        <div className="row">
+          <div className="col-xl-4 col-md-5 col-sm-6">
+            <div className="product-list-image-wrap">
+              <div className="product-img">
+                <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+                  <img
+                    className="default-img img-fluid"
+                    src={process.env.PUBLIC_URL + product.imageName}
+                    alt=""
+                  />
+                  {/* {product.image.length > 1 ? (
                       <img
                         className="hover-img img-fluid"
                         src={process.env.PUBLIC_URL + product.imageName}
@@ -156,40 +163,37 @@ const ProductGridListSingle = ({
                     ) : (
                       ""
                     )} */}
-                  </Link>
-               
-                </div>
+                </Link>
               </div>
             </div>
-            <div className="col-xl-8 col-md-7 col-sm-6">
-              <div className="shop-list-content">
-                <h3>
-                  <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
-                    {product.name}
-                  </Link>
-                </h3>
-                <div className="product-list-price">
-                  {discountedPrice !== null ? (
-                    <Fragment>
-                      <span>
-                        {product.rrp}
-                      </span>{" "}
-                      {/* <span className="old">
+          </div>
+          <div className="col-xl-8 col-md-7 col-sm-6">
+            <div className="shop-list-content">
+              <h3>
+                <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+                  {product.name}
+                </Link>
+              </h3>
+              <div className="product-list-price">
+                {discountedPrice !== null ? (
+                  <Fragment>
+                    <span>{product.rrp}</span>{" "}
+                    {/* <span className="old">
                         {currency.currencySymbol + finalProductPrice}
                       </span> */}
-                    </Fragment>
-                  ) : (
-                    <span>{product.rrp} </span>
-                  )}
-                </div>
-              
-                {product.shortDescription ? (
-                  <p>{product.shortDescription}</p>
+                  </Fragment>
                 ) : (
-                  ""
+                  <span>{product.rrp} </span>
                 )}
+              </div>
 
-                {/* <div className="shop-list-actions d-flex align-items-center">
+              {product.shortDescription ? (
+                <p>{product.shortDescription}</p>
+              ) : (
+                ""
+              )}
+
+              {/* <div className="shop-list-actions d-flex align-items-center">
                   <div className="shop-list-btn btn-hover">
                     {product.affiliateLink ? (
                       <a
@@ -265,10 +269,10 @@ const ProductGridListSingle = ({
                     </button>
                   </div>
                 </div> */}
-              </div>
             </div>
           </div>
         </div>
+      </div>
       {/* product modal */}
       <ProductModal
         show={modalShow}
@@ -291,7 +295,7 @@ ProductGridListSingle.propTypes = {
   currency: PropTypes.shape({}),
   product: PropTypes.shape({}),
   spaceBottomClass: PropTypes.string,
-  wishlistItem: PropTypes.shape({})
+  wishlistItem: PropTypes.shape({}),
 };
 
 export default ProductGridListSingle;

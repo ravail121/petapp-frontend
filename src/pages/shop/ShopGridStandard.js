@@ -79,37 +79,8 @@ const ShopGridStandard = () => {
   }, []);
 
   const GetAllProducts = (cat) => {
-    console.log("dsdd");
-    // value++
-    // setIsLoading(true); window.s
-
     window.scrollTo(0, 0);
     let filteredItems = [];
-
-    // setLimits(perpage)
-    // let Docline = categories?.map((item) => {
-    //   if (item.checked) {
-    //     return item.id
-    //   }
-    // })
-
-    // if (RefreshProduct === 1) {
-    //   let Array = []
-    //   event?.map((item) => {
-    //     Array.push({
-    //       name: item.name,
-    //       checked: true,
-    //       id: item.id
-    //     })
-    //   })
-    //   setCategories(Array);
-    // }
-    // if (event === 'Apply') {
-    //   filteredItems = Docline.filter((item) => typeof item !== 'undefined');
-    // }
-    // else {
-    //   filteredItems = []
-    // }
 
     setIsLoading(true);
     fetch(`${url}/user/products/list`, {
@@ -122,8 +93,9 @@ const ShopGridStandard = () => {
         page: currentPage ? currentPage : 1,
         limit: 15,
         search: search ? search : "",
-        categories: selectCat !== "All" ? [selectCat] : cat ? cat : [],
-        price: [0, 500],
+        categories:
+          selectCat && selectCat !== "All" ? [selectCat] : cat ? cat : [],
+        // price: [],
       }),
     })
       .then((response) => response.json())
