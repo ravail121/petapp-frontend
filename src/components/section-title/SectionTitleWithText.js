@@ -7,12 +7,19 @@ const SectionTitleWithText = ({ spaceTopClass, spaceBottomClass }) => {
       <div className="container">
         <div className="welcome-content text-center">
           <h5>Who Are We</h5>
-          <h1>Welcome To Flone</h1>
+          <h1>Welcome To RubyPets</h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt labor et dolore magna aliqua. Ut enim ad
-            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commo consequat irure{" "}
+            Introducing RubyPets, the ultimate e-commerce app for pet lovers!
+            RubyPets offers a vast and 
+            diverse selection of pets and their related products, providing a one-stop destination for all 
+            your furry, feathered, or scaly companion needs. From adorable puppies and kittens to exotic 
+            birds and reptiles, PetPal connects you with reputable breeders and shelters, ensuring the 
+            well-being of every pet. Explore a curated marketplace filled with high-quality pet food, toys, 
+            grooming essentials, and fashionable accessories. With user-friendly navigation, expert advice,
+            and a seamless adoption process, PetPal is your trusted partner in creating a loving and 
+            enriching environment for your beloved pets. Shop, adopt, and pamper your pets with RubyPets 
+            today!
+          {" "}
           </p>
         </div>
       </div>

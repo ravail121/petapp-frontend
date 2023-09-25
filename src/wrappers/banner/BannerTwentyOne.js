@@ -25,8 +25,17 @@ const BannerTwentyOne = ({ spaceTopClass, spaceBottomClass }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "Categories has been fetched Succesfully") {
-          setCategories(data?.data?.categories);
+        if (data.success) {
+          let categoriesData = data?.data?.categories;
+          if(categoriesData.length >=3){
+            categoriesData = categoriesData.slice(0, 3);
+            setCategories( categoriesData  );
+            
+          }
+          else{
+            setCategories(categoriesData);
+          }
+          
         }
       })
       .catch((error) => {});
