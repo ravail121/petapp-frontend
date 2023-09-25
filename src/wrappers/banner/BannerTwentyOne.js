@@ -47,7 +47,7 @@ const BannerTwentyOne = ({ spaceTopClass, spaceBottomClass }) => {
         <div className="row">
           {Categories &&
             Categories?.map((single, key) => (
-              <div className="col-lg-2 col-md-2" key={key}>
+              <div className="col-lg-4 col-md-4" key={key}>
                 <BannerTwentyOneSingle data={single} spaceBottomClass="mb-30" />
               </div>
             ))}

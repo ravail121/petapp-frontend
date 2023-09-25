@@ -148,7 +148,7 @@ const Checkout = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.message === "Shipping Fee has been fetched Succesfully") {
+        if (response.success) {
           setShippingSettings(response?.data?.shippingFee);
           let obj = response?.data?.shippingFee[0];
           setShippingTotal(obj);
