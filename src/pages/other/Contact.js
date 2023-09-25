@@ -1,21 +1,91 @@
-import { Fragment } from "react"; 
+import { Fragment, useEffect, useState } from "react"; 
 import { useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import GoogleMap from "../../components/google-map"
+import tick from "../../assets/qa.gif";
+import cogoToast from 'cogo-toast';
+
 
 const Contact = () => {
   let { pathname } = useLocation();
+  const [ email , setEmail ] = useState("")
+  const [ message , setMessage ] = useState("")
+  const [ buttonText , setButtonText ] = useState( "SEND" )
+  const [ emailCheck , setEmailCheck ] = useState(true);
+  const [ messageheck , setMessageCheck ] = useState(true);
+  const [ buttonDisabled , setButtonDisabled ] = useState(false)
+
+  const errorMessageStyle = {
+    color: 'red',
+  };
+
+  const handleEmailInput = (val)=>{
+    setEmail(val);
+    setEmailCheck(true);
+  }
+  const handleMessageInput = (val)=>{
+    setMessage(val);
+    setMessageCheck(true);
+  }
+
+  const sendMessage = ( )=>{
+
+      if(!email){ setEmailCheck(false) }
+      else if(!message){ setMessageCheck(false) }
+      else{
+        setMessageCheck(true)
+        setEmailCheck(true)
+        setButtonDisabled(true)
+        setButtonText("SENDING")
+  
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+  
+        var raw = JSON.stringify({
+            "from": email,
+            "message": message
+        });
+  
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+  
+        fetch("https://apis.rubypets.co.uk/user/queries/add", requestOptions)
+        .then(response => response.json())
+        .then(result =>
+           {
+            setButtonDisabled(false);
+            setButtonText("SEND")
+            if(result.success){
+              setEmail("");
+              setMessage("")
+              cogoToast.success("Message Sent", {position: "top-right"});  
+            }
+            else{
+              cogoToast.error("Message Not Sent", {position: "top-right"});
+            }
+           })
+        .catch(error => console.log('error', error));
+  
+      }
+  }
+
+
 
   return (
+
     <Fragment>
       <SEO
         titleTemplate="Contact"
         description="Contact page of flone react minimalist eCommerce template."
       />
       <LayoutOne headerTop="visible">
-        {/* breadcrumb */}
+        
         <Breadcrumb 
           pages={[
             {label: "Home", path: process.env.PUBLIC_URL + "/" },
@@ -24,9 +94,8 @@ const Contact = () => {
         />
         <div className="contact-area pt-100 pb-100">
           <div className="container">
-            <div className="contact-map mb-10">
-              <GoogleMap lat={47.444} lng={-122.176} />
-            </div>
+
+
             <div className="custom-row-2">
               <div className="col-12 col-lg-4 col-md-5">
                 <div className="contact-info-wrap">
@@ -36,7 +105,6 @@ const Contact = () => {
                     </div>
                     <div className="contact-info-dec">
                       <p>+012 345 678 102</p>
-                      <p>+012 345 678 102</p>
                     </div>
                   </div>
                   <div className="single-contact-info">
@@ -45,13 +113,13 @@ const Contact = () => {
                     </div>
                     <div className="contact-info-dec">
                       <p>
-                        <a href="mailto:yourname@email.com">
-                          yourname@email.com
+                        <a href="mailto:admin@rubypets.co.uk">
+                        admin@rubypets.co.uk
                         </a>
                       </p>
                       <p>
-                        <a href="https://yourwebsitename.com">
-                          yourwebsitename.com
+                        <a href="https://rubypets.co.uk/">
+                        Ruby Pets
                         </a>
                       </p>
                     </div>
@@ -61,81 +129,54 @@ const Contact = () => {
                       <i className="fa fa-map-marker" />
                     </div>
                     <div className="contact-info-dec">
-                      <p>Address goes here, </p>
                       <p>street, Crossroad 123.</p>
                     </div>
                   </div>
-                  <div className="contact-social text-center">
-                    <h3>Follow Us</h3>
-                    <ul>
-                      <li>
-                        <a href="//facebook.com">
-                          <i className="fa fa-facebook" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//pinterest.com">
-                          <i className="fa fa-pinterest-p" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//thumblr.com">
-                          <i className="fa fa-tumblr" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//vimeo.com">
-                          <i className="fa fa-vimeo" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="//twitter.com">
-                          <i className="fa fa-twitter" />
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+
+
                 </div>
               </div>
               <div className="col-12 col-lg-8 col-md-7">
-                <div className="contact-form">
+                <div  className="contact-form">
                   <div className="contact-title mb-30">
                     <h2>Get In Touch</h2>
                   </div>
-                  <form className="contact-form-style">
+                  <div className="contact-form-style">
                     <div className="row">
+                      
+
                       <div className="col-lg-6">
-                        <input name="name" placeholder="Name*" type="text" />
+                        <p style={errorMessageStyle} hidden={emailCheck} >email* required</p>
+                        <input id="email" onChange={(e)=>{handleEmailInput(e.target.value)}} name="email" required placeholder="Email*" type="email" value={email} />
                       </div>
-                      <div className="col-lg-6">
-                        <input name="email" placeholder="Email*" type="email" />
-                      </div>
+
+                      
                       <div className="col-lg-12">
-                        <input
-                          name="subject"
-                          placeholder="Subject*"
-                          type="text"
-                        />
-                      </div>
-                      <div className="col-lg-12">
+                        <p style={errorMessageStyle} hidden={messageheck} >message* required</p>
                         <textarea
+                          required
+                          value={message}
+                          onChange={(e)=>{handleMessageInput(e.target.value)}}
+                          id="message"
                           name="message"
                           placeholder="Your Message*"
                           defaultValue={""}
                         />
-                        <button className="submit" type="submit">
-                          SEND
+                        <button onClick={sendMessage} className="submit" disabled={buttonDisabled} >
+                          {buttonText}
                         </button>
                       </div>
                     </div>
-                  </form>
+                  </div>
                   <p className="form-message" />
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </LayoutOne>
+
     </Fragment>
   );
 };

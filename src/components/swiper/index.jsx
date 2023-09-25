@@ -67,6 +67,7 @@ const SwiperSlider = forwardRef(
                         >
                             <i className={cn(nextIcon, "icon")} />
                         </button>
+                        
                     </>
                 )}
             </div>

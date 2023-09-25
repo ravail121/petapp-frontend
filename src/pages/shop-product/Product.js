@@ -8,6 +8,7 @@ import RelatedProductSlider from "../../wrappers/product/RelatedProductSlider";
 import ProductDescriptionTab from "../../wrappers/product/ProductDescriptionTab";
 import ProductImageDescription from "../../wrappers/product/ProductImageDescription";
 import { url } from "../../environment";
+
 const Product = () => {
   let { pathname } = useLocation();
   const [IsLoading, setIsLoading] = useState(false);
@@ -31,7 +32,7 @@ const Product = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.message === "Product has been fetched Succesfully") {
+        if (response.success) {
           setProductDetail(response?.data?.product);
           setIsLoading(false);
         }
