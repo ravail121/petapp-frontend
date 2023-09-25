@@ -39,7 +39,7 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "Categories has been fetched Succesfully") {
+        if (data.success) {
           let Array = [];
           // data?.data?.categories?.map((item) => {
           //   Array.push({

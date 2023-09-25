@@ -53,7 +53,7 @@ const RelatedProductSlider = ({ spaceBottomClass, category }) => {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.message === "Products has been fetched Succesfully") {
+        if (response.success) {
           setProducts(response?.data?.products);
           setIsLoading(false);
         }

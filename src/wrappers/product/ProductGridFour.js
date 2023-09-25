@@ -29,7 +29,7 @@ const ProductGridFour = ({ spaceBottomClass, category, type, limit }) => {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.message === "Products has been fetched Succesfully") {
+        if (response.success) {
           setProducts(response?.data?.products);
           setIsLoading(false);
         }
