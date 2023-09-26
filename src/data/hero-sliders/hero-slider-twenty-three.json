@@ -1,15 +1,15 @@
 [
   {
     "id": 1,
-    "title": "2020 Latest Collection",
-    "subtitle": "-30% Offer All <br /> Pet Food.",
+    "title": "",
+    "subtitle": "Paws & browse<br /> Pet essentials",
     "image": "https://flone.jamstacktemplates.dev/assets/img/slider/slider-23.jpg",
     "url": "/shop-grid-standard"
   },
   {
     "id": 2,
-    "title": "2020 Latest Collection",
-    "subtitle": "-40% Offer All <br /> Pet Food.",
+    "title": "",
+    "subtitle": "Purr-fect<br /> pet shopping deals",
     "image": "https://flone.jamstacktemplates.dev/assets/img/slider/slider-23.jpg",
     "url": "/shop-grid-standard"
   }
