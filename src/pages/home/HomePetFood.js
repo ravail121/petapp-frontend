@@ -13,7 +13,7 @@ const HomePetFood = () => {
   return (
     <Fragment>
       <SEO
-        titleTemplate="Pet Food Home"
+        titleTemplate="Home"
         description="Pet food home of flone react minimalist eCommerce template."
       />
       <LayoutOne headerTop="visible">
