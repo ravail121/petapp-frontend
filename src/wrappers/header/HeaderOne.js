@@ -6,7 +6,7 @@ import NavMenu from "../../components/header/NavMenu";
 import IconGroup from "../../components/header/IconGroup";
 import MobileMenu from "../../components/header/MobileMenu";
 import HeaderTop from "../../components/header/HeaderTop";
-import Logo1 from "../../assets/Logo1.png";
+import Logo1 from "../../assets/Logo1.jpeg";
 
 const HeaderOne = ({
   layout,

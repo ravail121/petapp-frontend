@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 import FooterCopyright from "../../components/footer/FooterCopyright";
 import FooterNewsletter from "../../components/footer/FooterNewsletter";
+import Logo1 from "../../assets/Logo1.jpeg";
 
 
 const FooterOne = ({
@@ -24,9 +25,11 @@ const FooterOne = ({
               sideMenu ? "col-xl-2 col-sm-4" : "col-lg-2 col-sm-4"
             }`}
           >
+
+            {/* /assets/img/logo/logo.png */}
             {/* footer copyright */}
             <FooterCopyright
-              footerLogo="/assets/img/logo/logo.png"
+              footerLogo={Logo1}
               spaceBottomClass="mb-30"
             />
           </div>
