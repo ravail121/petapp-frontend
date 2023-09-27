@@ -55,10 +55,10 @@ const ProductGridSingle = ({
           <div className="product-price">
             {/* {discountedPrice !== null ? (
               <Fragment>
-                <span>{currency.currencySymbol + finalDiscountedPrice}</span>{" "}
+                <span>{"$" + finalDiscountedPrice}</span>{" "}
               </Fragment>
             ) : ( */}
-            <span>{currency.currencySymbol + product.rrp} </span>
+            <span>{"$" + product.rrp} </span>
             {/* )} */}
           </div>
         </div>

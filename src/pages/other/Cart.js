@@ -125,15 +125,15 @@ const Cart = () => {
                                   {discountedPrice !== null ? (
                                     <Fragment>
                                       <span className="amount old">
-                                        {currency.currencySymbol + cartItem.rrp}
+                                        {"$" + cartItem.rrp}
                                       </span>
                                       <span className="amount">
-                                        {currency.currencySymbol + cartItem.rrp}
+                                        {"$" + cartItem.rrp}
                                       </span>
                                     </Fragment>
                                   ) : (
                                     <span className="amount">
-                                      {currency.currencySymbol + cartItem.rrp}
+                                      {"$" + cartItem.rrp}
                                     </span>
                                   )}
                                 </td>
@@ -181,11 +181,11 @@ const Cart = () => {
                                 </td>
                                 <td className="product-subtotal">
                                   {discountedPrice !== null
-                                    ? currency.currencySymbol +
+                                    ? "$" +
                                       (
                                         cartItem.rrp * cartItem.quantity
                                       ).toFixed(2)
-                                    : currency.currencySymbol +
+                                    : "$" +
                                       (
                                         cartItem.rrp * cartItem.quantity
                                       ).toFixed(2)}
@@ -240,14 +240,14 @@ const Cart = () => {
                       <h5>
                         Total products{" "}
                         <span>
-                          {currency.currencySymbol + cartTotalPrice.toFixed(2)}
+                          {"$" + cartTotalPrice.toFixed(2)}
                         </span>
                       </h5>
 
                       <h4 className="grand-totall-title">
                         Grand Total{" "}
                         <span>
-                          {currency.currencySymbol + cartTotalPrice.toFixed(2)}
+                          {"$" + cartTotalPrice.toFixed(2)}
                         </span>
                       </h4>
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>
