@@ -80,13 +80,13 @@ const ProductGridSingleFour = ({
           <div className="price-5">
             {discountedPrice !== null ? (
               <Fragment>
-                <span>{currency.currencySymbol + finalDiscountedPrice}</span>{" "}
+                <span>{"$" + finalDiscountedPrice}</span>{" "}
                 <span className="old">
-                  {currency.currencySymbol + product.rrp}
+                  {"$" + product.rrp}
                 </span>
               </Fragment>
             ) : (
-              <span>{currency.currencySymbol + product.rrp} </span>
+              <span>{"$" + product.rrp} </span>
             )}
           </div>
         </div>

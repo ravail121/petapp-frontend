@@ -106,11 +106,11 @@ function ProductModal({
                 {discountedPrice !== null ? (
                   <Fragment>
                     <span>
-                      {currency.currencySymbol + finalDiscountedPrice}
+                      {"$" + finalDiscountedPrice}
                     </span>{" "}
                   </Fragment>
                 ) : (
-                  <span>{currency.currencySymbol + finalProductPrice} </span>
+                  <span>{"$" + finalProductPrice} </span>
                 )}
               </div>
 
