@@ -7,7 +7,7 @@ const FooterCopyright = ({ footerLogo, spaceBottomClass, colorClass }) => {
     <div className={clsx("copyright", spaceBottomClass, colorClass)}>
       <div className="footer-logo">
         <Link to={process.env.PUBLIC_URL + "/"}>
-          <h2>
+          <h2 style={{ fontFamily: "Comfortaa" }}>
             <b>Ruby Pets</b>
           </h2>
           {/* <img height="90px" width="90px" alt="" src={process.env.PUBLIC_URL + footerLogo} /> */}
@@ -16,11 +16,11 @@ const FooterCopyright = ({ footerLogo, spaceBottomClass, colorClass }) => {
       <p>
         &copy; {new Date().getFullYear()}{" "}
         <a
-          href="https://hasthemes.com"
+          // href=""
           rel="noopener noreferrer"
           target="_blank"
         >
-          Flone
+          Ruby pets
         </a>
         .<br /> All Rights Reserved
       </p>

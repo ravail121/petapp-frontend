@@ -6,7 +6,7 @@ const Logo = ({ imageUrl, logoClass }) => {
   return (
     <div className={clsx(logoClass)}>
       <Link to={process.env.PUBLIC_URL + "/"}>
-        <h2>
+        <h2 style={{ fontFamily: "Comfortaa" }}>
           <b>Ruby Pets</b>
         </h2>
         {/* <img width={100} alt="" src={process.env.PUBLIC_URL + imageUrl} /> */}
