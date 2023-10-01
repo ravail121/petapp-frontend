@@ -125,15 +125,15 @@ const Cart = () => {
                                   {discountedPrice !== null ? (
                                     <Fragment>
                                       <span className="amount old">
-                                        {"$" + cartItem.rrp}
+                                        {"£" + cartItem.rrp}
                                       </span>
                                       <span className="amount">
-                                        {"$" + cartItem.rrp}
+                                        {"£" + cartItem.rrp}
                                       </span>
                                     </Fragment>
                                   ) : (
                                     <span className="amount">
-                                      {"$" + cartItem.rrp}
+                                      {"£" + cartItem.rrp}
                                     </span>
                                   )}
                                 </td>
@@ -181,11 +181,11 @@ const Cart = () => {
                                 </td>
                                 <td className="product-subtotal">
                                   {discountedPrice !== null
-                                    ? "$" +
+                                    ? "£" +
                                       (
                                         cartItem.rrp * cartItem.quantity
                                       ).toFixed(2)
-                                    : "$" +
+                                    : "£" +
                                       (
                                         cartItem.rrp * cartItem.quantity
                                       ).toFixed(2)}
@@ -239,16 +239,12 @@ const Cart = () => {
                       </div>
                       <h5>
                         Total products{" "}
-                        <span>
-                          {"$" + cartTotalPrice.toFixed(2)}
-                        </span>
+                        <span>{"£" + cartTotalPrice.toFixed(2)}</span>
                       </h5>
 
                       <h4 className="grand-totall-title">
                         Grand Total{" "}
-                        <span>
-                          {"$" + cartTotalPrice.toFixed(2)}
-                        </span>
+                        <span>{"£" + cartTotalPrice.toFixed(2)}</span>
                       </h4>
                       <Link to={process.env.PUBLIC_URL + "/checkout"}>
                         Proceed to Checkout

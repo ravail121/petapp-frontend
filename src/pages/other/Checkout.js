@@ -614,11 +614,11 @@ const Checkout = () => {
                                         </span>{" "}
                                         <span className="order-price">
                                           {discountedPrice !== null
-                                            ? "$" +
+                                            ? "£" +
                                               (
                                                 cartItem.rrp * cartItem.quantity
                                               ).toFixed(2)
-                                            : "$" +
+                                            : "£" +
                                               (
                                                 cartItem.rrp * cartItem.quantity
                                               ).toFixed(2)}
@@ -653,7 +653,7 @@ const Checkout = () => {
                                 <ul>
                                   <li className="order-total">Total</li>
                                   <li>
-                                    {"$"}
+                                    {"£"}
                                     {cartItems?.length > 0
                                       ? (
                                           Number(cartTotalPrice) +

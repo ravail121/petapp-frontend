@@ -105,12 +105,10 @@ function ProductModal({
               <div className="product-details-price">
                 {discountedPrice !== null ? (
                   <Fragment>
-                    <span>
-                      {"$" + finalDiscountedPrice}
-                    </span>{" "}
+                    <span>{"£" + finalDiscountedPrice}</span>{" "}
                   </Fragment>
                 ) : (
-                  <span>{"$" + finalProductPrice} </span>
+                  <span>{"£" + finalProductPrice} </span>
                 )}
               </div>
 

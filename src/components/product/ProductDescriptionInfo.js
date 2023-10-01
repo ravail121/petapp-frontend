@@ -43,13 +43,13 @@ const ProductDescriptionInfo = ({
       <div className="product-details-price">
         {discountedPrice !== null ? (
           <Fragment>
-            <span>{"$" + finalDiscountedPrice}</span>{" "}
+            <span>{"£" + finalDiscountedPrice}</span>{" "}
             {/* <span className="old">
               {"$" + finalProductPrice}
             </span> */}
           </Fragment>
         ) : (
-          <span>{"$" + finalProductPrice} </span>
+          <span>{"£" + finalProductPrice} </span>
         )}
       </div>
 

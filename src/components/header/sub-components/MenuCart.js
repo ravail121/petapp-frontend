@@ -53,8 +53,8 @@ const MenuCart = () => {
                     <h6>Qty: {item.quantity}</h6>
                     <span>
                       {discountedPrice !== null
-                        ? "$" + item.rrp
-                        : "$" + item.rrp}
+                        ? "£" + item.rrp
+                        : "£" + item.rrp}
                     </span>
                   </div>
                   <div className="shopping-cart-delete">
@@ -72,7 +72,7 @@ const MenuCart = () => {
             <h4>
               Total :{" "}
               <span className="shop-total">
-                {"$" + cartTotalPrice.toFixed(2)}
+                {"£" + cartTotalPrice.toFixed(2)}
               </span>
             </h4>
           </div>
