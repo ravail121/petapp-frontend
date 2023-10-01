@@ -4,10 +4,7 @@ import { Link } from "react-router-dom";
 
 const Logo = ({ imageUrl, logoClass }) => {
   return (
-    <div
-      className={clsx(logoClass)}
-      style={{ display: "flex", alignItems: "center" }}
-    >
+    <div className={clsx(logoClass)}>
       <Link to={process.env.PUBLIC_URL + "/"}>
         <h2>
           <b>Ruby Pets</b>
