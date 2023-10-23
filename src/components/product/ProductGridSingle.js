@@ -58,7 +58,7 @@ const ProductGridSingle = ({
                 <span>{"$" + finalDiscountedPrice}</span>{" "}
               </Fragment>
             ) : ( */}
-            <span>{"$" + product.rrp} </span>
+            <span>{"£" + product.rrp} </span>
             {/* )} */}
           </div>
         </div>

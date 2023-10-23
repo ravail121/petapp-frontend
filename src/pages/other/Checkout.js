@@ -633,14 +633,14 @@ const Checkout = () => {
                                   <li className="your-order-shipping">
                                     Shipping
                                   </li>
-                                  <li>{ShippingTotal.shippingFee}</li>
+                                  <li>{"£" + ShippingTotal.shippingFee}</li>
                                 </ul>
                                 <ul>
                                   <li className="your-order-shipping">
                                     Tax ({ShippingTotal?.tax * 100}%)
                                   </li>
                                   <li>
-                                    {ShippingTotal?.currencySign}
+                                    {"£"}
                                     {cartTotalPrice
                                       ? (
                                           ShippingTotal?.tax * cartTotalPrice
